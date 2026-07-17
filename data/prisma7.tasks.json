@@ -1,0 +1,107 @@
+[
+  {
+    "id": "create-user",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Create a new user with email \"ada@example.com\" and name \"Ada\", and return the created user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Create a new user with email \"ada@example.com\" and name \"Ada\", and return the created user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "nested-create-profile",
+    "area": "relations",
+    "difficulty": "medium",
+    "prompt": "Create a user with email \"grace@example.com\" and, in the same call, create a related profile with bio \"Hello\". Return the user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Create a user with email \"grace@example.com\" and a related profile (bio \"Hello\") in one call. Return the user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "find-unique-email",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Find the user whose email is \"ada@example.com\" (email is unique) and return it (or null).",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Find the user whose unique email is \"ada@example.com\"; return it or null.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "find-many-filter-order",
+    "area": "query",
+    "difficulty": "medium",
+    "prompt": "Return all published posts ordered by title ascending.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return all published posts ordered by title ascending.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "update-user-name",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Set name to \"Ada L.\" for the user with email \"ada@example.com\" and return the updated user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Set name to \"Ada L.\" for the user with unique email \"ada@example.com\"; return the updated user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "upsert-user",
+    "area": "crud",
+    "difficulty": "medium",
+    "prompt": "Upsert a user by unique email \"ada@example.com\": if it exists set name to \"Ada\", otherwise create it with that email and name. Return the user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Upsert by unique email \"ada@example.com\": update name to \"Ada\" if present, else create. Return the user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "find-with-include-posts",
+    "area": "relations",
+    "difficulty": "medium",
+    "prompt": "Return the user with email \"ada@example.com\" including their posts.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return the user with unique email \"ada@example.com\" including their posts.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "cursor-pagination",
+    "area": "query",
+    "difficulty": "hard",
+    "prompt": "Return the first 10 posts after the post with id 100 using cursor-based pagination, ordered by id ascending.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return the first 10 posts after post id 100 using cursor pagination, ordered by id ascending.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "transaction-user-post",
+    "area": "transactions",
+    "difficulty": "hard",
+    "prompt": "In a single transaction, create a user with email \"tx@example.com\" and then a post titled \"First\" authored by that user. Return both.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// In one transaction: create user \"tx@example.com\", then a post \"First\" authored by that user. Return both.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "count-published",
+    "area": "aggregate",
+    "difficulty": "medium",
+    "prompt": "Return the number of published posts.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return the number of published posts.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "construct-client",
+    "area": "setup",
+    "difficulty": "medium",
+    "prompt": "Create and configure a PrismaClient instance, then export an async function `run()` that returns all users via findMany.",
+    "skeleton": "import { PrismaClient } from \"@prisma/client\";\n\n// Create a PrismaClient instance yourself, then export an async run() returning all users.\n"
+  },
+  {
+    "id": "construct-with-url",
+    "area": "setup",
+    "difficulty": "medium",
+    "prompt": "Create a PrismaClient that connects using the DATABASE_URL environment variable, then export an async function `run()` that returns all users.",
+    "skeleton": "import { PrismaClient } from \"@prisma/client\";\n\n// Create a PrismaClient configured to use process.env.DATABASE_URL, then export an async run() returning all users.\n"
+  },
+  {
+    "id": "query-logging-middleware",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Register middleware on the provided `prisma` client that measures and logs the duration of every query.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Register middleware on `prisma` that logs how long each query takes.\nexport function addQueryLogging(): void {\n  // implement using `prisma`\n}\n"
+  },
+  {
+    "id": "client-extension-computed",
+    "area": "config",
+    "difficulty": "hard",
+    "prompt": "Using the provided `prisma`, create an extended client that adds a computed `displayName` field to the User model (return the name, or the email if name is null), and export it as `db`.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Create an extended client that adds a computed `displayName` to User, exported as `db`.\n"
+  },
+  {
+    "id": "raw-query",
+    "area": "config",
+    "difficulty": "easy",
+    "prompt": "Using the provided `prisma`, export an async function `run()` that executes the raw SQL query `SELECT 1 as one` and returns the result.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Export an async run() that runs the raw SQL `SELECT 1 as one` via `prisma` and returns the result.\n"
+  }
+]

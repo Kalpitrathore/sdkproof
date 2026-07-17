@@ -1,0 +1,72 @@
+[
+  {
+    "id": "create-user",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Create a new user with email \"ada@example.com\" and name \"Ada\", and return the created user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Create a new user with email \"ada@example.com\" and name \"Ada\", and return the created user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "nested-create-profile",
+    "area": "relations",
+    "difficulty": "medium",
+    "prompt": "Create a user with email \"grace@example.com\" and, in the same call, create a related profile with bio \"Hello\". Return the user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Create a user with email \"grace@example.com\" and a related profile (bio \"Hello\") in one call. Return the user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "find-unique-email",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Find the user whose email is \"ada@example.com\" (email is unique) and return it (or null).",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Find the user whose unique email is \"ada@example.com\"; return it or null.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "find-many-filter-order",
+    "area": "query",
+    "difficulty": "medium",
+    "prompt": "Return all published posts ordered by title ascending.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return all published posts ordered by title ascending.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "update-user-name",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Set name to \"Ada L.\" for the user with email \"ada@example.com\" and return the updated user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Set name to \"Ada L.\" for the user with unique email \"ada@example.com\"; return the updated user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "upsert-user",
+    "area": "crud",
+    "difficulty": "medium",
+    "prompt": "Upsert a user by unique email \"ada@example.com\": if it exists set name to \"Ada\", otherwise create it with that email and name. Return the user.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Upsert by unique email \"ada@example.com\": update name to \"Ada\" if present, else create. Return the user.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "find-with-include-posts",
+    "area": "relations",
+    "difficulty": "medium",
+    "prompt": "Return the user with email \"ada@example.com\" including their posts.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return the user with unique email \"ada@example.com\" including their posts.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "cursor-pagination",
+    "area": "query",
+    "difficulty": "hard",
+    "prompt": "Return the first 10 posts after the post with id 100 using cursor-based pagination, ordered by id ascending.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return the first 10 posts after post id 100 using cursor pagination, ordered by id ascending.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "transaction-user-post",
+    "area": "transactions",
+    "difficulty": "hard",
+    "prompt": "In a single transaction, create a user with email \"tx@example.com\" and then a post titled \"First\" authored by that user. Return both.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// In one transaction: create user \"tx@example.com\", then a post \"First\" authored by that user. Return both.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  },
+  {
+    "id": "count-published",
+    "area": "aggregate",
+    "difficulty": "medium",
+    "prompt": "Return the number of published posts.",
+    "skeleton": "import type { PrismaClient } from \"@prisma/client\";\ndeclare const prisma: PrismaClient;\n\n// Return the number of published posts.\nexport async function solve() {\n  // Implement using `prisma`. Do not construct a new PrismaClient.\n}\n"
+  }
+]

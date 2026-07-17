@@ -1,0 +1,338 @@
+<title>SDKProof — Prisma 7 AI-Readiness Scorecard</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
+    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
+    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --fail: #cf222e;
+    --pass-bg: #dafbe1; --fail-bg: #ffebe9; --track: #e2e8ee;
+    --code-bg: #f5f7fa; --code-ink: #1b2430;
+    --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
+    --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
+      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
+      --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --fail: #f85149;
+      --pass-bg: #12261a; --fail-bg: #2a1416; --track: #222c37;
+      --code-bg: #0d1319; --code-ink: #d7e2ee;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
+    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
+    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --fail: #cf222e;
+    --pass-bg: #dafbe1; --fail-bg: #ffebe9; --track: #e2e8ee;
+    --code-bg: #f5f7fa; --code-ink: #1b2430;
+    --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
+    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
+    --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --fail: #f85149;
+    --pass-bg: #12261a; --fail-bg: #2a1416; --track: #222c37;
+    --code-bg: #0d1319; --code-ink: #d7e2ee;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 88px; }
+  h1, h2, h3 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
+  code, pre { font-family: var(--font-mono); }
+  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+
+  /* masthead */
+  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
+  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); }
+  .logo b { color: var(--brand); }
+  .mast .tag { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px 9px; margin-left: auto; }
+
+  /* hero */
+  .hero { border-bottom: 1px solid var(--line-strong); padding: 30px 0 30px; margin-bottom: 34px; }
+  .hero .lib { font-family: var(--font-mono); font-size: 13px; color: var(--brand); font-weight: 600; }
+  .hero h1 { font-size: clamp(27px, 5vw, 44px); font-weight: 800; margin: 10px 0 0; }
+  .hero .verdict { color: var(--ink-soft); font-size: 17px; margin: 14px 0 0; max-width: 60ch; }
+  .hero .verdict b { color: var(--ink); }
+
+  .scorerow { display: flex; align-items: flex-end; gap: 24px; margin-top: 26px; flex-wrap: wrap; }
+  .scorebig { font-family: var(--font-mono); line-height: .9; }
+  .scorebig .n { font-size: 68px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .scorebig .d { font-size: 22px; font-weight: 700; color: var(--ink-faint); }
+  .scorebig .l { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; }
+  .segs { flex: 1; min-width: 240px; }
+  .segbar { display: flex; gap: 4px; }
+  .seg { height: 30px; flex: 1; border-radius: 3px; }
+  .seg.p { background: var(--pass); }
+  .seg.f { background: var(--fail); }
+  .seglegend { display: flex; gap: 16px; margin-top: 10px; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); }
+  .seglegend b { color: var(--ink); }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; vertical-align: baseline; margin-right: 5px; }
+  .dot.p { background: var(--pass); } .dot.f { background: var(--fail); }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 24px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+  .meta b { color: var(--ink-soft); font-weight: 600; }
+
+  .sec-head { margin: 46px 0 18px; }
+  .sec-head h2 { font-size: clamp(19px, 3.2vw, 25px); font-weight: 760; margin-top: 8px; }
+  .sec-head p { color: var(--ink-soft); font-size: 14.5px; margin: 8px 0 0; max-width: 64ch; }
+
+  /* wrong cards */
+  .fails { display: flex; flex-direction: column; gap: 18px; }
+  .fcard { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow); overflow: hidden; }
+  .fcard .top { display: flex; align-items: center; gap: 10px; padding: 15px 18px; border-bottom: 1px solid var(--line); }
+  .fcard .top .x { color: var(--fail); font-weight: 800; font-family: var(--font-mono); }
+  .fcard .top .t { font-weight: 700; font-size: 15.5px; }
+  .fcard .top .tsx { margin-left: auto; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--fail); background: var(--fail-bg); border-radius: 5px; padding: 3px 8px; white-space: nowrap; }
+  .fbody { display: grid; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 640px) { .fbody { grid-template-columns: 1fr; } }
+  .col { padding: 16px 18px; }
+  .col + .col { border-left: 1px solid var(--line); }
+  @media (max-width: 640px) { .col + .col { border-left: none; border-top: 1px solid var(--line); } }
+  .col .clabel { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; font-weight: 650; margin-bottom: 9px; }
+  .col.bad .clabel { color: var(--fail); }
+  .col.good .clabel { color: var(--pass); }
+  pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 13px; overflow-x: auto; font-size: 12.5px; line-height: 1.55; color: var(--code-ink); }
+  .fcard .errline { padding: 0 18px 16px; }
+  .fcard .errline .e { font-family: var(--font-mono); font-size: 12px; color: var(--fail); background: var(--fail-bg); border-left: 3px solid var(--fail); border-radius: 0 6px 6px 0; padding: 8px 11px; }
+  .fcard .why { padding: 0 18px 16px; font-size: 13.5px; color: var(--ink-soft); }
+  .fcard .why b { color: var(--ink); }
+
+  /* right list */
+  .rights { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--pass); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .rights h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .rights p { margin: 0 0 12px; color: var(--ink-soft); font-size: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); background: var(--pass-bg); border-radius: 6px; padding: 4px 9px; }
+  .chip::before { content: "✓ "; color: var(--pass); font-weight: 700; }
+
+  /* insight */
+  .insight { background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 22px 24px; }
+  .insight h2 { font-size: 20px; font-weight: 760; margin-bottom: 10px; }
+  .insight p { margin: 0 0 12px; color: var(--ink-soft); font-size: 15px; }
+  .insight p:last-child { margin-bottom: 0; }
+  .insight b { color: var(--ink); }
+
+  /* method */
+  .method { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; line-height: 1.7; }
+  .method b { color: var(--ink); }
+  .method .k { color: var(--brand); }
+
+  /* next + cta */
+  .next { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .next h2 { font-size: 20px; font-weight: 760; margin-bottom: 12px; }
+  .next .list { display: flex; flex-direction: column; gap: 10px; }
+  .next .row { display: flex; gap: 12px; align-items: baseline; font-size: 14.5px; }
+  .next .row .r { font-family: var(--font-mono); font-size: 12px; color: var(--brand); font-weight: 700; flex: none; width: 22px; }
+  .next .row b { color: var(--ink); font-weight: 650; }
+  .next .row span { color: var(--ink-soft); }
+  .scanning { font-family: var(--font-mono); font-size: 13px; color: var(--ink-faint); }
+
+  .cta { text-align: center; margin-top: 46px; padding: 30px 24px; background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--line-strong); border-radius: 16px; }
+  .cta h2 { font-size: clamp(20px, 3.4vw, 26px); font-weight: 780; }
+  .cta p { color: var(--ink-soft); font-size: 15px; margin: 12px auto 20px; max-width: 52ch; }
+  .cta .btn { display: inline-block; font-family: var(--font-mono); font-size: 14px; font-weight: 650; background: var(--brand); color: var(--brand-ink); padding: 11px 22px; border-radius: 9px; text-decoration: none; }
+  .cta .note { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 14px; }
+
+  footer { margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
+</style>
+
+<div class="wrap">
+
+  <div class="mast">
+    <span class="logo">SDK<b>Proof</b></span>
+    <span class="tag">AI-Readiness Scorecard</span>
+  </div>
+
+  <header class="hero">
+    <div class="lib">@prisma/client · v7.8.0</div>
+    <h1>Prisma 7 is 80% ready for AI coding agents.</h1>
+    <p class="verdict">Claude Opus 4.8 writes Prisma's <b>query</b> API flawlessly — and even the new <code>$extends</code>. But it still reaches for <b>Prisma 6's setup code</b> that no longer compiles: the old constructor, the removed <code>datasources</code> option, and <code>$use</code> middleware. <b>3 of 15 real tasks fail to type-check against the installed package.</b></p>
+
+    <div class="scorerow">
+      <div class="scorebig">
+        <span class="n">80</span><span class="d">/100</span>
+        <div class="l">Agent-readiness</div>
+      </div>
+      <div class="segs">
+        <div class="segbar">
+          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
+          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
+          <div class="seg p"></div><div class="seg p"></div>
+          <div class="seg f"></div><div class="seg f"></div><div class="seg f"></div>
+        </div>
+        <div class="seglegend">
+          <span><span class="dot p"></span><b>12</b> compile clean</span>
+          <span><span class="dot f"></span><b>3</b> fail type-check</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <span><b>Model:</b> claude-opus-4-8</span>
+      <span><b>Tasks:</b> 15</span>
+      <span><b>Method:</b> tsc against real installed package</span>
+      <span><b>Run:</b> 2026-07-17</span>
+    </div>
+  </header>
+
+  <!-- WRONG -->
+  <div class="sec-head">
+    <span class="eyebrow">The gap</span>
+    <h2>3 things the agent gets wrong</h2>
+    <p>Each is real code the model generated, verified by the TypeScript compiler against Prisma 7's actual types. These are Prisma&nbsp;6 patterns the model still writes.</p>
+  </div>
+
+  <div class="fails">
+
+    <article class="fcard">
+      <div class="top"><span class="x">✗</span><span class="t">Constructing the client</span><span class="tsx">TS2554</span></div>
+      <div class="fbody">
+        <div class="col bad">
+          <div class="clabel">Agent wrote (Prisma 6)</div>
+          <pre>const prisma = new PrismaClient()</pre>
+        </div>
+        <div class="col good">
+          <div class="clabel">Prisma 7</div>
+          <pre>import { PrismaPg } from "@prisma/adapter-pg"
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+})
+const prisma = new PrismaClient({ adapter })</pre>
+        </div>
+      </div>
+      <div class="errline"><div class="e">error TS2554: Expected 1 arguments, but got 0.</div></div>
+      <div class="why"><b>Why:</b> Prisma 7 dropped the bundled query engine — the constructor now requires a <b>driver adapter</b>. A bare <code>new PrismaClient()</code> no longer type-checks.</div>
+    </article>
+
+    <article class="fcard">
+      <div class="top"><span class="x">✗</span><span class="t">Setting the datasource URL</span><span class="tsx">TS2353</span></div>
+      <div class="fbody">
+        <div class="col bad">
+          <div class="clabel">Agent wrote (Prisma 6)</div>
+          <pre>new PrismaClient({
+  datasources: {
+    db: { url: process.env.DATABASE_URL },
+  },
+})</pre>
+        </div>
+        <div class="col good">
+          <div class="clabel">Prisma 7</div>
+          <pre>// the URL now flows through the adapter
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+})
+new PrismaClient({ adapter })</pre>
+        </div>
+      </div>
+      <div class="errline"><div class="e">error TS2353: Object literal may only specify known properties, and 'datasources' does not exist in type 'PrismaClientOptions'.</div></div>
+      <div class="why"><b>Why:</b> the <code>datasources</code> constructor option was removed. The connection string is configured on the driver adapter instead.</div>
+    </article>
+
+    <article class="fcard">
+      <div class="top"><span class="x">✗</span><span class="t">Logging query duration (middleware)</span><span class="tsx">TS2339</span></div>
+      <div class="fbody">
+        <div class="col bad">
+          <div class="clabel">Agent wrote (Prisma 6)</div>
+          <pre>prisma.$use(async (params, next) => {
+  const start = Date.now()
+  const result = await next(params)
+  console.log(Date.now() - start)
+  return result
+})</pre>
+        </div>
+        <div class="col good">
+          <div class="clabel">Prisma 7</div>
+          <pre>const db = prisma.$extends({
+  query: {
+    async $allOperations({ args, query }) {
+      const start = performance.now()
+      const res = await query(args)
+      console.log(performance.now() - start)
+      return res
+    },
+  },
+})</pre>
+        </div>
+      </div>
+      <div class="errline"><div class="e">error TS2339: Property '$use' does not exist on type 'PrismaClient'.</div></div>
+      <div class="why"><b>Why:</b> <code>$use</code> middleware was removed in favor of <b>client extensions</b> (<code>$extends</code>). The model knows <code>$extends</code> elsewhere — it just defaults to the old middleware for this task.</div>
+    </article>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="sec-head">
+    <span class="eyebrow">Fair's fair</span>
+    <h2>What it gets right — 12 of 15</h2>
+  </div>
+  <div class="rights">
+    <h3>The query surface is solid.</h3>
+    <p>Every CRUD, relation, and query task compiled clean against Prisma 7 — including the <em>new</em> <code>$extends</code> computed fields and raw queries. The gap is specific to setup &amp; config APIs that changed in the major.</p>
+    <div class="chips">
+      <span class="chip">create / update</span>
+      <span class="chip">upsert</span>
+      <span class="chip">findUnique / findMany</span>
+      <span class="chip">where + orderBy</span>
+      <span class="chip">nested relation writes</span>
+      <span class="chip">include</span>
+      <span class="chip">cursor pagination</span>
+      <span class="chip">$transaction</span>
+      <span class="chip">count</span>
+      <span class="chip">$extends (computed field)</span>
+      <span class="chip">$queryRaw</span>
+    </div>
+  </div>
+
+  <!-- INSIGHT -->
+  <div class="sec-head">
+    <span class="eyebrow">Why this matters</span>
+    <h2>The version-drift gap</h2>
+  </div>
+  <div class="insight">
+    <p><b>Models are trained on a snapshot of the past.</b> The moment your SDK ships a breaking major, coding agents keep writing the old API — confidently, and it looks right — until they're retrained. For your users, that's broken code on their first try with your latest version.</p>
+    <p><b>The gap refreshes twice over:</b> every new SDK major re-opens it, and every new model release shifts it. That makes it a moving target worth <em>monitoring</em>, not a one-time audit — which is exactly what SDKProof watches.</p>
+  </div>
+
+  <!-- METHOD -->
+  <div class="sec-head">
+    <span class="eyebrow">No opinions — just the compiler</span>
+    <h2>How this was measured</h2>
+  </div>
+  <div class="method">
+    <span class="k">15</span> realistic Prisma tasks → generated by <span class="k">claude-opus-4-8</span> → each solution written into a project with the <b>real installed <code>@prisma/client</code> v7.8.0</b> and type-checked with <span class="k">tsc --noEmit</span>.<br>
+    A task <b>passes</b> only if it compiles clean. Failures are the compiler's own diagnostics (TS2554 / TS2353 / TS2339) — no LLM judge, no hand-waving. Reproducible: pinned package version, pinned model.
+  </div>
+
+  <!-- NEXT -->
+  <div class="sec-head">
+    <span class="eyebrow">On the board next</span>
+    <h2>SDKs shipping breaking majors — scoring soon</h2>
+  </div>
+  <div class="next">
+    <div id="next-list" class="list">
+      <div class="row"><span class="r">01</span><div><b>Vercel AI SDK 5</b> <span>— <code>ai</code> · agents still write <code>maxTokens</code>, <code>tool({ parameters })</code>, and <code>import … from "ai/react"</code> — all renamed or moved in v5.</span></div></div>
+      <div class="row"><span class="r">02</span><div><b>Zod 4</b> <span>— <code>zod</code> · <code>z.record(z.string())</code> now needs 2 args; <code>required_error</code> and <code>.ip()</code> were removed.</span></div></div>
+      <div class="row"><span class="r">03</span><div><b>React Router 7</b> <span>— <code>react-router</code> · agents still <code>import … from "@remix-run/node"</code> and call <code>json()</code> / <code>defer()</code> — the packages and helpers are gone.</span></div></div>
+      <div class="row"><span class="r">04</span><div><b>Clerk v6</b> <span>— <code>@clerk/nextjs</code> · <code>const { userId } = auth()</code> is now <code>await auth()</code>; <code>authMiddleware</code> → <code>clerkMiddleware</code>.</span></div></div>
+      <div class="row"><span class="r">05</span><div><b>TanStack Query v5</b> <span>— <code>@tanstack/react-query</code> · <code>useQuery(key, fn)</code> is now one object arg; <code>cacheTime</code> → <code>gcTime</code>; status <code>'loading'</code> → <code>'pending'</code>.</span></div></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Is your SDK ready for AI agents?</h2>
+    <p>Right after a major release, most aren't — agents keep shipping your old API. SDKProof scores it, tracks it across model releases, and tells you exactly what to fix.</p>
+    <a class="btn" href="#">Get your SDK scored →</a>
+    <div class="note">early project · scorecards are independent analysis</div>
+  </div>
+
+  <footer>
+    SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by Prisma.<br>
+    Measured 2026-07-17 against @prisma/client v7.8.0 with claude-opus-4-8. Type-check only — measures API-surface correctness, not runtime behavior.
+  </footer>
+
+</div>

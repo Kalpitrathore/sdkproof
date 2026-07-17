@@ -1,0 +1,15 @@
+node_modules/
+
+# secrets — never commit
+.env
+.env.local
+
+# Prisma-generated client (regenerate with `npm run setup`)
+fixtures/prisma/generated/
+
+# transient candidate written during verification
+fixtures/prisma/candidate.ts
+
+# run outputs (tasks.json + example scorecards are committed; raw run data is not)
+data/*.candidates.json
+data/*.result.json
