@@ -8,7 +8,7 @@ node_modules/
 fixtures/prisma/generated/
 
 # transient candidate written during verification
-fixtures/prisma/candidate.ts
+fixtures/*/candidate.ts
 
 # run outputs (tasks.json + example scorecards are committed; raw run data is not)
 data/*.candidates.json

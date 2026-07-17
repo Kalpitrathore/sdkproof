@@ -14,9 +14,12 @@
     "score": "tsx src/cli.ts run --lib prisma"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.15",
     "@anthropic-ai/sdk": "^0.111.0",
     "@prisma/client": "^7.8.0",
-    "openai": "^6.47.0"
+    "ai": "^7.0.30",
+    "openai": "^6.47.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

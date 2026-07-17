@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { prismaSpec } from "./libraries/prisma.ts";
+import { aisdkSpec } from "./libraries/aisdk.ts";
 import { projectRoot, tscEntry } from "./env.ts";
 import { generate } from "./generate.ts";
 import { verify } from "./verify.ts";
@@ -10,7 +11,7 @@ import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
 import type { Candidate, LibrarySpec, Task, Verdict } from "./types.ts";
 
-const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec };
+const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec };
 
 function flag(argv: string[], name: string): string | undefined {
   const i = argv.indexOf(name);

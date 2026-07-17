@@ -1,0 +1,72 @@
+[
+  {
+    "id": "generate-text",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Generate an answer to the prompt \"What is the capital of France?\" using an OpenAI model, and return the generated text.",
+    "skeleton": "import { generateText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Answer \"What is the capital of France?\" with an OpenAI model; return the text.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "generate-with-system",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Generate text with a system instruction \"You are a terse assistant.\" and the user prompt \"Explain HTTP.\" Return the text.",
+    "skeleton": "import { generateText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Generate text with a system instruction and a user prompt; return the text.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "stream-text",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Stream a text response to the prompt \"Write a haiku.\" and return the stream result object.",
+    "skeleton": "import { streamText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Stream a response to \"Write a haiku.\" and return the stream result.\nexport function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "generate-object",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Extract a person as { name: string, age: number } from the text \"Ada is 36.\" using a zod schema, and return the object.",
+    "skeleton": "import { generateObject } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\nimport { z } from \"zod\";\n\n// Extract { name, age } from \"Ada is 36.\" using a zod schema; return the object.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "generate-text-temperature",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Generate text for the prompt \"Give me a startup name.\" with a temperature of 0.8, and return the text.",
+    "skeleton": "import { generateText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Generate a response to \"Give me a startup name.\" at temperature 0.8; return the text.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "messages-conversation",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Generate a reply for a conversation using a messages array: a system instruction \"You are terse.\" followed by a user message \"Hi.\" Return the text.",
+    "skeleton": "import { generateText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Generate a reply using a messages array (system + user); return the text.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "embed-text",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Create an embedding vector for the sentence \"hello world\" using an OpenAI embedding model, and return the embedding.",
+    "skeleton": "import { embed } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Create an embedding for \"hello world\"; return the embedding vector.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "token-limit",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Generate an answer to \"Explain how TCP works.\" but cap the response at roughly 256 output tokens. Return the text.",
+    "skeleton": "import { generateText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Answer \"Explain how TCP works.\" capped at ~256 output tokens; return the text.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "stream-token-limit",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Stream a response to \"Tell me a story.\" limited to roughly 512 output tokens, and return the stream result.",
+    "skeleton": "import { streamText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Stream a response to \"Tell me a story.\" limited to ~512 output tokens; return the stream result.\nexport function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "tool-weather",
+    "area": "config",
+    "difficulty": "hard",
+    "prompt": "Define a `getWeather` tool that takes a `city` string and returns a weather string, then call generateText with it so the model can use the tool. Return the text.",
+    "skeleton": "import { generateText, tool } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\nimport { z } from \"zod\";\n\n// Define a getWeather tool (input: city string) and use it with generateText; return the text.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  }
+]
