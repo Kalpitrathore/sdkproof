@@ -39,6 +39,9 @@ for (const page of PAGES) {
 </head>
 <body>
 ${html.trim()}
+<!-- Cloudflare Web Analytics -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "a50cb1636e514225ad69b1f406df2054"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </body>
 </html>
 `;
