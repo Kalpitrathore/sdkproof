@@ -1,5 +1,7 @@
 # SDKProof
 
+**Live:** https://kalpitrathore.github.io/sdkproof/
+
 **How ready is your SDK for AI coding agents?** When a library ships a breaking
 major, AI assistants keep writing the *old* API — it looks right, but it doesn't
 compile against the new version. SDKProof measures exactly how much: it has a

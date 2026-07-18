@@ -11,7 +11,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --import tsx --test test/*.test.ts",
     "start": "tsx src/cli.ts",
-    "score": "tsx src/cli.ts run --lib prisma"
+    "score": "tsx src/cli.ts run --lib prisma",
+    "build:site": "node scripts/build-site.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.15",
