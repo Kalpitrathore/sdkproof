@@ -1,0 +1,72 @@
+[
+  {
+    "id": "object-schema",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Define a Zod schema for a User object with a `name` string and an `age` number, and export it as `User`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Define a schema for { name: string, age: number } and export it as `User`.\n"
+  },
+  {
+    "id": "parse-value",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Export a function `parseName(input: unknown)` that validates the input as a string using Zod and returns the string (throwing if invalid).",
+    "skeleton": "import { z } from \"zod\";\n\n// Validate `input` as a string with Zod and return it (throw if invalid).\nexport function parseName(input: unknown): string {\n  // implement\n}\n"
+  },
+  {
+    "id": "safe-parse",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Export a function `tryAge(input: unknown)` that safely parses the input as a number using Zod and returns the safe-parse result object.",
+    "skeleton": "import { z } from \"zod\";\n\n// Safely parse `input` as a number with Zod; return the safe-parse result.\nexport function tryAge(input: unknown) {\n  // implement\n}\n"
+  },
+  {
+    "id": "infer-type",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Define a Zod schema for { id: number, email: string }, export it as `Account`, and also export its inferred TypeScript type as `AccountType`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Schema for { id: number, email: string } exported as `Account`, plus its inferred type `AccountType`.\n"
+  },
+  {
+    "id": "array-of-enum",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Define a Zod schema for an array whose items are one of the string values 'red', 'green', or 'blue', and export it as `Colors`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Schema for an array of the enum values 'red' | 'green' | 'blue', exported as `Colors`.\n"
+  },
+  {
+    "id": "optional-default",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Define a Zod schema for a `role` string that is optional and defaults to 'user', and export it as `Role`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Schema for an optional `role` string defaulting to 'user', exported as `Role`.\n"
+  },
+  {
+    "id": "email-schema",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Define a Zod schema that validates a string is a valid email address, and export it as `Email`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Schema validating a string is a valid email, exported as `Email`.\n"
+  },
+  {
+    "id": "record-schema",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Define a Zod schema for an object that maps arbitrary string keys to number values (i.e. Record<string, number>), and export it as `Scores`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Schema for an object mapping string keys to number values (Record<string, number>), exported as `Scores`.\n"
+  },
+  {
+    "id": "required-error",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Define a required Zod string schema that reports the message 'Name is required' when the value is missing, and export it as `Name`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Required string schema with the message 'Name is required' when missing, exported as `Name`.\n"
+  },
+  {
+    "id": "ip-validation",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Define a Zod schema that validates a string is a valid IPv4 address, and export it as `Ip`.",
+    "skeleton": "import { z } from \"zod\";\n\n// Schema validating a string is a valid IPv4 address, exported as `Ip`.\n"
+  }
+]
