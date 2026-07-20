@@ -49,4 +49,6 @@ ${html.trim()}
 }
 
 writeFileSync(path.join(root, "docs", ".nojekyll"), "");
-console.log(`Built ${PAGES.length} pages into docs/ (+ .nojekyll)`);
+// Custom domain for GitHub Pages — keep it here so a clean rebuild never drops it.
+writeFileSync(path.join(root, "docs", "CNAME"), "sdkproof.dev\n");
+console.log(`Built ${PAGES.length} pages into docs/ (+ .nojekyll, CNAME)`);
