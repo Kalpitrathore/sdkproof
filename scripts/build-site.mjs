@@ -26,6 +26,12 @@ for (const page of PAGES) {
     html = html.replaceAll(`https://claude.ai/code/artifact/${id}`, file);
   }
 
+  // Inject the cat logo mark into the masthead, before the text wordmark.
+  html = html.replace(
+    '<span class="logo">SDK<b>Proof</b></span>',
+    '<img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span>'
+  );
+
   const title = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "SDKProof").trim();
   html = html.replace(/<title>[\s\S]*?<\/title>\s*/i, "");
 
@@ -36,6 +42,9 @@ for (const page of PAGES) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="How ready is your SDK for AI coding agents? Type-checked scorecards from SDKProof.">
 <title>${title}</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 ${html.trim()}

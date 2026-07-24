@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" alt="SDKProof" width="360">
+</p>
+
 # SDKProof
 
 **Live:** https://sdkproof.dev
