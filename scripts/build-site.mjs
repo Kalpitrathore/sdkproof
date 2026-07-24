@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html"];
 
 mkdirSync(path.join(root, "docs"), { recursive: true });
 

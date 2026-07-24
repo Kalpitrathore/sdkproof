@@ -1,0 +1,93 @@
+[
+  {
+    "id": "basic-query",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Write a hook `useTodo(id: number)` that fetches `/api/todos/${id}` and returns its JSON using TanStack Query's useQuery, cached under a key that includes the todo id. Return the useQuery result object.",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Fetch /api/todos/{id} as JSON with useQuery, keyed by the id. Return the query result.\nexport function useTodo(id: number) {\n  // implement\n}\n"
+  },
+  {
+    "id": "query-select",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Write a hook `useTodoTitle(id: number)` that fetches `/api/todos/${id}` (JSON with a `title: string` field) and, using useQuery's transform option, exposes only the `title` string as the query data.",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Fetch the todo, then transform the query data down to just its `title` string.\nexport function useTodoTitle(id: number) {\n  // implement\n}\n"
+  },
+  {
+    "id": "query-enabled",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Write a hook `useUser(id: string | undefined)` that fetches `/api/users/${id}` with useQuery, but only runs the request when `id` is defined.",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Fetch /api/users/{id}, but only run the query when id is defined.\nexport function useUser(id: string | undefined) {\n  // implement\n}\n"
+  },
+  {
+    "id": "query-key-parts",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Write a hook `useProjectTasks(projectId: string, status: string)` that fetches `/api/projects/${projectId}/tasks?status=${status}` with useQuery, cached under a key that includes both the project id and the status.",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Fetch project tasks, keyed by both projectId and status.\nexport function useProjectTasks(projectId: string, status: string) {\n  // implement\n}\n"
+  },
+  {
+    "id": "read-state",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Write a function `describeUser(id: string)` that runs a useQuery fetching `/api/users/${id}`, and returns the string 'error' if the query errored, otherwise returns the fetched data (which may be undefined).",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Run a query for /api/users/{id}; return 'error' if it errored, else the data.\nexport function describeUser(id: string) {\n  // implement\n}\n"
+  },
+  {
+    "id": "query-refetch",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Write a function `makeRefetcher(id: string)` that runs a useQuery for `/api/users/${id}` and returns the query's manual re-run function so the caller can re-trigger the request on demand.",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Run a query for /api/users/{id}; return the function that manually re-runs it.\nexport function makeRefetcher(id: string) {\n  // implement\n}\n"
+  },
+  {
+    "id": "basic-mutation",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Write a hook `useCreateTodo()` that uses TanStack Query's useMutation to POST a `{ title: string }` body to `/api/todos` and return the JSON response.",
+    "skeleton": "import { useMutation } from \"@tanstack/react-query\";\n\n// A mutation that POSTs { title } to /api/todos and returns the JSON response.\nexport function useCreateTodo() {\n  // implement\n}\n"
+  },
+  {
+    "id": "mutation-onsuccess",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Write a hook `useDeleteTodo()` that uses useMutation to send a DELETE to `/api/todos/${id}` (the id is the mutation variable, a number), and runs a side-effect logging 'deleted' after the mutation succeeds.",
+    "skeleton": "import { useMutation } from \"@tanstack/react-query\";\n\n// A mutation that DELETEs /api/todos/{id}; log 'deleted' after it succeeds.\nexport function useDeleteTodo() {\n  // implement\n}\n"
+  },
+  {
+    "id": "client-staletime",
+    "area": "config",
+    "difficulty": "easy",
+    "prompt": "Create and export a configured QueryClient (as `queryClient`) whose queries are considered fresh for 30 seconds by default.",
+    "skeleton": "import { QueryClient } from \"@tanstack/react-query\";\n\n// Export a QueryClient (as `queryClient`) with a default staleTime of 30 seconds.\n"
+  },
+  {
+    "id": "gc-time",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Create and export a QueryClient (as `queryClient`) configured so that unused/inactive query data is garbage-collected from the cache after 5 minutes.",
+    "skeleton": "import { QueryClient } from \"@tanstack/react-query\";\n\n// Export a QueryClient (as `queryClient`) whose inactive/unused cache is garbage-collected after 5 minutes.\n"
+  },
+  {
+    "id": "status-pending",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Write a function `statusLabel(id: string)` that runs a useQuery for `/api/users/${id}` and, by switching on the query's `status` field (not the boolean flags), returns 'waiting' while it has no data yet, 'failed' if it errored, and 'ready' otherwise.",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Switch on the query's status field: 'waiting' (no data yet), 'failed' (errored), else 'ready'.\nexport function statusLabel(id: string): string {\n  // implement\n}\n"
+  },
+  {
+    "id": "keep-previous-page",
+    "area": "pagination",
+    "difficulty": "hard",
+    "prompt": "Write a hook `usePagedTodos(page: number)` that fetches `/api/todos?page=${page}` with useQuery, keyed by the page, and keeps the previous page's data visible (instead of resetting to empty) while the next page is being fetched.",
+    "skeleton": "import { useQuery } from \"@tanstack/react-query\";\n\n// Fetch /api/todos?page={page}, keyed by page; keep the previous page's data visible while the next loads.\nexport function usePagedTodos(page: number) {\n  // implement\n}\n"
+  },
+  {
+    "id": "infinite-query",
+    "area": "pagination",
+    "difficulty": "hard",
+    "prompt": "Write a hook `useFeed()` that uses useInfiniteQuery to page through `/api/feed?cursor=${cursor}`. The JSON response is `{ items: any[], nextCursor: number | null }`. Start from cursor 0 and use `nextCursor` to load subsequent pages.",
+    "skeleton": "import { useInfiniteQuery } from \"@tanstack/react-query\";\n\n// Page through /api/feed?cursor= with useInfiniteQuery.\n// Response: { items: any[], nextCursor: number | null }. Start at cursor 0; use nextCursor for the next page.\nexport function useFeed() {\n  // implement\n}\n"
+  }
+]

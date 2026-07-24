@@ -3,6 +3,7 @@ import path from "node:path";
 import { prismaSpec } from "./libraries/prisma.ts";
 import { aisdkSpec } from "./libraries/aisdk.ts";
 import { zodSpec } from "./libraries/zod.ts";
+import { tanstackQuerySpec } from "./libraries/tanstack-query.ts";
 import { projectRoot, tscEntry } from "./env.ts";
 import { generate } from "./generate.ts";
 import { verify } from "./verify.ts";
@@ -12,16 +13,16 @@ import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
 import type { Candidate, LibrarySpec, Task, Verdict } from "./types.ts";
 
-const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec };
+const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec };
 
 function flag(argv: string[], name: string): string | undefined {
   const i = argv.indexOf(name);
   return i >= 0 ? argv[i + 1] : undefined;
 }
 
-async function libVersion(): Promise<string> {
+async function libVersion(packageName: string): Promise<string> {
   try {
-    const p = path.join(projectRoot, "node_modules", "@prisma", "client", "package.json");
+    const p = path.join(projectRoot, "node_modules", ...packageName.split("/"), "package.json");
     return JSON.parse(await readFile(p, "utf8")).version ?? "unknown";
   } catch {
     return "unknown";
@@ -108,7 +109,7 @@ async function main(): Promise<void> {
   }
   process.stdout.write("\n");
 
-  const result = score(spec.id, await libVersion(), new Date().toISOString(), verdicts);
+  const result = score(spec.id, await libVersion(spec.packageName), new Date().toISOString(), verdicts);
   await writeFile(
     path.join(projectRoot, "data", `${label}.result.json`),
     JSON.stringify(result, null, 2),

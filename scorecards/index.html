@@ -47,7 +47,7 @@
   .hero .sub b { color: var(--ink); }
   .hero .judge { font-family: var(--font-mono); font-size: 13px; color: var(--brand); margin-top: 18px; }
 
-  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 4px 0 6px; }
+  .board { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 4px 0 6px; }
   @media (max-width: 700px) { .board { grid-template-columns: 1fr; } }
   .card { background: var(--panel); border: 1px solid var(--line-strong); border-radius: 15px; padding: 20px; box-shadow: var(--shadow); text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: border-color .12s; }
   .card:hover { border-color: var(--brand); }
@@ -133,6 +133,14 @@
       <div class="gap">Even nails the new 2-arg <b>z.record()</b> — only slips on the removed <b>required_error</b> option.</div>
       <div class="view">View scorecard →</div>
     </a>
+    <a class="card" href="tanstack-query.html">
+      <div class="name">TanStack Query 5</div>
+      <div class="pkg">@tanstack/react-query</div>
+      <div class="score">100<span class="d">/100</span></div>
+      <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
+      <div class="gap">Fully absorbed — nails every v4→v5 trap: <b>gcTime</b>, <b>placeholderData</b>, <b>'pending'</b>, <b>initialPageParam</b>.</div>
+      <div class="view">View scorecard →</div>
+    </a>
   </div>
 
   <div class="sec-head">
@@ -140,7 +148,7 @@
     <h2>Readiness tracks the drift window</h2>
   </div>
   <div class="insight">
-    <p><b>The score isn't about how smart the model is — it's about how recently your SDK changed.</b> Zod 4 and the Vercel AI SDK shipped their breaking changes in 2025, so today's models have largely absorbed them (90 each). Prisma 7 is newer, and the same model still writes its old v6 setup (80).</p>
+    <p><b>The score isn't about how smart the model is — it's about how recently your SDK changed.</b> TanStack Query v5 shipped back in 2023, so the model has fully absorbed it — a perfect 100. Zod 4 and the Vercel AI SDK (2025 majors) are mostly there at 90 each. Prisma 7 is the newest, and the same model still writes its old v6 setup (80).</p>
     <p>Right after a major the gap is wide; as models retrain it narrows — then re-opens on your next major and shifts on every model release. It's a <b>moving number</b>, which is why it's worth monitoring, not auditing once.</p>
   </div>
 
@@ -161,7 +169,7 @@
   <div class="next">
     <span class="npill"><b>React Router 7</b> — <code>@remix-run/*</code> imports removed</span>
     <span class="npill"><b>Clerk v6</b> — <code>auth()</code> now async</span>
-    <span class="npill"><b>TanStack Query v5</b> — <code>cacheTime</code> → <code>gcTime</code></span>
+    <span class="npill"><b>Next.js 15</b> — <code>cookies()</code> / <code>params</code> now async</span>
   </div>
 
   <div class="cta">
