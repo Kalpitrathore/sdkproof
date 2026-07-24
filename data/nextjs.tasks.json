@@ -1,0 +1,93 @@
+[
+  {
+    "id": "read-cookie",
+    "area": "request",
+    "difficulty": "easy",
+    "prompt": "Export a function `getSessionId` that reads the value of the `session` cookie using Next's cookies helper and returns it (or undefined).",
+    "skeleton": "import { cookies } from \"next/headers\";\n\n// Export a function `getSessionId` that returns the 'session' cookie's value, or undefined.\n"
+  },
+  {
+    "id": "read-header",
+    "area": "request",
+    "difficulty": "easy",
+    "prompt": "Export a function `getAuth` that reads the `authorization` request header using Next's headers helper and returns it (or null).",
+    "skeleton": "import { headers } from \"next/headers\";\n\n// Export a function `getAuth` that returns the 'authorization' header, or null.\n"
+  },
+  {
+    "id": "draft-mode",
+    "area": "request",
+    "difficulty": "medium",
+    "prompt": "Export a function `isDraft` that returns whether Draft Mode is currently enabled, using Next's draftMode helper.",
+    "skeleton": "import { draftMode } from \"next/headers\";\n\n// Export a function `isDraft` that returns whether Draft Mode is enabled.\n"
+  },
+  {
+    "id": "route-get",
+    "area": "routes",
+    "difficulty": "easy",
+    "prompt": "Write a Route Handler `GET` that returns the JSON array `[{ id: 1 }, { id: 2 }]` as the response, using Next's server response helper.",
+    "skeleton": "import { NextResponse } from \"next/server\";\n\n// GET Route Handler returning [{ id: 1 }, { id: 2 }] as JSON.\nexport async function GET() {\n  // implement\n}\n"
+  },
+  {
+    "id": "route-post",
+    "area": "routes",
+    "difficulty": "medium",
+    "prompt": "Write a Route Handler `POST` that reads a JSON body `{ title: string }` from the request and returns `{ ok: true, title }` as JSON with a 201 status.",
+    "skeleton": "import { NextRequest, NextResponse } from \"next/server\";\n\n// POST Route Handler: read { title } from the request JSON, respond { ok, title } with status 201.\nexport async function POST(req: NextRequest) {\n  // implement\n}\n"
+  },
+  {
+    "id": "route-query",
+    "area": "routes",
+    "difficulty": "medium",
+    "prompt": "Write a Route Handler `GET` that reads a `q` query-string parameter from the incoming request and returns `{ q }` as JSON.",
+    "skeleton": "import { NextRequest, NextResponse } from \"next/server\";\n\n// GET Route Handler: read the `q` query param and return { q } as JSON.\nexport async function GET(req: NextRequest) {\n  // implement\n}\n"
+  },
+  {
+    "id": "response-status",
+    "area": "routes",
+    "difficulty": "easy",
+    "prompt": "Export a function `notFoundResponse()` that returns a JSON response `{ error: 'not found' }` with HTTP status 404, using Next's server response helper.",
+    "skeleton": "import { NextResponse } from \"next/server\";\n\n// Return a JSON response { error: 'not found' } with status 404.\nexport function notFoundResponse() {\n  // implement\n}\n"
+  },
+  {
+    "id": "redirect-fn",
+    "area": "navigation",
+    "difficulty": "easy",
+    "prompt": "Export a function `goDashboard()` that performs a server-side redirect to `/dashboard` using Next's navigation helper.",
+    "skeleton": "import { redirect } from \"next/navigation\";\n\n// Export a function `goDashboard` that redirects to /dashboard.\nexport function goDashboard() {\n  // implement\n}\n"
+  },
+  {
+    "id": "not-found-fn",
+    "area": "navigation",
+    "difficulty": "easy",
+    "prompt": "Export a function `requireItem(item: unknown)` that triggers Next's not-found handling when `item` is null or undefined.",
+    "skeleton": "import { notFound } from \"next/navigation\";\n\n// Export a function `requireItem` that calls Next's not-found when item is null/undefined.\nexport function requireItem(item: unknown) {\n  // implement\n}\n"
+  },
+  {
+    "id": "middleware",
+    "area": "routes",
+    "difficulty": "medium",
+    "prompt": "Write a Next.js `middleware` function that redirects the request to `/login` when there is no `token` cookie, and otherwise lets the request continue.",
+    "skeleton": "import { NextRequest, NextResponse } from \"next/server\";\n\n// middleware: redirect to /login if there's no `token` cookie, else continue.\nexport function middleware(req: NextRequest) {\n  // implement\n}\n"
+  },
+  {
+    "id": "revalidate-path",
+    "area": "cache",
+    "difficulty": "medium",
+    "prompt": "Export an async function `publish()` that (pretend to) saves a post and then revalidates the `/posts` path so the cache updates, using Next's cache revalidation helper.",
+    "skeleton": "import { revalidatePath } from \"next/cache\";\n\n// Export async `publish()`: after saving, revalidate the /posts path.\nexport async function publish() {\n  // implement\n}\n"
+  },
+  {
+    "id": "revalidate-tag",
+    "area": "cache",
+    "difficulty": "medium",
+    "prompt": "Export an async function `refreshUsers()` that revalidates everything tagged `users`, using Next's tag-based cache revalidation helper.",
+    "skeleton": "import { revalidateTag } from \"next/cache\";\n\n// Export async `refreshUsers()`: revalidate the 'users' cache tag.\nexport async function refreshUsers() {\n  // implement\n}\n"
+  },
+  {
+    "id": "json-echo",
+    "area": "routes",
+    "difficulty": "medium",
+    "prompt": "Write a Route Handler `PUT` that reads the full JSON body of the request and echoes it back as the JSON response.",
+    "skeleton": "import { NextRequest, NextResponse } from \"next/server\";\n\n// PUT Route Handler: read the JSON body and echo it back as JSON.\nexport async function PUT(req: NextRequest) {\n  // implement\n}\n"
+  }
+]

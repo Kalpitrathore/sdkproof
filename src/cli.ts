@@ -4,6 +4,7 @@ import { prismaSpec } from "./libraries/prisma.ts";
 import { aisdkSpec } from "./libraries/aisdk.ts";
 import { zodSpec } from "./libraries/zod.ts";
 import { tanstackQuerySpec } from "./libraries/tanstack-query.ts";
+import { nextjsSpec } from "./libraries/nextjs.ts";
 import { projectRoot, tscEntry } from "./env.ts";
 import { generate } from "./generate.ts";
 import { verify } from "./verify.ts";
@@ -13,7 +14,7 @@ import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
 import type { Candidate, LibrarySpec, Task, Verdict } from "./types.ts";
 
-const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec };
+const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec };
 
 function flag(argv: string[], name: string): string | undefined {
   const i = argv.indexOf(name);
