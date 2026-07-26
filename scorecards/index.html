@@ -85,7 +85,9 @@
   .cta h2 { font-size: clamp(21px, 3.6vw, 27px); font-weight: 800; }
   .cta p { color: var(--ink-soft); font-size: 15px; margin: 12px auto 20px; max-width: 54ch; }
   .cta .btn { display: inline-block; font-family: var(--font-mono); font-size: 14px; font-weight: 650; background: var(--brand); color: var(--brand-ink); padding: 12px 24px; border-radius: 9px; text-decoration: none; }
-  .cta .note { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 14px; }
+  .cta .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta .btn.ghost { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); padding: 10.5px 22px; }
+  .cta .note { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 16px; }
 
   footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
 </style>
@@ -183,8 +185,11 @@
   <div class="cta">
     <h2>Score my SDK</h2>
     <p>Name any TypeScript package &amp; I'll type-check how well AI writes its current API — or run it yourself, it's open source.</p>
-    <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
-    <div class="note">or ★ <a href="https://github.com/Kalpitrathore/sdkproof">star the repo</a> to get each new one · the compiler is the judge</div>
+    <div class="btns">
+      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">★ Star on GitHub</a>
+    </div>
+    <div class="note">★ star to get each new scorecard · the compiler is the judge</div>
   </div>
 
   <footer>
