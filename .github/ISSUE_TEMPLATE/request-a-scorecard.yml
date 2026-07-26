@@ -1,0 +1,32 @@
+name: Score my SDK
+description: Ask SDKProof to score how well AI coding agents write a library's current API.
+title: "[Score my SDK] "
+labels: ["scorecard-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Name a TypeScript / JavaScript package and it'll go on the board — type-checked against the real installed version, no LLM judge. ⭐ Star the repo to see the result land.
+  - type: input
+    id: package
+    attributes:
+      label: npm package
+      description: The exact package name, e.g. `drizzle-orm`, `stripe`, `react-router`, `@trpc/server`.
+      placeholder: "@scope/name"
+    validations:
+      required: true
+  - type: textarea
+    id: whatchanged
+    attributes:
+      label: What changed recently? (optional, but helps)
+      description: Any recent major / renamed or removed APIs the AI tends to get wrong.
+      placeholder: "v7 removed X, renamed Y → Z, made Z async ..."
+    validations:
+      required: false
+  - type: input
+    id: links
+    attributes:
+      label: Docs or migration guide (optional)
+      placeholder: "https://..."
+    validations:
+      required: false

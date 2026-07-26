@@ -2,6 +2,14 @@
   <img src="docs/logo.png" alt="SDKProof" width="360">
 </p>
 
+<p align="center">
+  <a href="https://github.com/Kalpitrathore/sdkproof/stargazers"><img src="https://img.shields.io/github/stars/Kalpitrathore/sdkproof?style=social" alt="GitHub stars"></a>
+  &nbsp;
+  <a href="https://sdkproof.dev"><img src="https://img.shields.io/badge/live-sdkproof.dev-0e9aa7" alt="Live site"></a>
+  &nbsp;
+  <img src="https://img.shields.io/github/license/Kalpitrathore/sdkproof?color=888" alt="license">
+</p>
+
 # SDKProof
 
 **Live:** https://sdkproof.dev
@@ -20,11 +28,16 @@ compiler decides.
 | **Prisma 7** | `@prisma/client` | **80 / 100** | still writes removed v6 setup — `new PrismaClient()`, `datasources`, `$use` |
 | **Vercel AI SDK 7** | `ai` | **90 / 100** | old tool wiring — `parameters` (now `inputSchema`), removed `maxSteps` |
 | **Zod 4** | `zod` | **90 / 100** | removed `required_error` (now `error`) — but nails the new 2-arg `z.record()` |
+| **Next.js 16** | `next` | **92 / 100** | misses Next 16's new 2-arg `revalidateTag()` — but nails the Next 15 async APIs |
+| **TanStack Query 5** | `@tanstack/react-query` | **100 / 100** | fully absorbed — every v4→v5 trap navigated |
 
-**The pattern:** readiness tracks how recently the SDK changed. AI SDK & Zod (2025
-majors) are mostly absorbed; Prisma 7 (newer) isn't. The gap re-opens on every
-major and shifts on every model release — so it's worth *monitoring*, not auditing
-once.
+**The pattern:** readiness tracks how recently the SDK changed. TanStack Query v5
+(2023) is fully absorbed (100); the 2025 majors sit at 90; the freshest releases —
+Next 16, Prisma 7 — are where the agent still writes the old API. The gap re-opens
+on every major and shifts on every model release, so it's worth *monitoring*, not
+auditing once.
+
+> **⭐ Star the repo** to get each new scorecard — or [**request one**](https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml): name any TypeScript package and it'll go on the board.
 
 ## How it works
 
@@ -57,9 +70,9 @@ Get an Anthropic key at <https://console.anthropic.com> (a run costs a few cents
 OpenAI is optional — set `OPENAI_API_KEY` (+ `SDKPROOF_OPENAI_MODEL`) to also score GPT.
 
 ```bash
-npm start -- run --lib prisma     # or: aisdk, zod
-npm start -- run --lib aisdk
-npm start -- run --lib zod
+npm start -- run --lib prisma     # or: aisdk, zod, tanstack-query, nextjs
+npm start -- run --lib tanstack-query
+npm start -- run --lib nextjs
 ```
 
 Outputs land in `scorecards/<lib>.md` and `data/<lib>.result.json`.
