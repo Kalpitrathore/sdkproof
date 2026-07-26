@@ -148,51 +148,53 @@
 
   <header class="hero">
     <div class="lib">@prisma/client · v7.8.0</div>
-    <h1>Prisma 7 is 80% ready for AI coding agents.</h1>
-    <p class="verdict">Claude Opus 4.8 writes Prisma's <b>query</b> API flawlessly — and even the new <code>$extends</code>. But it still reaches for <b>Prisma 6's setup code</b> that no longer compiles: the old constructor, the removed <code>datasources</code> option, and <code>$use</code> middleware. <b>3 of 15 real tasks fail to type-check against the installed package.</b></p>
+    <h1>Prisma 7 is 87% ready for AI coding agents.</h1>
+    <p class="verdict">Claude Opus 5 writes Prisma's <b>query</b> API flawlessly — even the new <code>$extends</code> that replaced <code>$use</code> middleware. The one place it still reaches for <b>old setup code</b> is <b>constructing the client</b>: it hasn't learned that Prisma 7 requires a <b>driver adapter</b>, so it passes bare options and the removed <code>datasourceUrl</code>. <b>2 of 15 real tasks fail to type-check against the installed package.</b></p>
 
     <div class="scorerow">
       <div class="scorebig">
-        <span class="n">80</span><span class="d">/100</span>
+        <span class="n">87</span><span class="d">/100</span>
         <div class="l">Agent-readiness</div>
       </div>
       <div class="segs">
         <div class="segbar">
           <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
           <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div><div class="seg p"></div>
-          <div class="seg f"></div><div class="seg f"></div><div class="seg f"></div>
+          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
+          <div class="seg f"></div><div class="seg f"></div>
         </div>
         <div class="seglegend">
-          <span><span class="dot p"></span><b>12</b> compile clean</span>
-          <span><span class="dot f"></span><b>3</b> fail type-check</span>
+          <span><span class="dot p"></span><b>13</b> compile clean</span>
+          <span><span class="dot f"></span><b>2</b> fail type-check</span>
         </div>
       </div>
     </div>
 
     <div class="meta">
-      <span><b>Model:</b> claude-opus-4-8</span>
+      <span><b>Model:</b> claude-opus-5</span>
       <span><b>Tasks:</b> 15</span>
       <span><b>Method:</b> tsc against real installed package</span>
-      <span><b>Run:</b> 2026-07-17</span>
+      <span><b>Run:</b> 2026-07-26</span>
     </div>
   </header>
 
   <!-- WRONG -->
   <div class="sec-head">
     <span class="eyebrow">The gap</span>
-    <h2>3 things the agent gets wrong</h2>
-    <p>Each is real code the model generated, verified by the TypeScript compiler against Prisma 7's actual types. These are Prisma&nbsp;6 patterns the model still writes.</p>
+    <h2>2 things the agent gets wrong</h2>
+    <p>Both are real code the model generated, verified by the TypeScript compiler against Prisma 7's actual types — and both are the same root cause: Prisma 7 now requires a <b>driver adapter</b>, and the model still writes the pre-adapter setup.</p>
   </div>
 
   <div class="fails">
 
     <article class="fcard">
-      <div class="top"><span class="x">✗</span><span class="t">Constructing the client</span><span class="tsx">TS2554</span></div>
+      <div class="top"><span class="x">✗</span><span class="t">Constructing the client</span><span class="tsx">TS2345</span></div>
       <div class="fbody">
         <div class="col bad">
           <div class="clabel">Agent wrote (Prisma 6)</div>
-          <pre>const prisma = new PrismaClient()</pre>
+          <pre>const prisma = new PrismaClient({
+  log: ["warn", "error"],
+})</pre>
         </div>
         <div class="col good">
           <div class="clabel">Prisma 7</div>
@@ -201,22 +203,23 @@
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
 })
-const prisma = new PrismaClient({ adapter })</pre>
+const prisma = new PrismaClient({
+  adapter,
+  log: ["warn", "error"],
+})</pre>
         </div>
       </div>
-      <div class="errline"><div class="e">error TS2554: Expected 1 arguments, but got 0.</div></div>
-      <div class="why"><b>Why:</b> Prisma 7 dropped the bundled query engine — the constructor now requires a <b>driver adapter</b>. A bare <code>new PrismaClient()</code> no longer type-checks.</div>
+      <div class="errline"><div class="e">error TS2345: Argument of type '{ log: ("warn" | "error")[]; }' is not assignable to parameter of type 'Subset&lt;PrismaClientOptions, PrismaClientOptions&gt;'.</div></div>
+      <div class="why"><b>Why:</b> Prisma 7 dropped the bundled query engine — the constructor now requires a <b>driver adapter</b>. The model passes v6-style options (<code>log</code>) but omits the now-required <code>adapter</code>, so the whole options object fails to type-check.</div>
     </article>
 
     <article class="fcard">
       <div class="top"><span class="x">✗</span><span class="t">Setting the datasource URL</span><span class="tsx">TS2353</span></div>
       <div class="fbody">
         <div class="col bad">
-          <div class="clabel">Agent wrote (Prisma 6)</div>
+          <div class="clabel">Agent wrote (Prisma 5–6)</div>
           <pre>new PrismaClient({
-  datasources: {
-    db: { url: process.env.DATABASE_URL },
-  },
+  datasourceUrl: process.env.DATABASE_URL,
 })</pre>
         </div>
         <div class="col good">
@@ -228,38 +231,8 @@ const adapter = new PrismaPg({
 new PrismaClient({ adapter })</pre>
         </div>
       </div>
-      <div class="errline"><div class="e">error TS2353: Object literal may only specify known properties, and 'datasources' does not exist in type 'PrismaClientOptions'.</div></div>
-      <div class="why"><b>Why:</b> the <code>datasources</code> constructor option was removed. The connection string is configured on the driver adapter instead.</div>
-    </article>
-
-    <article class="fcard">
-      <div class="top"><span class="x">✗</span><span class="t">Logging query duration (middleware)</span><span class="tsx">TS2339</span></div>
-      <div class="fbody">
-        <div class="col bad">
-          <div class="clabel">Agent wrote (Prisma 6)</div>
-          <pre>prisma.$use(async (params, next) => {
-  const start = Date.now()
-  const result = await next(params)
-  console.log(Date.now() - start)
-  return result
-})</pre>
-        </div>
-        <div class="col good">
-          <div class="clabel">Prisma 7</div>
-          <pre>const db = prisma.$extends({
-  query: {
-    async $allOperations({ args, query }) {
-      const start = performance.now()
-      const res = await query(args)
-      console.log(performance.now() - start)
-      return res
-    },
-  },
-})</pre>
-        </div>
-      </div>
-      <div class="errline"><div class="e">error TS2339: Property '$use' does not exist on type 'PrismaClient'.</div></div>
-      <div class="why"><b>Why:</b> <code>$use</code> middleware was removed in favor of <b>client extensions</b> (<code>$extends</code>). The model knows <code>$extends</code> elsewhere — it just defaults to the old middleware for this task.</div>
+      <div class="errline"><div class="e">error TS2353: Object literal may only specify known properties, and 'datasourceUrl' does not exist in type 'Subset&lt;PrismaClientOptions, PrismaClientOptions&gt;'.</div></div>
+      <div class="why"><b>Why:</b> the <code>datasourceUrl</code> option (Prisma 5–6) was removed. In Prisma 7 the connection string is configured on the driver adapter instead.</div>
     </article>
 
   </div>
@@ -267,11 +240,11 @@ new PrismaClient({ adapter })</pre>
   <!-- RIGHT -->
   <div class="sec-head">
     <span class="eyebrow">Fair's fair</span>
-    <h2>What it gets right — 12 of 15</h2>
+    <h2>What it gets right — 13 of 15</h2>
   </div>
   <div class="rights">
     <h3>The query surface is solid.</h3>
-    <p>Every CRUD, relation, and query task compiled clean against Prisma 7 — including the <em>new</em> <code>$extends</code> computed fields and raw queries. The gap is specific to setup &amp; config APIs that changed in the major.</p>
+    <p>Every CRUD, relation, and query task compiled clean against Prisma 7 — including the <em>new</em> <code>$extends</code> computed fields, <code>$extends</code> query middleware (which replaced <code>$use</code>), and raw queries. The only gap is <b>constructing the client</b>, where v7's driver-adapter requirement changed the setup.</p>
     <div class="chips">
       <span class="chip">create / update</span>
       <span class="chip">upsert</span>
@@ -283,6 +256,7 @@ new PrismaClient({ adapter })</pre>
       <span class="chip">$transaction</span>
       <span class="chip">count</span>
       <span class="chip">$extends (computed field)</span>
+      <span class="chip">$extends (query middleware)</span>
       <span class="chip">$queryRaw</span>
     </div>
   </div>
@@ -303,7 +277,7 @@ new PrismaClient({ adapter })</pre>
     <h2>How this was measured</h2>
   </div>
   <div class="method">
-    <span class="k">15</span> realistic Prisma tasks → generated by <span class="k">claude-opus-4-8</span> → each solution written into a project with the <b>real installed <code>@prisma/client</code> v7.8.0</b> and type-checked with <span class="k">tsc --noEmit</span>.<br>
+    <span class="k">15</span> realistic Prisma tasks → generated by <span class="k">claude-opus-5</span> → each solution written into a project with the <b>real installed <code>@prisma/client</code> v7.8.0</b> and type-checked with <span class="k">tsc --noEmit</span>.<br>
     A task <b>passes</b> only if it compiles clean. Failures are the compiler's own diagnostics (TS2554 / TS2353 / TS2339) — no LLM judge, no hand-waving. Reproducible: pinned package version, pinned model.
   </div>
 
@@ -332,7 +306,7 @@ new PrismaClient({ adapter })</pre>
 
   <footer>
     SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by Prisma.<br>
-    Measured 2026-07-17 against @prisma/client v7.8.0 with claude-opus-4-8. Type-check only — measures API-surface correctness, not runtime behavior.
+    Measured 2026-07-26 against @prisma/client v7.8.0 with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior.
   </footer>
 
 </div>

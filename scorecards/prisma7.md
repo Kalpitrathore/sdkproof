@@ -1,35 +1,28 @@
 # Prisma — AI-Readiness Scorecard
 
 **Library:** `@prisma/client` v7.8.0  
-**Generated:** 2026-07-17T04:43:53.914Z  
+**Generated:** 2026-07-26T19:56:37.515Z  
 **Method:** type-check only — measures whether agent-generated code uses the real, current API surface. Not a runtime test.
 
-## Overall: 80/100
+## Overall: 87/100
 
 | Model | Score | Passed | Total |
 |---|---:|---:|---:|
-| claude-opus-4-8 | 80/100 | 12 | 15 |
+| claude-opus-5 | 87/100 | 13 | 15 |
 
 ## Top failure patterns
-
-### hallucinated-member — 2×
-
-```
-Property '$use' does not exist on type 'PrismaClient'.
-```
-_claude-opus-4-8 on task `query-logging-middleware`_
-
-### other — 2×
-
-```
-Parameter 'params' implicitly has an 'any' type.
-```
-_claude-opus-4-8 on task `query-logging-middleware`_
 
 ### wrong-arguments — 1×
 
 ```
-Expected 1 arguments, but got 0.
+Argument of type '{ log: ("error" | "warn")[]; }' is not assignable to parameter of type 'Subset<PrismaClientOptions, PrismaClientOptions>'.
 ```
-_claude-opus-4-8 on task `construct-client`_
+_claude-opus-5 on task `construct-client`_
+
+### hallucinated-member — 1×
+
+```
+Object literal may only specify known properties, and 'datasourceUrl' does not exist in type 'Subset<PrismaClientOptions, PrismaClientOptions>'.
+```
+_claude-opus-5 on task `construct-with-url`_
 

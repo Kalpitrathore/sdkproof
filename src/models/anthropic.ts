@@ -2,12 +2,12 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { GenerateRequest, ModelAdapter } from "./types.ts";
 
 /**
- * Claude adapter. Model defaults to claude-opus-4-8 (the current flagship
+ * Claude adapter. Model defaults to claude-opus-5 (the current flagship
  * coding model). No temperature is set — sampling params are rejected on
- * Opus 4.8. Thinking is omitted (single-shot generation); the system prompt
- * forces code-only output.
+ * the 5-family. Thinking is omitted (single-shot generation); the system
+ * prompt forces code-only output.
  */
-export function anthropicAdapter(model = "claude-opus-4-8"): ModelAdapter {
+export function anthropicAdapter(model = "claude-opus-5"): ModelAdapter {
   const client = new Anthropic();
   return {
     id: model,

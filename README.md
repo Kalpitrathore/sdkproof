@@ -23,19 +23,20 @@ compiler decides.
 
 ## The board so far
 
-| SDK | Package | claude-opus-4-8 | The gap |
+| SDK | Package | claude-opus-5 | The gap |
 |-----|---------|:---:|---------|
-| **Prisma 7** | `@prisma/client` | **80 / 100** | still writes removed v6 setup — `new PrismaClient()`, `datasources`, `$use` |
-| **Vercel AI SDK 7** | `ai` | **90 / 100** | old tool wiring — `parameters` (now `inputSchema`), removed `maxSteps` |
-| **Zod 4** | `zod` | **90 / 100** | removed `required_error` (now `error`) — but nails the new 2-arg `z.record()` |
+| **Prisma 7** | `@prisma/client` | **87 / 100** | still writes v6 client setup — omits v7's required driver `adapter`, uses the removed `datasourceUrl` |
 | **Next.js 16** | `next` | **92 / 100** | misses Next 16's new 2-arg `revalidateTag()` — but nails the Next 15 async APIs |
+| **Vercel AI SDK 7** | `ai` | **100 / 100** | clean sweep — now wires tools the v7 way (`inputSchema`, `stopWhen`). Was 90 on Opus 4.8 |
+| **Zod 4** | `zod` | **100 / 100** | clean sweep — the new 2-arg `z.record()` and unified `error`. Was 90 on Opus 4.8 |
 | **TanStack Query 5** | `@tanstack/react-query` | **100 / 100** | fully absorbed — every v4→v5 trap navigated |
 
 **The pattern:** readiness tracks how recently the SDK changed. TanStack Query v5
-(2023) is fully absorbed (100); the 2025 majors sit at 90; the freshest releases —
-Next 16, Prisma 7 — are where the agent still writes the old API. The gap re-opens
-on every major and shifts on every model release, so it's worth *monitoring*, not
-auditing once.
+(2023) is fully absorbed (100); the 2025 majors (Zod, the Vercel AI SDK) are now
+absorbed too — Opus 5 closed the gaps Opus 4.8 still had (90 → 100); the freshest
+releases — Next 16 (92), Prisma 7 (87) — are where the agent still writes the old
+API. The gap re-opens on every major and shifts on every model release, so it's
+worth *monitoring*, not auditing once.
 
 > **⭐ Star the repo** to get each new scorecard — or [**request one**](https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml): name any TypeScript package and it'll go on the board.
 

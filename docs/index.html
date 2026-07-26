@@ -120,32 +120,16 @@
   <div class="sec-head">
     <span class="eyebrow">The board</span>
     <h2>Scorecards</h2>
-    <p>Each score is <code>claude-opus-4-8</code> across ~10–15 realistic tasks, type-checked against the current package.</p>
+    <p>Each score is <code>claude-opus-5</code> across ~10–15 realistic tasks, type-checked against the current package.</p>
   </div>
 
   <div class="board">
     <a class="card" href="prisma7.html">
       <div class="name">Prisma 7</div>
       <div class="pkg">@prisma/client</div>
-      <div class="score">80<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:80%;background:var(--warn)"></div></div>
-      <div class="gap">Nails the query API, but still writes removed v6 setup — <b>new PrismaClient()</b>, <b>datasources</b>, <b>$use</b>.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="aisdk.html">
-      <div class="name">Vercel AI SDK 7</div>
-      <div class="pkg">ai</div>
-      <div class="score">90<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:90%;background:var(--pass)"></div></div>
-      <div class="gap">Mostly caught up, but wires tools the old way — <b>parameters</b> (now inputSchema) and removed <b>maxSteps</b>.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="zod.html">
-      <div class="name">Zod 4</div>
-      <div class="pkg">zod</div>
-      <div class="score">90<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:90%;background:var(--pass)"></div></div>
-      <div class="gap">Even nails the new 2-arg <b>z.record()</b> — only slips on the removed <b>required_error</b> option.</div>
+      <div class="score">87<span class="d">/100</span></div>
+      <div class="bar"><div class="fill" style="width:87%;background:var(--warn)"></div></div>
+      <div class="gap">Nails the query API and the new <b>$extends</b> — only slips on <b>client construction</b>: v7's required driver <b>adapter</b> and the removed <b>datasourceUrl</b>.</div>
       <div class="view">View scorecard →</div>
     </a>
     <a class="card" href="nextjs.html">
@@ -154,6 +138,22 @@
       <div class="score">92<span class="d">/100</span></div>
       <div class="bar"><div class="fill" style="width:92%;background:var(--pass)"></div></div>
       <div class="gap">Knows the Next 15 async APIs cold — only misses <b>Next 16's</b> new 2-arg <b>revalidateTag()</b>.</div>
+      <div class="view">View scorecard →</div>
+    </a>
+    <a class="card" href="aisdk.html">
+      <div class="name">Vercel AI SDK 7</div>
+      <div class="pkg">ai</div>
+      <div class="score">100<span class="d">/100</span></div>
+      <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
+      <div class="gap">Clean sweep on Opus 5 — now wires tools the v7 way (<b>inputSchema</b>, <b>stopWhen</b>). Was 90 on Opus 4.8.</div>
+      <div class="view">View scorecard →</div>
+    </a>
+    <a class="card" href="zod.html">
+      <div class="name">Zod 4</div>
+      <div class="pkg">zod</div>
+      <div class="score">100<span class="d">/100</span></div>
+      <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
+      <div class="gap">Clean sweep on Opus 5 — the new 2-arg <b>z.record()</b> and the unified <b>error</b> option. Was 90 on Opus 4.8.</div>
       <div class="view">View scorecard →</div>
     </a>
     <a class="card" href="tanstack-query.html">
@@ -171,7 +171,7 @@
     <h2>Readiness tracks the drift window</h2>
   </div>
   <div class="insight">
-    <p><b>The score isn't about how smart the model is — it's about how recently your SDK changed.</b> TanStack Query v5 (2023) is fully absorbed — a perfect 100. The 2025 majors (Zod, the Vercel AI SDK) sit at 90. And the freshest releases are where the agent still writes the old API: Next.js 16 misses only its brand-new 2-arg <b>revalidateTag()</b> (92), while Prisma 7's recent overhaul drags it to 80.</p>
+    <p><b>The score isn't about how smart the model is — it's about how recently your SDK changed.</b> TanStack Query v5 (2023) is fully absorbed — a perfect 100. The 2025 majors (Zod, the Vercel AI SDK) are now fully absorbed too, at 100 — Opus 5 closed the gaps Opus 4.8 still had. The freshest releases are where the agent still writes the old API: Next.js 16 misses only its brand-new 2-arg <b>revalidateTag()</b> (92), while Prisma 7's driver-adapter overhaul keeps it at 87.</p>
     <p>Right after a major the gap is wide; as models retrain it narrows — then re-opens on your next major and shifts on every model release. It's a <b>moving number</b>, which is why it's worth monitoring, not auditing once.</p>
   </div>
 
@@ -206,7 +206,7 @@
   </div>
 
   <footer>
-    SDKProof — independent analysis of how AI coding agents use real SDKs. Scorecards measured with claude-opus-4-8, type-check only (API-surface correctness, not runtime). Not affiliated with the libraries scored.
+    SDKProof — independent analysis of how AI coding agents use real SDKs. Scorecards measured with claude-opus-5, type-check only (API-surface correctness, not runtime). Not affiliated with the libraries scored.
   </footer>
 </div>
 <!-- Cloudflare Web Analytics -->
