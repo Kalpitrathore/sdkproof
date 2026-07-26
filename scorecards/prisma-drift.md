@@ -1,14 +1,14 @@
 # Prisma — AI-Readiness Scorecard
 
 **Library:** `@prisma/client` v7.8.0  
-**Generated:** 2026-07-16T19:36:40.432Z  
+**Generated:** 2026-07-26T20:18:57.317Z  
 **Method:** type-check only — measures whether agent-generated code uses the real, current API surface. Not a runtime test.
 
 ## Overall: 0/100
 
 | Model | Score | Passed | Total |
 |---|---:|---:|---:|
-| claude-opus-4-8 | 0/100 | 0 | 3 |
+| claude-opus-5 | 0/100 | 0 | 3 |
 
 ## Top failure patterns
 
@@ -17,12 +17,12 @@
 ```
 Expected 1 arguments, but got 0.
 ```
-_claude-opus-4-8 on task `construct-client`_
+_claude-opus-5 on task `construct-and-disconnect`_
 
 ### hallucinated-member — 1×
 
 ```
-Object literal may only specify known properties, and 'datasources' does not exist in type 'Subset<PrismaClientOptions, PrismaClientOptions>'.
+Object literal may only specify known properties, and 'datasourceUrl' does not exist in type 'Subset<PrismaClientOptions, PrismaClientOptions>'.
 ```
-_claude-opus-4-8 on task `construct-with-url`_
+_claude-opus-5 on task `construct-with-url`_
 
