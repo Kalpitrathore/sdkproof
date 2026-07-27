@@ -92,34 +92,11 @@
   footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
   footer .fine { margin: 0; }
 
-  /* Launch badges — Peerlist's official embed + a DevHunt badge built from their
-     mark, framed in the site's own card language so the two read as one pair. */
-  .launched { margin-bottom: 28px; }
-  .launched .eyebrow { display: block; margin-bottom: 13px; }
-  .badges { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-  .badges a { display: block; text-decoration: none; border-radius: 12px; }
-  .badges a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
-
-  /* Peerlist — the official embed, one variant per theme. */
-  .badges .pl { height: 72px; width: auto; display: block; border-radius: 12px; }
-  .badges .pl-dark { display: none; }
-  @media (prefers-color-scheme: dark) {
-    .badges .pl-light { display: none; }
-    .badges .pl-dark { display: block; }
-  }
-  :root[data-theme="light"] .badges .pl-light { display: block; }
-  :root[data-theme="light"] .badges .pl-dark { display: none; }
-  :root[data-theme="dark"] .badges .pl-light { display: none; }
-  :root[data-theme="dark"] .badges .pl-dark { display: block; }
-
-  /* DevHunt — their mark, our frame (DevHunt ships no badge asset). */
-  .badges .badge { display: flex; align-items: center; gap: 12px; height: 72px; padding: 0 22px 0 17px; background: var(--panel); border: 1px solid var(--line-strong); box-shadow: var(--shadow); transition: border-color .12s; }
-  .badges .badge:hover { border-color: var(--brand); }
-  .badges .badge img { width: 26px; height: 26px; display: block; flex: none; }
-  .badges .badge .kicker { display: block; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
-  .badges .badge .name { display: block; font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; margin-top: 3px; }
-  /* Shown only if Peerlist's embed fails to load, so a broken image never appears. */
-  .badges .pl-fallback { display: none; padding: 0 22px; }
+  /* Launch links — same ghost-button treatment as the CTA, sized for the footer. */
+  .launched { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .launched a { font-family: var(--font-mono); font-size: 12.5px; font-weight: 650; color: var(--brand); border: 1px solid var(--brand); border-radius: 9px; padding: 9px 16px; text-decoration: none; transition: background .12s, color .12s; }
+  .launched a:hover { background: var(--brand); color: var(--brand-ink); }
+  .launched a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
 </style>
 
 <div class="wrap">
@@ -224,44 +201,9 @@
 
   <footer>
     <div class="launched">
-      <span class="eyebrow">Launched on</span>
-      <div class="badges">
-        <a id="pl-link" href="https://peerlist.io/kalpitrathore/project/sdkproof" target="_blank" rel="noreferrer">
-          <img class="pl pl-light" alt="SDKProof on Peerlist"
-               src="https://peerlist.io/api/v1/projects/embed/PRJHOK8PJQ8DANPJMI8KJM96QDB6AN?showUpvote=true&amp;theme=light">
-          <img class="pl pl-dark" alt="SDKProof on Peerlist"
-               src="https://peerlist.io/api/v1/projects/embed/PRJHOK8PJQ8DANPJMI8KJM96QDB6AN?showUpvote=true&amp;theme=dark">
-          <span class="badge pl-fallback">
-            <span>
-              <span class="kicker">Featured on</span>
-              <span class="name">Peerlist</span>
-            </span>
-          </span>
-        </a>
-        <a class="badge" href="https://devhunt.org/tool/sdkproof" target="_blank" rel="noreferrer">
-          <img src="devhunt-mark.png" alt="" width="26" height="26">
-          <span>
-            <span class="kicker">Live on</span>
-            <span class="name">DevHunt</span>
-          </span>
-        </a>
-      </div>
+      <a href="https://peerlist.io/kalpitrathore/project/sdkproof" target="_blank" rel="noreferrer">Live on Peerlist | Launchpad</a>
+      <a href="https://devhunt.org/tool/sdkproof" target="_blank" rel="noreferrer">Live on DevHunt</a>
     </div>
     <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Scorecards measured with claude-opus-5, type-check only (API-surface correctness, not runtime). Not affiliated with the libraries scored.</p>
   </footer>
-
-  <script>
-    // If Peerlist's embed can't load (either theme), drop it and show the
-    // matching text badge instead — better than a broken image icon.
-    (function () {
-      var link = document.getElementById("pl-link");
-      if (!link) return;
-      link.querySelectorAll(".pl").forEach(function (img) {
-        img.addEventListener("error", function () {
-          link.querySelectorAll(".pl").forEach(function (i) { i.remove(); });
-          link.querySelector(".pl-fallback").style.display = "flex";
-        });
-      });
-    })();
-  </script>
 </div>
