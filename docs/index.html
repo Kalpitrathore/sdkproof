@@ -103,9 +103,15 @@
   footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
   footer .fine { margin: 0; }
 
+  /* Inter — the face both Peerlist and DevHunt set their own product names in.
+     Self-hosted latin subset; used only for the two brand names below. */
+  @font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url(inter-600-latin.woff2) format("woff2"); }
+
   /* Launch links — same ghost-button treatment as the CTA, sized for the footer. */
   .launched { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
   .launched a { font-family: var(--font-mono); font-size: 12.5px; font-weight: 650; color: var(--brand); border: 1px solid var(--brand); border-radius: 9px; padding: 9px 16px; text-decoration: none; transition: background .12s, color .12s; }
+  .launched .brand { font-family: "Inter", var(--font-body); font-size: 13.5px; font-weight: 600; letter-spacing: -.01em; }
+  .launched .sep { margin: 0 .34em; font-weight: 400; opacity: .6; }
   .launched a:hover { background: var(--brand); color: var(--brand-ink); }
   .launched a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
 </style>
@@ -212,8 +218,8 @@
 
   <footer>
     <div class="launched">
-      <a href="https://peerlist.io/kalpitrathore/project/sdkproof" target="_blank" rel="noreferrer">Live on Peerlist | Launchpad</a>
-      <a href="https://devhunt.org/tool/sdkproof" target="_blank" rel="noreferrer">Live on DevHunt</a>
+      <a href="https://peerlist.io/kalpitrathore/project/sdkproof" target="_blank" rel="noreferrer">Live on <span class="brand">Peerlist<span class="sep">|</span>Launchpad</span></a>
+      <a href="https://devhunt.org/tool/sdkproof" target="_blank" rel="noreferrer">Live on <span class="brand">DevHunt</span></a>
     </div>
     <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Scorecards measured with claude-opus-5, type-check only (API-surface correctness, not runtime). Not affiliated with the libraries scored.</p>
   </footer>
