@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "privacy.html"];
 
 const SITE = "https://sdkproof.dev";
 
@@ -54,10 +54,19 @@ const META = {
     desc: "Prisma 7 scores 87/100 on Claude Opus 5. The queries and $extends are clean — every miss is client construction, like the required driver adapter.",
     type: "article",
   },
+  "privacy.html": {
+    social: "SDKProof — Privacy",
+    desc: "What SDKProof collects: no accounts, no forms. Cloudflare Web Analytics for cookieless counts, Microsoft Clarity for heatmaps and session replay.",
+    type: "website",
+  },
 };
 
+// Pages without a dedicated OG card fall back to the board image.
+const OG_FALLBACK = new Set(["privacy.html"]);
+
 const canonicalFor = (page) => (page === "index.html" ? `${SITE}/` : `${SITE}/${page}`);
-const ogImageFor = (page) => `${SITE}/og/${page.replace(/\.html$/, ".png")}`;
+const ogImageFor = (page) =>
+  `${SITE}/og/${OG_FALLBACK.has(page) ? "index" : page.replace(/\.html$/, "")}.png`;
 const attr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
 mkdirSync(path.join(root, "docs"), { recursive: true });
@@ -73,6 +82,13 @@ for (const page of PAGES) {
   html = html.replace(
     '<span class="logo">SDK<b>Proof</b></span>',
     '<img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span>'
+  );
+
+  // Privacy link into every footer, injected here rather than added to six
+  // separate fragments by hand.
+  html = html.replace(
+    "</footer>",
+    '  <p class="fine" style="margin-top:10px"><a href="privacy.html">Privacy</a></p>\n  </footer>'
   );
 
   const title = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "SDKProof").trim();
@@ -128,8 +144,9 @@ for (const page of PAGES) {
 <meta name="twitter:description" content="${attr(meta.desc)}">
 <meta name="twitter:image" content="${ogImage}">
 <script type="application/ld+json">${JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd)}</script>
-<!-- Microsoft Clarity — heatmaps and session replay. In <head> so replay captures
-     from first paint; Cloudflare Web Analytics stays at end of <body> for counts. -->
+<!-- Microsoft Clarity — heatmaps and session replay. Loaded in the document head so
+     replay captures from first paint; Cloudflare Web Analytics stays at the end of
+     the document and remains the source of truth for visitor counts. -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -161,7 +178,7 @@ const urls = PAGES.map((page) => {
     <loc>${canonicalFor(page)}</loc>
     <lastmod>${mtime.toISOString().slice(0, 10)}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${page === "index.html" ? "1.0" : "0.8"}</priority>
+    <priority>${page === "index.html" ? "1.0" : page === "privacy.html" ? "0.3" : "0.8"}</priority>
   </url>`;
 }).join("\n");
 

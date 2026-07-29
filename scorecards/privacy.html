@@ -1,0 +1,97 @@
+<title>SDKProof — Privacy</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
+    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
+    --brand: #0e9aa7; --brand-ink: #ffffff;
+    --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
+      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
+      --brand: #2dd4bf; --brand-ink: #06231f;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
+    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
+    --brand: #0e9aa7; --brand-ink: #ffffff;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
+    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
+    --brand: #2dd4bf; --brand-ink: #06231f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 90px; }
+  h1, h2 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
+  code { font-family: var(--font-mono); font-size: .92em; }
+  a { color: var(--brand); }
+  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+
+  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
+  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); }
+  .logo b { color: var(--brand); }
+  .mast .gh { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-decoration: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 11px; }
+
+  .hero { padding: 40px 0 30px; border-bottom: 1px solid var(--line-strong); margin-bottom: 34px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; }
+  .hero .sub { color: var(--ink-soft); font-size: 17px; margin: 14px 0 0; max-width: 62ch; }
+
+  .doc h2 { font-size: 19px; font-weight: 700; margin: 34px 0 10px; }
+  .doc p { color: var(--ink-soft); margin: 0 0 12px; max-width: 68ch; }
+  .doc ul { color: var(--ink-soft); margin: 0 0 12px; padding-left: 20px; max-width: 68ch; }
+  .doc li { margin-bottom: 7px; }
+  .doc b { color: var(--ink); }
+  .updated { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); margin-top: 30px; }
+
+  footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
+  footer .fine { margin: 0; }
+</style>
+
+<div class="wrap">
+  <div class="mast">
+    <span class="logo">SDK<b>Proof</b></span>
+    <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">GitHub ↗</a>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">Privacy</div>
+    <h1>What this site collects</h1>
+    <p class="sub">Short version: no accounts, no forms, nothing you type goes anywhere. Two analytics tools run, and one of them uses cookies. Details below.</p>
+  </header>
+
+  <div class="doc">
+    <h2>What SDKProof is</h2>
+    <p>A set of static pages. There is no login, no signup, no contact form and no database. Nothing you enter into your browser is sent to or stored by this site, because there is nowhere to enter anything.</p>
+
+    <h2>Analytics</h2>
+    <p>Two tools run on these pages, and both are third-party services with their own privacy policies.</p>
+    <ul>
+      <li><b>Cloudflare Web Analytics</b> — counts page views and referrers in aggregate. It does not use cookies and does not fingerprint or track you across sites. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noreferrer">Cloudflare's privacy policy</a>.</li>
+      <li><b>Microsoft Clarity</b> — heatmaps and session replay. This one <b>does</b> set cookies (<code>_clck</code>, <code>_clsk</code>) and records how you interact with the page: clicks, scroll position and mouse movement. I use it to see which parts of a scorecard people actually read and where they stop. <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noreferrer">Microsoft's privacy statement</a>.</li>
+    </ul>
+
+    <h2>What is not collected</h2>
+    <ul>
+      <li>No name, email address or account of any kind — there is nothing to sign up for.</li>
+      <li>No payment information. The site sells nothing.</li>
+      <li>Nothing is sold, rented or shared with anyone beyond the two services above.</li>
+    </ul>
+
+    <h2>Opting out</h2>
+    <p>Any standard content blocker stops Microsoft Clarity, and most already do by default — <code>clarity.ms</code> is on the common blocklists. Blocking it costs you nothing on this site; every page works identically without it. Microsoft also documents its own <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-gdpr" target="_blank" rel="noreferrer">data handling for Clarity</a>.</p>
+
+    <h2>Questions</h2>
+    <p>Open an issue at <a href="https://github.com/Kalpitrathore/sdkproof/issues/new">github.com/Kalpitrathore/sdkproof</a> and I'll answer there.</p>
+
+    <p class="updated">Last updated 29 July 2026</p>
+  </div>
+
+  <footer>
+    <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with the libraries scored.</p>
+  </footer>
+</div>
