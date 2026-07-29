@@ -128,6 +128,15 @@ for (const page of PAGES) {
 <meta name="twitter:description" content="${attr(meta.desc)}">
 <meta name="twitter:image" content="${ogImage}">
 <script type="application/ld+json">${JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd)}</script>
+<!-- Microsoft Clarity — heatmaps and session replay. In <head> so replay captures
+     from first paint; Cloudflare Web Analytics stays at end of <body> for counts. -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xtum7dy1n3");
+</script>
 </head>
 <body>
 ${html.trim()}
