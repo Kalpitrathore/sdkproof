@@ -9,7 +9,7 @@
   "scripts": {
     "setup": "prisma generate --schema fixtures/prisma/schema.prisma",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test test/*.test.ts",
+    "test": "node --import tsx --test --test-concurrency=1 test/*.test.ts",
     "start": "tsx src/cli.ts",
     "score": "tsx src/cli.ts run --lib prisma",
     "build:og": "node scripts/build-og.mjs",
@@ -27,6 +27,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/adapter-pg": "^7.8.0",
     "@types/node": "^26.1.1",
     "@types/react": "^19.2.17",
     "prisma": "^7.8.0",

@@ -1,7 +1,7 @@
 # Prisma — AI-Readiness Scorecard
 
 **Library:** `@prisma/client` v7.8.0  
-**Generated:** 2026-07-26T19:56:37.515Z  
+**Generated:** 2026-07-31T08:40:45.871Z  
 **Method:** type-check only — measures whether agent-generated code uses the real, current API surface. Not a runtime test.
 
 ## Overall: 87/100
