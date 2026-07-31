@@ -19,10 +19,22 @@ const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack
 
 const SITE = "https://sdkproof.dev";
 
-// Per-page social + search metadata. `title` is the <title> already in the source;
-// `social` is the Open Graph headline, which leads with the score because that is
-// the thing worth clicking. `desc` is the meta description — every page used to
-// share one generic string, which helps neither search nor previews.
+// Per-page social + search metadata. `social` is the Open Graph headline, which
+// leads with the score because that is the thing worth clicking. `desc` is the meta
+// description — every page used to share one generic string, which helps neither
+// search nor previews.
+//
+// `title` overrides the <title> in the source. Scorecard pages set it; index and
+// privacy fall back to what the source already has. It mirrors each page's own H1
+// and leads with the library, not the brand — "sdkproof" is the only query this
+// site currently ranks for and the homepage already owns it, so spending the first
+// eleven characters of six other titles defending it buys nothing. The score goes
+// in because at position 7 the snippet is the only thing you control.
+//
+// Set 2026-07-31, reversing the 07-28 call to leave titles alone. That call was
+// made to avoid disturbing what Google had indexed; the Search Console export
+// showed five of six pages had never appeared in a result, so there was nothing
+// to disturb and this is the cheapest moment to change them.
 const META = {
   "index.html": {
     social: "SDKProof — How ready is your SDK for AI coding agents?",
@@ -30,31 +42,37 @@ const META = {
     type: "website",
   },
   "tanstack-query.html": {
+    title: "TanStack Query v5 is 100% ready for AI coding agents — SDKProof",
     social: "TanStack Query v5 — 100/100 AI-readiness",
     desc: "TanStack Query v5 scores 100/100 for AI-readiness on Claude Opus 5. Every v4→v5 rename — gcTime, placeholderData, 'pending' — written unprompted.",
     type: "article",
   },
   "aisdk.html": {
+    title: "Vercel AI SDK 7 is 100% ready for AI coding agents — SDKProof",
     social: "Vercel AI SDK 7 — 100/100 AI-readiness",
     desc: "Vercel AI SDK 7 scores 100/100 on Claude Opus 5. The v7 tool rename (inputSchema, stopWhen) is fully absorbed — it was 90/100 on Opus 4.8.",
     type: "article",
   },
   "zod.html": {
+    title: "Zod 4 is 100% ready for AI coding agents — SDKProof",
     social: "Zod 4 — 100/100 AI-readiness",
     desc: "Zod 4 scores 100/100 on Claude Opus 5, writing the unified error option and 2-arg z.record() unprompted. It was 90/100 on Opus 4.8.",
     type: "article",
   },
   "nextjs.html": {
+    title: "Next.js 16 is 92% ready for AI coding agents — SDKProof",
     social: "Next.js 16 — 92/100 AI-readiness",
     desc: "Next.js 16 scores 92/100 for AI-readiness on Claude Opus 5. Async cookies and headers are absorbed; the 2-arg revalidateTag is the one miss.",
     type: "article",
   },
   "prisma7.html": {
+    title: "Prisma 7 is 87% ready for AI coding agents — SDKProof",
     social: "Prisma 7 — 87/100 AI-readiness",
     desc: "Prisma 7 scores 87/100 on Claude Opus 5. The queries and $extends are clean — every miss is client construction, like the required driver adapter.",
     type: "article",
   },
   "react-router.html": {
+    title: "React Router 8 is 93% ready for AI coding agents — SDKProof",
     social: "React Router 8 — 93/100 AI-readiness",
     desc: "React Router 8 scores 93/100 on Claude Opus 5. It drops json() and defer() unprompted; the one consistent miss is meta's removed data argument, now loaderData.",
     type: "article",
@@ -96,10 +114,11 @@ for (const page of PAGES) {
     '  <p class="fine" style="margin-top:10px"><a href="privacy.html">Privacy</a></p>\n  </footer>'
   );
 
-  const title = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "SDKProof").trim();
+  const sourceTitle = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "SDKProof").trim();
   html = html.replace(/<title>[\s\S]*?<\/title>\s*/i, "");
 
   const meta = META[page];
+  const title = meta.title ?? sourceTitle;
   const canonical = canonicalFor(page);
   const ogImage = ogImageFor(page);
 
