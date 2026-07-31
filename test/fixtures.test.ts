@@ -9,6 +9,7 @@ import { aisdkSpec } from "../src/libraries/aisdk.ts";
 import { zodSpec } from "../src/libraries/zod.ts";
 import { tanstackQuerySpec } from "../src/libraries/tanstack-query.ts";
 import { nextjsSpec } from "../src/libraries/nextjs.ts";
+import { reactRouterSpec } from "../src/libraries/react-router.ts";
 import type { LibrarySpec } from "../src/types.ts";
 
 /**
@@ -28,7 +29,14 @@ import type { LibrarySpec } from "../src/types.ts";
  * When a library ships a breaking major, this test is the first thing that
  * should fail. Update `known-good.ts` to the new API before trusting any score.
  */
-const SPECS: LibrarySpec[] = [prismaSpec, aisdkSpec, zodSpec, tanstackQuerySpec, nextjsSpec];
+const SPECS: LibrarySpec[] = [
+  prismaSpec,
+  aisdkSpec,
+  zodSpec,
+  tanstackQuerySpec,
+  nextjsSpec,
+  reactRouterSpec,
+];
 
 for (const spec of SPECS) {
   test(`${spec.id} fixture can express a passing answer`, async () => {

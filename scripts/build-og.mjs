@@ -98,6 +98,7 @@ const PAGES = {
     { short: "TanStack Q", score: 100 },
     { short: "Vercel AI", score: 100 },
     { short: "Zod 4", score: 100 },
+    { short: "React Router", score: 93 },
     { short: "Next.js 16", score: 92 },
     { short: "Prisma 7", score: 87 },
   ]),
@@ -128,6 +129,13 @@ const PAGES = {
     passed: 12,
     total: 13,
     note: "Only consistent miss: the 2-arg revalidateTag",
+  }),
+  "react-router.png": scorecardSvg({
+    name: "React Router 8",
+    score: 93,
+    passed: 14,
+    total: 15,
+    note: "Only consistent miss: meta's data arg, now loaderData",
   }),
   "prisma7.png": scorecardSvg({
     name: "Prisma 7",

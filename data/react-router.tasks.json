@@ -1,0 +1,107 @@
+[
+  {
+    "id": "loader-return-data",
+    "area": "data",
+    "difficulty": "easy",
+    "prompt": "Write a route loader that reads the `id` route param, looks the user up with the provided `getUser`, throws a 404 Response when there is no such user, and returns the user to the route component.",
+    "skeleton": "declare function getUser(id: string): Promise<{ id: string; name: string } | null>;\n\n// Export a route loader named `loader`.\n"
+  },
+  {
+    "id": "action-error-status",
+    "area": "data",
+    "difficulty": "medium",
+    "prompt": "Write a route action that reads a `name` field from the submitted form. When it is missing or not a string, return an error payload carrying a 400 status. Otherwise create the user with `createUser` and return it.",
+    "skeleton": "declare function createUser(name: string): Promise<{ id: string; name: string }>;\n\n// Export a route action named `action`.\n"
+  },
+  {
+    "id": "loader-search-param",
+    "area": "data",
+    "difficulty": "easy",
+    "prompt": "Write a route loader that reads a `q` search parameter from the request URL and returns the results of `search(q)`, or an empty array when `q` is absent.",
+    "skeleton": "declare function search(q: string): Promise<string[]>;\n\n// Export a route loader named `loader`.\n"
+  },
+  {
+    "id": "redirect-after-action",
+    "area": "data",
+    "difficulty": "easy",
+    "prompt": "Write a route action that reads `name` from the submitted form, creates the user with `createUser`, and then redirects the browser to `/users/<the new id>`.",
+    "skeleton": "declare function createUser(name: string): Promise<{ id: string; name: string }>;\n\n// Export a route action named `action`.\n"
+  },
+  {
+    "id": "streaming-slow-data",
+    "area": "data",
+    "difficulty": "hard",
+    "prompt": "Write a route loader that returns the post immediately while letting the slow comments stream in afterwards — await `getPost`, but hand back `getComments`' promise without awaiting it.",
+    "skeleton": "declare function getPost(id: string): Promise<{ id: string; title: string }>;\ndeclare function getComments(id: string): Promise<string[]>;\n\n// Export a route loader named `loader`.\n"
+  },
+  {
+    "id": "middleware-auth-redirect",
+    "area": "middleware",
+    "difficulty": "medium",
+    "prompt": "Write a route middleware that redirects to `/login` when the incoming request has no `cookie` header, and otherwise lets the request continue to the next handler.",
+    "skeleton": "// Export a route middleware named `authMiddleware`.\n"
+  },
+  {
+    "id": "middleware-set-context",
+    "area": "middleware",
+    "difficulty": "hard",
+    "prompt": "Create a typed router context that holds the current user (or null), and write a route middleware that resolves the user with `getUserFromRequest` and stores it in that context before continuing.",
+    "skeleton": "interface User { id: string; name: string }\ndeclare function getUserFromRequest(request: Request): Promise<User | null>;\n\n// Export the context as `userContext` and the middleware as `userMiddleware`.\n"
+  },
+  {
+    "id": "loader-read-context",
+    "area": "middleware",
+    "difficulty": "hard",
+    "prompt": "Given the exported `userContext`, write a route loader that reads the current user out of the router context and returns it alongside the `id` route param.",
+    "skeleton": "import { createContext } from \"react-router\";\n\ninterface User { id: string; name: string }\nexport const userContext = createContext<User | null>(null);\n\n// Export a route loader named `loader`.\n"
+  },
+  {
+    "id": "meta-from-loader",
+    "area": "meta",
+    "difficulty": "medium",
+    "prompt": "Given the exported `loader`, write a route meta function that sets the page title to the loaded user's name, falling back to \"User\" when there is none.",
+    "skeleton": "export async function loader() {\n  return { user: { id: \"1\", name: \"Ada\" } as { id: string; name: string } | null };\n}\n\n// Export a route meta function named `meta`.\n"
+  },
+  {
+    "id": "create-data-router",
+    "area": "router",
+    "difficulty": "medium",
+    "prompt": "Create a browser data router with a single route at `/users/:id` wired to the provided `loader` and `action`, and export it as `router`.",
+    "skeleton": "declare const loader: () => Promise<{ id: string }>;\ndeclare const action: () => Promise<{ ok: boolean }>;\n\n// Export the router as `router`.\n"
+  },
+  {
+    "id": "router-provider-export",
+    "area": "router",
+    "difficulty": "medium",
+    "prompt": "Export the component used to render a data router in the browser, re-exported under the name `AppRouterProvider`.",
+    "skeleton": "// Re-export the data router provider component as `AppRouterProvider`.\n"
+  },
+  {
+    "id": "hook-fetcher-load",
+    "area": "hooks",
+    "difficulty": "medium",
+    "prompt": "Write a hook that returns the fetcher's current data and a `loadUsers` callback which fetches `/api/users` without triggering a navigation.",
+    "skeleton": "// Export a hook named `useUsersFetcher`.\n"
+  },
+  {
+    "id": "hook-programmatic-submit",
+    "area": "hooks",
+    "difficulty": "medium",
+    "prompt": "Write a hook that returns a `save` callback which programmatically submits a FormData payload as a POST to `/users`.",
+    "skeleton": "// Export a hook named `useSaveUser`.\n"
+  },
+  {
+    "id": "hook-search-params",
+    "area": "hooks",
+    "difficulty": "easy",
+    "prompt": "Write a hook that returns the current `q` search parameter and a `setQuery` callback that updates it in the URL.",
+    "skeleton": "// Export a hook named `useQueryParam`.\n"
+  },
+  {
+    "id": "route-error-message",
+    "area": "errors",
+    "difficulty": "medium",
+    "prompt": "Write a hook that returns a display message for the current route error — including the status code when the error is a thrown route error response, and a generic message otherwise.",
+    "skeleton": "// Export a hook named `useErrorMessage`.\n"
+  }
+]

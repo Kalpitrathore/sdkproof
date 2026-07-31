@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "privacy.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "privacy.html"];
 
 const SITE = "https://sdkproof.dev";
 
@@ -52,6 +52,11 @@ const META = {
   "prisma7.html": {
     social: "Prisma 7 — 87/100 AI-readiness",
     desc: "Prisma 7 scores 87/100 on Claude Opus 5. The queries and $extends are clean — every miss is client construction, like the required driver adapter.",
+    type: "article",
+  },
+  "react-router.html": {
+    social: "React Router 8 — 93/100 AI-readiness",
+    desc: "React Router 8 scores 93/100 on Claude Opus 5. It drops json() and defer() unprompted; the one consistent miss is meta's removed data argument, now loaderData.",
     type: "article",
   },
   "privacy.html": {
