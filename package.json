@@ -13,7 +13,8 @@
     "start": "tsx src/cli.ts",
     "score": "tsx src/cli.ts run --lib prisma",
     "build:og": "node scripts/build-og.mjs",
-    "build:site": "node scripts/build-og.mjs && node scripts/build-site.mjs"
+    "build:badges": "node scripts/build-badges.mjs",
+    "build:site": "node scripts/build-og.mjs && node scripts/build-badges.mjs && node scripts/build-site.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.15",

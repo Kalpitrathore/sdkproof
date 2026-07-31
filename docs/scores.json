@@ -1,0 +1,72 @@
+{
+  "generatedAt": "2026-07-31",
+  "note": "Each score is one model solving 10-15 realistic tasks, type-checked against the installed package. Pass = compiles clean.",
+  "scores": [
+    {
+      "library": "TanStack Query v5",
+      "slug": "tanstack-query",
+      "libraryVersion": "5.101.4",
+      "model": "claude-opus-5",
+      "score": 100,
+      "passed": 13,
+      "total": 13,
+      "scorecard": "https://sdkproof.dev/tanstack-query.html",
+      "badge": "https://sdkproof.dev/badge/tanstack-query.svg"
+    },
+    {
+      "library": "Vercel AI SDK 7",
+      "slug": "aisdk",
+      "libraryVersion": "7.0.30",
+      "model": "claude-opus-5",
+      "score": 100,
+      "passed": 10,
+      "total": 10,
+      "scorecard": "https://sdkproof.dev/aisdk.html",
+      "badge": "https://sdkproof.dev/badge/aisdk.svg"
+    },
+    {
+      "library": "Zod 4",
+      "slug": "zod",
+      "libraryVersion": "4.4.3",
+      "model": "claude-opus-5",
+      "score": 100,
+      "passed": 10,
+      "total": 10,
+      "scorecard": "https://sdkproof.dev/zod.html",
+      "badge": "https://sdkproof.dev/badge/zod.svg"
+    },
+    {
+      "library": "React Router 8",
+      "slug": "react-router",
+      "libraryVersion": "8.3.0",
+      "model": "claude-opus-5",
+      "score": 93,
+      "passed": 14,
+      "total": 15,
+      "scorecard": "https://sdkproof.dev/react-router.html",
+      "badge": "https://sdkproof.dev/badge/react-router.svg"
+    },
+    {
+      "library": "Next.js 16",
+      "slug": "nextjs",
+      "libraryVersion": "16.2.11",
+      "model": "claude-opus-5",
+      "score": 92,
+      "passed": 12,
+      "total": 13,
+      "scorecard": "https://sdkproof.dev/nextjs.html",
+      "badge": "https://sdkproof.dev/badge/nextjs.svg"
+    },
+    {
+      "library": "Prisma 7",
+      "slug": "prisma7",
+      "libraryVersion": "7.8.0",
+      "model": "claude-opus-5",
+      "score": 87,
+      "passed": 13,
+      "total": 15,
+      "scorecard": "https://sdkproof.dev/prisma7.html",
+      "badge": "https://sdkproof.dev/badge/prisma7.svg"
+    }
+  ]
+}

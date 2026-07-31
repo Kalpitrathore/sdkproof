@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "privacy.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "badge.html", "privacy.html"];
 
 const SITE = "https://sdkproof.dev";
 
@@ -77,6 +77,12 @@ const META = {
     desc: "React Router 8 scores 93/100 on Claude Opus 5. It drops json() and defer() unprompted; the one consistent miss is meta's removed data argument, now loaderData.",
     type: "article",
   },
+  "badge.html": {
+    title: "SDKProof badges — put your AI-readiness score in your README",
+    social: "Put your AI-readiness score in your README",
+    desc: "Copy-paste README badges for every library SDKProof scores. The badge reads the same run as the scorecard, so it never claims a number the page doesn't show.",
+    type: "website",
+  },
   "privacy.html": {
     social: "SDKProof — Privacy",
     desc: "What SDKProof collects: no accounts, no forms. Cloudflare Web Analytics for cookieless counts, Microsoft Clarity for heatmaps and session replay.",
@@ -85,7 +91,7 @@ const META = {
 };
 
 // Pages without a dedicated OG card fall back to the board image.
-const OG_FALLBACK = new Set(["privacy.html"]);
+const OG_FALLBACK = new Set(["privacy.html", "badge.html"]);
 
 const canonicalFor = (page) => (page === "index.html" ? `${SITE}/` : `${SITE}/${page}`);
 const ogImageFor = (page) =>
@@ -111,7 +117,7 @@ for (const page of PAGES) {
   // separate fragments by hand.
   html = html.replace(
     "</footer>",
-    '  <p class="fine" style="margin-top:10px"><a href="privacy.html">Privacy</a></p>\n  </footer>'
+    '  <p class="fine" style="margin-top:10px"><a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>\n  </footer>'
   );
 
   const sourceTitle = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "SDKProof").trim();
@@ -202,7 +208,7 @@ const urls = PAGES.map((page) => {
     <loc>${canonicalFor(page)}</loc>
     <lastmod>${mtime.toISOString().slice(0, 10)}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${page === "index.html" ? "1.0" : page === "privacy.html" ? "0.3" : "0.8"}</priority>
+    <priority>${page === "index.html" ? "1.0" : page === "privacy.html" ? "0.3" : page === "badge.html" ? "0.6" : "0.8"}</priority>
   </url>`;
 }).join("\n");
 
