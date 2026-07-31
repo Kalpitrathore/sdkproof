@@ -27,18 +27,44 @@ compiler decides.
 |-----|---------|:---:|---------|
 | **Prisma 7** | `@prisma/client` | **87 / 100** | still writes v6 client setup — omits v7's required driver `adapter`, uses the removed `datasourceUrl` |
 | **Next.js 16** | `next` | **92 / 100** | misses Next 16's new 2-arg `revalidateTag()` — but nails the Next 15 async APIs |
+| **React Router 8** | `react-router` | **93 / 100** | drops the deleted `json()` and `defer()` unprompted, but `meta()` still takes the removed `data` arg — now `loaderData` |
 | **Vercel AI SDK 7** | `ai` | **100 / 100** | clean sweep — now wires tools the v7 way (`inputSchema`, `stopWhen`). Was 90 on Opus 4.8 |
 | **Zod 4** | `zod` | **100 / 100** | clean sweep — the new 2-arg `z.record()` and unified `error`. Was 90 on Opus 4.8 |
 | **TanStack Query 5** | `@tanstack/react-query` | **100 / 100** | fully absorbed — every v4→v5 trap navigated |
 
-**The pattern:** readiness tracks how recently the SDK changed. TanStack Query v5
-(2023) is fully absorbed (100); the 2025 majors (Zod, the Vercel AI SDK) are now
-absorbed too — Opus 5 closed the gaps Opus 4.8 still had (90 → 100); the freshest
-releases — Next 16 (92), Prisma 7 (87) — are where the agent still writes the old
-API. The gap re-opens on every major and shifts on every model release, so it's
-worth *monitoring*, not auditing once.
+**The pattern:** it isn't how *recently* the SDK changed, it's how much warning
+the ecosystem had. TanStack Query v5 (2023) is fully absorbed (100), and the 2025
+majors (Zod, the Vercel AI SDK) are too — Opus 5 closed the gaps Opus 4.8 still
+had (90 → 100). React Router 8 is the newest major here and still scores 93,
+because v8 mostly finished removals v7 had already deprecated — years of "stop
+using this" signal to learn from. The misses cluster on changes that landed with
+no deprecation runway: Prisma 7's now-required driver `adapter` (87), Next 16's
+2-arg `revalidateTag()` (92), React Router's `meta()` rename. The gap re-opens on
+every major and shifts on every model release, so it's worth *monitoring*, not
+auditing once.
 
 > **⭐ Star the repo** to get each new scorecard — or [**request one**](https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml): name any TypeScript package and it'll go on the board.
+
+## For maintainers — put your score in your README
+
+Every scored library gets a badge. One line of markdown, and it links back to the
+full scorecard so anyone can check the number instead of taking it on faith:
+
+[![SDKProof: 100/100](https://sdkproof.dev/badge/zod.svg)](https://sdkproof.dev/zod.html?ref=badge)
+
+```markdown
+[![SDKProof: 100/100](https://sdkproof.dev/badge/zod.svg)](https://sdkproof.dev/zod.html?ref=badge)
+```
+
+**All six badges, plus a shields.io endpoint:** <https://sdkproof.dev/badge.html>
+
+Two things worth knowing before you embed it. **The score can go down** — it's
+re-measured when a new model ships or your library ships a breaking major, and
+the badge follows the run. And **it measures the model, not your library**: a low
+score usually means your newest major is too recent for the training data, which
+isn't a defect in your code.
+
+Scores are also published as JSON at <https://sdkproof.dev/scores.json>.
 
 ## How it works
 
@@ -71,7 +97,7 @@ Get an Anthropic key at <https://console.anthropic.com> (a run costs a few cents
 OpenAI is optional — set `OPENAI_API_KEY` (+ `SDKPROOF_OPENAI_MODEL`) to also score GPT.
 
 ```bash
-npm start -- run --lib prisma     # or: aisdk, zod, tanstack-query, nextjs
+npm start -- run --lib prisma     # or: aisdk, zod, tanstack-query, nextjs, react-router
 npm start -- run --lib tanstack-query
 npm start -- run --lib nextjs
 ```
@@ -91,7 +117,7 @@ Flags: `--fake` (offline), `--limit N`, `--tasks <file>` (custom task set).
 ```
 src/
   types.ts            shared types
-  libraries/          LibrarySpec per SDK (prisma, aisdk, zod)
+  libraries/          LibrarySpec per SDK (prisma, aisdk, zod, tanstack-query, nextjs, react-router)
   prompt.ts           generation prompt + code extraction
   generate.ts         (task × model) -> candidate
   verify.ts           type-check a candidate against the fixture   [load-bearing]
