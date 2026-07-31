@@ -1,8 +1,30 @@
 # Pipeline automation — design
 
 **Date:** 2026-07-30
-**Status:** approved, not yet implemented
+**Status:** approved, not yet implemented — **queued behind the Stripe scorecard (decided 2026-07-31)**
 **Scope:** internal batch tool. No web UI, no public endpoint, no untrusted input.
+
+## Build order (decided 2026-07-31)
+
+Build in two slices, cut at the line where the pipeline starts spending money.
+
+**Slice 1 — `resolve` + `install` + `probe`, exposed as `--dry-run`.** No model calls, no
+spend. Answers "which of these packages even has drift worth an email" from npm metadata and
+two `tsc` runs each. This is the slice that pays first: the outreach queue emptied after four
+sends on 07-31, and targets are currently picked by guess.
+
+**Slice 2 — `taskgen` + `admit` + `report`.** The subtle half. Admission is where a wrong
+design quietly inflates every published score, so it gets its own session rather than riding
+along with the mechanical stages.
+
+**Sequenced behind the Stripe scorecard**, which is validated demand from a named person and
+about two hours by hand. The pipeline pays back over weeks; Stripe pays back tomorrow.
+
+**Read this before starting Slice 2.** The probe finds removals and renames. It cannot see
+signature or arity changes — and the best finding this project has produced, `new PrismaClient()`
+losing its zero-argument overload, was exactly that. The entry-points-as-soft-targets rule in
+`taskgen` is the only thing covering that class, which makes it load-bearing rather than a
+nicety.
 
 ## Problem
 
