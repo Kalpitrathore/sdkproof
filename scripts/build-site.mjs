@@ -107,10 +107,16 @@ for (const page of PAGES) {
     html = html.replaceAll(`https://claude.ai/code/artifact/${id}`, file);
   }
 
-  // Inject the cat logo mark into the masthead, before the text wordmark.
+  // Inject the cat logo mark into the masthead, and make the wordmark a link home.
+  // Clarity recorded dead clicks in 17.65% of sessions (2026-08-04) and the masthead
+  // was the one confirmed source: people click a logo expecting to go home, and this
+  // one was inert text on every page.
   html = html.replace(
     '<span class="logo">SDK<b>Proof</b></span>',
-    '<img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span>'
+    '<a href="index.html" aria-label="SDKProof home" style="display:flex;align-items:center;gap:10px;text-decoration:none">' +
+      '<img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none">' +
+      '<span class="logo">SDK<b>Proof</b></span>' +
+    '</a>'
   );
 
   // Privacy link into every footer, injected here rather than added to six
