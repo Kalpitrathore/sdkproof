@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { classify } from "../src/classify.ts";
 import { score } from "../src/score.ts";
 import type { Verdict } from "../src/types.ts";
+import { renderScorecard } from "../src/report.ts";
 
 const verdicts: Verdict[] = [
   { taskId: "t1", model: "claude", passed: true, errors: [] },
@@ -40,4 +41,30 @@ test("score computes per-model and overall scores", () => {
   assert.equal(claude.score, 50); // 1 of 2
   assert.equal(gpt.score, 0); // 0 of 2
   assert.equal(r.overallScore, 25); // 1 of 4
+});
+
+test("refusals are excluded from the score and stated on the scorecard", () => {
+  const verdicts: Verdict[] = [
+    { taskId: "a", model: "m", passed: true, errors: [] },
+    { taskId: "b", model: "m", passed: true, errors: [] },
+  ];
+  const refusals = [{ taskId: "c", model: "m", attempts: 4 }];
+  const r = score("stripe", "22.4.0", "2026-08-04T00:00:00Z", verdicts, refusals);
+
+  // The score covers what was measured, not what was written.
+  assert.equal(r.overallScore, 100);
+  assert.equal(r.perModel[0].total, 2);
+  assert.equal(r.refusals.length, 1);
+
+  const md = renderScorecard(r, {
+    id: "stripe",
+    packageName: "stripe",
+    displayName: "Stripe",
+    fixtureDir: "/tmp",
+    docsHint: "",
+  });
+  // A reader must see the shortfall in the same breath as the number.
+  assert.match(md, /1 task refused/);
+  assert.match(md, /`c`/);
+  assert.match(md, /covering 2 of 3 written tasks/);
 });

@@ -10,3 +10,15 @@ export interface ModelAdapter {
   id: string;
   generate(req: GenerateRequest): Promise<string>;
 }
+
+/**
+ * Thrown when a model refuses the identical prompt every time it is sampled.
+ * Typed so the CLI can record it as a refusal rather than a generic failure —
+ * a refusal is an unmeasured task, not a failed one.
+ */
+export class RefusalError extends Error {
+  constructor(readonly attempts: number) {
+    super(`model refused this task ${attempts}x — not library drift, excluded from the score`);
+    this.name = "RefusalError";
+  }
+}

@@ -1,4 +1,4 @@
-import type { ModelScore, Result, Verdict } from "./types.ts";
+import type { ModelScore, Refusal, Result, Verdict } from "./types.ts";
 import { classify } from "./classify.ts";
 
 /** Aggregate verdicts into a per-model + overall score with ranked failures. */
@@ -7,6 +7,7 @@ export function score(
   libraryVersion: string,
   generatedAt: string,
   verdicts: Verdict[],
+  refusals: Refusal[] = [],
 ): Result {
   const models = [...new Set(verdicts.map((v) => v.model))].sort();
   const perModel: ModelScore[] = models.map((model) => {
@@ -34,5 +35,6 @@ export function score(
     perModel,
     failurePatterns: classify(verdicts),
     verdicts,
+    refusals,
   };
 }

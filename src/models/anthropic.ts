@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { GenerateRequest, ModelAdapter } from "./types.ts";
+import { RefusalError } from "./types.ts";
 
 /** Stochastic refusals on benign SDK tasks; re-sample the same prompt this many times. */
 const REFUSAL_ATTEMPTS = 4;
@@ -42,11 +43,7 @@ export function anthropicAdapter(model = "claude-opus-5"): ModelAdapter {
         // response — the prompt is not reworded to avoid the classifier, and a
         // task that refuses every time still fails rather than scoring.
         if (res.stop_reason === "refusal") {
-          if (attempt === REFUSAL_ATTEMPTS) {
-            throw new Error(
-              `model refused this task ${REFUSAL_ATTEMPTS}x — not library drift, exclude it from the score`,
-            );
-          }
+          if (attempt === REFUSAL_ATTEMPTS) throw new RefusalError(REFUSAL_ATTEMPTS);
           continue;
         }
 

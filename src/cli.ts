@@ -9,12 +9,13 @@ import { reactRouterSpec } from "./libraries/react-router.ts";
 import { stripeSpec } from "./libraries/stripe.ts";
 import { projectRoot, tscEntry } from "./env.ts";
 import { generate } from "./generate.ts";
+import { RefusalError } from "./models/types.ts";
 import { verify } from "./verify.ts";
 import { score } from "./score.ts";
 import { renderScorecard } from "./report.ts";
 import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
-import type { Candidate, LibrarySpec, Task, Verdict } from "./types.ts";
+import type { Candidate, LibrarySpec, Refusal, Task, Verdict } from "./types.ts";
 
 const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec, "react-router": reactRouterSpec, stripe: stripeSpec };
 
@@ -82,6 +83,10 @@ async function main(): Promise<void> {
   // Generate concurrently (each task × model is independent).
   process.stdout.write("Generating ");
   const candidates: Candidate[] = [];
+  // A refusal is an UNMEASURED task, not a failed one — the model never wrote
+  // code, so nothing about the library was tested. Kept apart from generic
+  // failures so the scorecard can say so out loud instead of quietly shrinking.
+  const refusals: Refusal[] = [];
   await Promise.all(
     adapters.flatMap((m) =>
       tasks.map(async (t) => {
@@ -89,12 +94,23 @@ async function main(): Promise<void> {
           candidates.push(await generate(t, m, spec));
           process.stdout.write(".");
         } catch (e) {
-          console.error(`\n  generate failed [${m.id}/${t.id}]: ${(e as Error).message}`);
+          if (e instanceof RefusalError) {
+            refusals.push({ taskId: t.id, model: m.id, attempts: e.attempts });
+            process.stdout.write("R");
+          } else {
+            console.error(`\n  generate failed [${m.id}/${t.id}]: ${(e as Error).message}`);
+          }
         }
       }),
     ),
   );
   process.stdout.write("\n");
+  if (refusals.length) {
+    console.log(
+      `Refused: ${refusals.length}/${tasks.length * adapters.length} — ${[...new Set(refusals.map((r) => r.taskId))].join(", ")}`,
+    );
+    console.log("  (unmeasured, not counted as drift — see the scorecard)");
+  }
 
   await mkdir(path.join(projectRoot, "data"), { recursive: true });
   await writeFile(
@@ -112,7 +128,7 @@ async function main(): Promise<void> {
   }
   process.stdout.write("\n");
 
-  const result = score(spec.id, await libVersion(spec.packageName), new Date().toISOString(), verdicts);
+  const result = score(spec.id, await libVersion(spec.packageName), new Date().toISOString(), verdicts, refusals);
   await writeFile(
     path.join(projectRoot, "data", `${label}.result.json`),
     JSON.stringify(result, null, 2),

@@ -82,6 +82,19 @@ export interface ModelScore {
   score: number;
 }
 
+/**
+ * A task the model would not attempt. Refusals are stochastic on ordinary SDK
+ * tasks (measured 2026-08-04 on Stripe), and they are NOT library drift — the
+ * model never wrote code, so nothing was measured. They are excluded from the
+ * score and reported separately so a thin board is visibly thin.
+ */
+export interface Refusal {
+  taskId: string;
+  model: ModelId;
+  /** how many times the identical prompt was re-sampled before giving up */
+  attempts: number;
+}
+
 export interface Result {
   library: string;
   libraryVersion: string;
@@ -92,4 +105,6 @@ export interface Result {
   perModel: ModelScore[];
   failurePatterns: FailurePattern[];
   verdicts: Verdict[];
+  /** tasks the model refused outright; excluded from every score above */
+  refusals: Refusal[];
 }

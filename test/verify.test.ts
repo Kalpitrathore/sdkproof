@@ -49,3 +49,33 @@ test("verify fails a hallucinated Prisma candidate and captures the API error", 
   );
   assert.ok(v.errors.every((e) => e.libraryRelated));
 });
+
+/**
+ * The mirror of the known-good guard. That one proves a fixture can express a
+ * PASS; these prove a non-answer can never BE one.
+ *
+ * Why: on 2026-08-04 the first Stripe run scored 100/100 with four of fifteen
+ * candidates empty. An empty file compiles clean, so verify() passed it — the
+ * harness reported "the model produced nothing" as "the model got it right".
+ * Refusals were the cause and they are stochastic, so this can recur on any
+ * library at any time. SDKP001 is deliberately outside API_SHAPE_CODES so a
+ * harness failure can never be classified as library drift.
+ */
+for (const [name, code] of [
+  ["empty", ""],
+  ["whitespace only", "   \n\n  "],
+  ["imports and comments only", 'import Stripe from "stripe";\n// TODO\n'],
+  ["no export", 'import Stripe from "stripe";\nasync function solve() { return 1; }\n'],
+] as const) {
+  test(`verify fails a ${name} candidate without running tsc`, async () => {
+    const candidate: Candidate = { taskId: "t", model: "m", code };
+    const v = await verify(candidate, prismaSpec, { tscEntry });
+    assert.equal(v.passed, false, "a non-answer must never pass");
+    assert.equal(v.errors[0].code, "SDKP001");
+    assert.equal(
+      v.errors[0].libraryRelated,
+      false,
+      "a harness failure must never be counted as library drift",
+    );
+  });
+}
