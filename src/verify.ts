@@ -41,6 +41,26 @@ export async function verify(
   spec: LibrarySpec,
   opts: VerifyOptions,
 ): Promise<Verdict> {
+  // An empty or bodyless candidate compiles clean, so without this it scores as
+  // a PASS — a generation failure recorded as a perfect answer. Found on the
+  // first Stripe run (2026-08-04): four of fifteen candidates came back empty
+  // because the model hit max_tokens, lost its closing fence, and extraction
+  // returned nothing. All four "passed" and the library scored 100/100.
+  //
+  // Every task skeleton asks for an export, so a candidate with no `export`
+  // has not answered. That is a harness failure, not model drift, and it is
+  // reported with a code outside API_SHAPE_CODES so it can never be counted as
+  // a library-drift finding.
+  const empty = emptyCandidate(candidate.code);
+  if (empty) {
+    return {
+      taskId: candidate.taskId,
+      model: candidate.model,
+      passed: false,
+      errors: [{ code: "SDKP001", message: empty, line: 0, column: 0, libraryRelated: false }],
+    };
+  }
+
   const candidatePath = path.join(spec.fixtureDir, "candidate.ts");
   const tsconfigPath = path.join(spec.fixtureDir, "tsconfig.json");
   await writeFile(candidatePath, candidate.code, "utf8");
@@ -56,6 +76,26 @@ export async function verify(
   } finally {
     await rm(candidatePath, { force: true });
   }
+}
+
+
+/**
+ * Reject candidates that cannot possibly be an answer. Returns a reason string
+ * when the candidate is unusable, or null when it is worth compiling.
+ */
+function emptyCandidate(code: string): string | null {
+  const trimmed = code.trim();
+  if (!trimmed) return "empty candidate: the model returned no code";
+  // Strip comments and imports; what remains must contain an export.
+  const body = trimmed
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "")
+    .replace(/^\s*import\s[^;]*;?\s*$/gm, "")
+    .replace(/^\s*declare\s[^;]*;?\s*$/gm, "")
+    .trim();
+  if (!body) return "empty candidate: only imports and comments, no implementation";
+  if (!/\bexport\b/.test(body)) return "no export: the candidate does not implement the requested export";
+  return null;
 }
 
 async function runTsc(tscEntry: string, tsconfigPath: string): Promise<string> {

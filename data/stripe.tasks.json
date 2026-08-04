@@ -1,0 +1,107 @@
+[
+  {
+    "id": "create-customer",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Create a Stripe customer with the given email address and a metadata entry `plan` set to \"pro\". Return the new customer's id.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `createCustomer(email: string): Promise<string>`.\n"
+  },
+  {
+    "id": "checkout-session",
+    "area": "checkout",
+    "difficulty": "easy",
+    "prompt": "Create a Checkout Session in payment mode for one unit of the given price id, sending the buyer to https://example.com/ok on success and https://example.com/no if they cancel. Return the session's hosted URL.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `checkout(price: string): Promise<string | null>`.\n"
+  },
+  {
+    "id": "payment-intent",
+    "area": "payments",
+    "difficulty": "easy",
+    "prompt": "Create a PaymentIntent for the given amount in USD, letting Stripe decide which payment methods to offer automatically. Return the client secret.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `intent(amount: number): Promise<string | null>`.\n"
+  },
+  {
+    "id": "subscription-create",
+    "area": "billing",
+    "difficulty": "medium",
+    "prompt": "Subscribe the given customer to the given price and return the subscription id.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `subscribe(customer: string, price: string): Promise<string>`.\n"
+  },
+  {
+    "id": "webhook-verify",
+    "area": "webhooks",
+    "difficulty": "medium",
+    "prompt": "Verify a raw webhook payload against the signature header and the endpoint secret. If the resulting event is a completed Checkout Session, return that session's id; otherwise return null.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export a function `handle(body: string, signature: string, secret: string): string | null`.\n"
+  },
+  {
+    "id": "auto-paginate",
+    "area": "pagination",
+    "difficulty": "medium",
+    "prompt": "Collect the ids of every customer in the account, letting the SDK walk the pages for you rather than handling cursors by hand. Ask for 100 per page.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `allCustomerIds(): Promise<string[]>`.\n"
+  },
+  {
+    "id": "expand-customer",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Retrieve a PaymentIntent by id and have Stripe return the full customer object alongside it rather than just the id. Return whatever the customer field holds.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `withCustomer(id: string)`.\n"
+  },
+  {
+    "id": "refund-partial",
+    "area": "payments",
+    "difficulty": "easy",
+    "prompt": "Refund the given amount from the given PaymentIntent and return the refund id.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `refund(paymentIntent: string, amount: number): Promise<string>`.\n"
+  },
+  {
+    "id": "connect-account",
+    "area": "connect",
+    "difficulty": "medium",
+    "prompt": "List the first five customers that belong to a connected account, given that account's id. Use the same client — do not build a second one.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `customersFor(accountId: string)`.\n"
+  },
+  {
+    "id": "idempotent-create",
+    "area": "crud",
+    "difficulty": "medium",
+    "prompt": "Create a customer with the given email in a way that is safe to retry, so a repeated call with the same email cannot create a duplicate. Return the customer id.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `createOnce(email: string): Promise<string>`.\n"
+  },
+  {
+    "id": "card-error",
+    "area": "errors",
+    "difficulty": "medium",
+    "prompt": "Create a PaymentIntent for the given amount in USD. If Stripe rejects the card, return the decline code it gives you; rethrow anything else.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `charge(amount: number): Promise<string | null>`.\n"
+  },
+  {
+    "id": "invoice-finalize",
+    "area": "billing",
+    "difficulty": "medium",
+    "prompt": "Create a draft invoice for the given customer, finalize it, and return the hosted invoice URL.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `bill(customer: string): Promise<string | null | undefined>`.\n"
+  },
+  {
+    "id": "client-config",
+    "area": "setup",
+    "difficulty": "medium",
+    "prompt": "Build and export the Stripe client this project uses: pin it to the API version this installed SDK targets, give it a 30 second timeout and let it retry twice on network failure.",
+    "skeleton": "import Stripe from \"stripe\";\n\n// Export a const `stripe`.\n"
+  },
+  {
+    "id": "decimal-fx-rate",
+    "area": "money",
+    "difficulty": "hard",
+    "prompt": "Retrieve a Checkout Session and return its currency-conversion FX rate as a plain string, or null when the session had no conversion.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `fxRate(sessionId: string): Promise<string | null>`.\n"
+  },
+  {
+    "id": "per-request-key",
+    "area": "setup",
+    "difficulty": "hard",
+    "prompt": "Retrieve a customer using a different secret key for this one request only, reusing the existing client rather than constructing another one.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `retrieveWithKey(customerId: string, key: string)`.\n"
+  }
+]

@@ -3,7 +3,7 @@ import type { LibrarySpec, Task } from "./types.ts";
 export const GENERATION_SYSTEM =
   "You are an expert TypeScript developer. Implement the requested function using the specified library. " +
   "Respond with ONLY the complete TypeScript module inside a single ```ts code block — no explanation before or after. " +
-  "Keep the provided imports and the `declare const prisma` line exactly as given; do NOT construct the client yourself. " +
+  "Keep the provided imports and any `declare` lines exactly as given. " +
   "Fill in the function body so the module type-checks against the real installed package.";
 
 export function buildUserPrompt(task: Task, spec: LibrarySpec): string {

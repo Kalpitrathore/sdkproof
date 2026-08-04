@@ -10,6 +10,7 @@ import { zodSpec } from "../src/libraries/zod.ts";
 import { tanstackQuerySpec } from "../src/libraries/tanstack-query.ts";
 import { nextjsSpec } from "../src/libraries/nextjs.ts";
 import { reactRouterSpec } from "../src/libraries/react-router.ts";
+import { stripeSpec } from "../src/libraries/stripe.ts";
 import type { LibrarySpec } from "../src/types.ts";
 
 /**
@@ -36,6 +37,7 @@ const SPECS: LibrarySpec[] = [
   tanstackQuerySpec,
   nextjsSpec,
   reactRouterSpec,
+  stripeSpec,
 ];
 
 for (const spec of SPECS) {
