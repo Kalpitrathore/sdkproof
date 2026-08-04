@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31",
+  "generatedAt": "2026-08-04",
   "note": "Each score is one model solving 10-15 realistic tasks, type-checked against the installed package. Pass = compiles clean.",
   "scores": [
     {
