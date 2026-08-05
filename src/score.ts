@@ -1,4 +1,4 @@
-import type { ModelScore, Refusal, Result, Verdict } from "./types.ts";
+import type { ArmScore, ModelScore, Refusal, Result, Verdict } from "./types.ts";
 import { classify } from "./classify.ts";
 
 /** Aggregate verdicts into a per-model + overall score with ranked failures. */
@@ -8,6 +8,7 @@ export function score(
   generatedAt: string,
   verdicts: Verdict[],
   refusals: Refusal[] = [],
+  contextArms: ArmScore[] = [],
 ): Result {
   const models = [...new Set(verdicts.map((v) => v.model))].sort();
   const perModel: ModelScore[] = models.map((model) => {
@@ -27,6 +28,11 @@ export function score(
     ? Math.round((100 * passedAll) / verdicts.length)
     : 0;
 
+  // Deltas are computed against the bare score on the SAME task subset, in the
+  // CLI, where the per-arm verdicts live. Not recomputed here against the
+  // headline score — those cover different task sets whenever an arm lost one.
+  const arms = contextArms;
+
   return {
     library,
     libraryVersion,
@@ -36,5 +42,6 @@ export function score(
     failurePatterns: classify(verdicts),
     verdicts,
     refusals,
+    ...(arms.length ? { contextArms: arms } : {}),
   };
 }

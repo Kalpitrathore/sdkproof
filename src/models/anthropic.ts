@@ -4,6 +4,8 @@ import { RefusalError } from "./types.ts";
 
 /** Stochastic refusals on benign SDK tasks; re-sample the same prompt this many times. */
 const REFUSAL_ATTEMPTS = 4;
+/** Transient server errors (529 overloaded, 429 rate limit) — retried with backoff. */
+const TRANSIENT_ATTEMPTS = 5;
 
 /**
  * Claude adapter. Model defaults to claude-opus-5 (the current flagship
@@ -21,12 +23,27 @@ export function anthropicAdapter(model = "claude-opus-5"): ModelAdapter {
       // was scored as a perfect answer. Found 2026-08-04 on the first Stripe
       // run, which reported 100/100 with four of fifteen candidates blank.
       for (let attempt = 1; attempt <= REFUSAL_ATTEMPTS; attempt++) {
-        const res = await client.messages.create({
-          model,
-          max_tokens: maxTokens,
-          system,
-          messages: [{ role: "user", content: user }],
-        });
+        // A 529/429 is the API being busy, not the model saying anything. Left
+        // unretried it drops a task from the run — and on 2026-08-05 that scored
+        // a context arm higher than bare simply because overload took its hardest
+        // tasks away. Same shape as an empty candidate passing: a failure that
+        // improves the number.
+        let res;
+        for (let t = 1; ; t++) {
+          try {
+            res = await client.messages.create({
+              model,
+              max_tokens: maxTokens,
+              system,
+              messages: [{ role: "user", content: user }],
+            });
+            break;
+          } catch (e) {
+            const status = (e as { status?: number }).status;
+            if ((status !== 529 && status !== 429) || t === TRANSIENT_ATTEMPTS) throw e;
+            await new Promise((r) => setTimeout(r, 1500 * 2 ** (t - 1)));
+          }
+        }
 
         // A truncated completion loses its closing fence, so extraction returns
         // a fragment or nothing. That is a harness problem, not model drift.

@@ -46,6 +46,38 @@ export function renderScorecard(r: Result, spec: LibrarySpec): string {
     lines.push("");
   }
 
+  // Placed before the failure patterns: on a context run this is the headline,
+  // because it is the only number on the page a maintainer can change.
+  if (r.contextArms?.length) {
+    lines.push(`## With the library's own agent context`);
+    lines.push("");
+    lines.push(
+      `Same tasks, same model. The bare score above is a project with no agent context; ` +
+        `each arm below adds the files this library ships for itself.`,
+    );
+    lines.push("");
+    const cmp = r.contextArms[0];
+    lines.push(
+      `Compared on the **${cmp.comparedOn} tasks every arm produced code for** — a task missing ` +
+        `from any arm is dropped from all of them, so an arm cannot score higher for having lost one.`,
+    );
+    lines.push("");
+    lines.push(`| Arm | Score | Passed | Scored | vs bare |`);
+    lines.push(`|---|---:|---:|---:|---:|`);
+    lines.push(`| bare | ${cmp.baselineScore}/100 | ${Math.round((cmp.baselineScore * cmp.comparedOn) / 100)} | ${cmp.comparedOn} | — |`);
+    for (const a of r.contextArms) {
+      const sign = a.delta > 0 ? `+${a.delta}` : `${a.delta}`;
+      lines.push(`| ${a.name} | ${a.score}/100 | ${a.passed} | ${a.total} | **${sign}** |`);
+    }
+    lines.push("");
+    for (const a of r.contextArms) {
+      lines.push(`- \`${a.name}\` — ${a.label}`);
+      if (a.fixed.length) lines.push(`  - fixes: ${a.fixed.map((t) => `\`${t}\``).join(", ")}`);
+      if (a.failed.length) lines.push(`  - still fails: ${a.failed.map((t) => `\`${t}\``).join(", ")}`);
+    }
+    lines.push("");
+  }
+
   if (r.failurePatterns.length) {
     lines.push(`## Top failure patterns`);
     lines.push("");

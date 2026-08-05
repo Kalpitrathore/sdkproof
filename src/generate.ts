@@ -7,10 +7,11 @@ export async function generate(
   task: Task,
   model: ModelAdapter,
   spec: LibrarySpec,
+  context?: string,
 ): Promise<Candidate> {
   const raw = await model.generate({
     system: GENERATION_SYSTEM,
-    user: buildUserPrompt(task, spec),
+    user: buildUserPrompt(task, spec, context),
   });
   return { taskId: task.id, model: model.id, code: extractCode(raw) };
 }

@@ -6,8 +6,8 @@ export const GENERATION_SYSTEM =
   "Keep the provided imports and any `declare` lines exactly as given. " +
   "Fill in the function body so the module type-checks against the real installed package.";
 
-export function buildUserPrompt(task: Task, spec: LibrarySpec): string {
-  return [
+export function buildUserPrompt(task: Task, spec: LibrarySpec, context?: string): string {
+  const base = [
     `Library: ${spec.displayName}, imported from "${spec.packageName}".`,
     spec.docsHint,
     "",
@@ -17,6 +17,19 @@ export function buildUserPrompt(task: Task, spec: LibrarySpec): string {
     "```ts",
     task.skeleton,
     "```",
+  ].join("\n");
+  // No context => byte-identical to every prompt that produced a published
+  // score. That equality is asserted in test/prompt.test.ts, because a silent
+  // change here would move six numbers that are already on the web.
+  if (!context) return base;
+  return [
+    "Project context — the agent files this library ships:",
+    "",
+    context,
+    "",
+    "---",
+    "",
+    base,
   ].join("\n");
 }
 
