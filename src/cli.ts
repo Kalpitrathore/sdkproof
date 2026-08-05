@@ -45,13 +45,14 @@ async function main(): Promise<void> {
 
   const argv = process.argv.slice(2);
   if (argv[0] !== "run") {
-    console.error("usage: sdkproof run --lib <id> [--fake] [--limit N] [--with-context]");
+    console.error("usage: sdkproof run --lib <id> [--fake] [--limit N] [--with-context] [--trials N]");
     process.exit(1);
   }
 
   const libId = flag(argv, "--lib") ?? "prisma";
   const useFake = argv.includes("--fake");
   const withContext = argv.includes("--with-context");
+  const trials = Math.max(1, Number(flag(argv, "--trials") ?? "1"));
   const limit = Number(flag(argv, "--limit") ?? "0");
   const tasksFlag = flag(argv, "--tasks");
 
@@ -118,42 +119,69 @@ async function main(): Promise<void> {
   // files the library ships for itself. The bare arm above is untouched, so a
   // context run can never move the published number — it only adds a delta
   // beside it. That delta is the thing a maintainer can act on.
-  const armCandidates = new Map<string, Candidate[]>();
+  // --with-context: score the SAME tasks again, once per arm, with the agent
+  // files the library ships. The bare run above is untouched, so a context run
+  // can never move a published number — it only adds a delta beside it.
+  //
+  // --trials N repeats every cell, INCLUDING the bare arm. Comparing a 1-trial
+  // baseline against an N-trial arm would be the same mistake as comparing arms
+  // over different task sets: the model is stochastic, and a single flipped task
+  // is worth 6 points on a 15-task set.
+  const armCandidates = new Map<string, Candidate[][]>();
+  const bareTrials: Candidate[][] = [];
   if (withContext) {
     if (!spec.agentContext) {
       console.error(`--with-context: ${spec.id} declares no agentContext`);
       process.exit(1);
     }
     const arms = await loadArms(spec.agentContext);
-    console.log(`\nContext arms (${spec.agentContext.source}):`);
+    console.log(`\nContext arms (${spec.agentContext.source}), ${trials} trial(s) each:`);
     for (const arm of spec.agentContext.arms) {
       console.log(`  ${arm.name}: ${arms.get(arm.name)!.length} chars — ${arm.label}`);
     }
-    for (const arm of spec.agentContext.arms) {
-      process.stdout.write(`Generating [${arm.name}] `);
+
+    const runTrial = async (label2: string, context: string | undefined) => {
       const got: Candidate[] = [];
       await Promise.all(
         adapters.flatMap((m) =>
           tasks.map(async (t) => {
             try {
-              got.push(await generate(t, m, spec, arms.get(arm.name)));
+              got.push(await generate(t, m, spec, context));
               process.stdout.write(".");
             } catch (e) {
               if (e instanceof RefusalError) process.stdout.write("R");
-              else console.error(`\n  generate failed [${arm.name}/${m.id}/${t.id}]: ${(e as Error).message}`);
+              else console.error(`\n  generate failed [${label2}/${t.id}]: ${(e as Error).message}`);
             }
           }),
         ),
       );
+      return got;
+    };
+
+    // Trial 1 of the bare arm is the run already generated above; only extra
+    // trials cost anything new.
+    bareTrials.push(candidates);
+    for (let t = 2; t <= trials; t++) {
+      process.stdout.write(`Generating [bare t${t}] `);
+      bareTrials.push(await runTrial(`bare/t${t}`, undefined));
       process.stdout.write("\n");
-      armCandidates.set(arm.name, got);
+    }
+    for (const arm of spec.agentContext.arms) {
+      const per: Candidate[][] = [];
+      for (let t = 1; t <= trials; t++) {
+        process.stdout.write(`Generating [${arm.name} t${t}] `);
+        per.push(await runTrial(`${arm.name}/t${t}`, arms.get(arm.name)));
+        process.stdout.write("\n");
+      }
+      armCandidates.set(arm.name, per);
       await mkdir(path.join(projectRoot, "data"), { recursive: true });
       await writeFile(
         path.join(projectRoot, "data", `${label}.arm-${arm.name}.candidates.json`),
-        JSON.stringify(got, null, 2),
+        JSON.stringify(per, null, 2),
       );
     }
   }
+
 
   await mkdir(path.join(projectRoot, "data"), { recursive: true });
   await writeFile(
@@ -176,55 +204,74 @@ async function main(): Promise<void> {
   // dropped from all of them — otherwise an arm scores higher for having lost
   // its hardest task, which is what happened on the first run (2026-08-05:
   // full-setup "100" over 11 tasks vs bare 86 over 14, different 11).
-  const armVerdicts = new Map<string, Map<string, boolean>>();
-  for (const arm of spec.agentContext?.arms ?? []) {
-    const got = armCandidates.get(arm.name);
-    if (!got) continue;
-    process.stdout.write(`Verifying [${arm.name}] `);
-    const byTask = new Map<string, boolean>();
-    for (const c of got) {
-      const v = await verify(c, spec, { tscEntry });
-      byTask.set(c.taskId, v.passed);
-      process.stdout.write(v.passed ? "✓" : "✗");
+  // Verify every trial of every arm, then compare only on tasks where the bare
+  // run AND every arm produced code in ALL trials. A task missing anywhere is
+  // dropped everywhere, so an arm can never score higher for having lost one.
+  const passCount = async (trialsOf: Candidate[][], tag: string) => {
+    const byTask = new Map<string, { pass: number; seen: number }>();
+    for (let t = 0; t < trialsOf.length; t++) {
+      process.stdout.write(`Verifying [${tag} t${t + 1}] `);
+      for (const c of trialsOf[t]) {
+        const v = await verify(c, spec, { tscEntry });
+        const cur = byTask.get(c.taskId) ?? { pass: 0, seen: 0 };
+        cur.seen++;
+        if (v.passed) cur.pass++;
+        byTask.set(c.taskId, cur);
+        process.stdout.write(v.passed ? "✓" : "✗");
+      }
+      process.stdout.write("\n");
     }
-    process.stdout.write("\n");
-    armVerdicts.set(arm.name, byTask);
-  }
+    return byTask;
+  };
 
   const armScores: ArmScore[] = [];
-  if (armVerdicts.size) {
-    const bareByTask = new Map(verdicts.map((v) => [v.taskId, v.passed]));
-    const comparable = [...bareByTask.keys()].filter((id) =>
-      [...armVerdicts.values()].every((m) => m.has(id)),
+  if (withContext && spec.agentContext) {
+    const bareBy = await passCount(bareTrials, "bare");
+    const armBy = new Map<string, Map<string, { pass: number; seen: number }>>();
+    for (const arm of spec.agentContext.arms) {
+      const per = armCandidates.get(arm.name);
+      if (per) armBy.set(arm.name, await passCount(per, arm.name));
+    }
+
+    // Each task yields one candidate per model per trial, so a complete cell is
+    // trials x adapters — not trials. Caught by a two-model --fake run, where
+    // the naive check matched nothing and silently compared on zero tasks.
+    const perTask = trials * adapters.length;
+    const complete = (m: Map<string, { pass: number; seen: number }>, id: string) =>
+      m.get(id)?.seen === perTask;
+    const comparable = [...bareBy.keys()].filter(
+      (id) => complete(bareBy, id) && [...armBy.values()].every((m) => complete(m, id)),
     );
     const dropped = tasks.length - comparable.length;
     if (dropped > 0) {
       console.log(
-        `Comparing on ${comparable.length} of ${tasks.length} tasks — ${dropped} missing from at least one arm`,
+        `\nComparing on ${comparable.length} of ${tasks.length} tasks — ${dropped} incomplete in at least one arm`,
       );
     }
-    const barePassed = comparable.filter((id) => bareByTask.get(id)).length;
-    const baselineScore = comparable.length
-      ? Math.round((100 * barePassed) / comparable.length)
-      : 0;
-    for (const arm of spec.agentContext?.arms ?? []) {
-      const m = armVerdicts.get(arm.name);
+    const cells = comparable.length * perTask;
+    const barePass = comparable.reduce((n, id) => n + (bareBy.get(id)?.pass ?? 0), 0);
+    const baselineScore = cells ? Math.round((100 * barePass) / cells) : 0;
+
+    for (const arm of spec.agentContext.arms) {
+      const m = armBy.get(arm.name);
       if (!m) continue;
-      const passed = comparable.filter((id) => m.get(id)).length;
-      const s = comparable.length ? Math.round((100 * passed) / comparable.length) : 0;
+      const passed = comparable.reduce((n, id) => n + (m.get(id)?.pass ?? 0), 0);
+      const sc = cells ? Math.round((100 * passed) / cells) : 0;
       armScores.push({
         name: arm.name,
         label: arm.label,
         passed,
-        total: comparable.length,
-        score: s,
+        total: cells,
+        score: sc,
         baselineScore,
-        delta: s - baselineScore,
+        delta: sc - baselineScore,
         comparedOn: comparable.length,
-        // The aggregate says the docs help. These say WHICH task they fixed and
-        // which they did not, which is the only part a maintainer can act on.
-        failed: comparable.filter((id) => !m.get(id)),
-        fixed: comparable.filter((id) => m.get(id) && !bareByTask.get(id)),
+        trials,
+        // Majority-of-trials, so a single flaky run does not read as "fixed".
+        fixed: comparable.filter(
+          (id) => (m.get(id)!.pass) * 2 > trials && (bareBy.get(id)!.pass) * 2 <= trials,
+        ),
+        failed: comparable.filter((id) => (m.get(id)!.pass) * 2 <= trials),
       });
     }
   }

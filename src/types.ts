@@ -142,6 +142,8 @@ export interface ArmScore {
   delta: number;
   /** how many tasks every arm and the bare run all produced code for */
   comparedOn: number;
+  /** trials per task; total = comparedOn x trials */
+  trials: number;
   /** task ids this arm still fails — the list a maintainer's docs have not closed */
   failed: string[];
   /** task ids this arm fixes that the bare run got wrong — what the docs bought */

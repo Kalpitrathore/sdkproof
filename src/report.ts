@@ -58,13 +58,14 @@ export function renderScorecard(r: Result, spec: LibrarySpec): string {
     lines.push("");
     const cmp = r.contextArms[0];
     lines.push(
-      `Compared on the **${cmp.comparedOn} tasks every arm produced code for** — a task missing ` +
-        `from any arm is dropped from all of them, so an arm cannot score higher for having lost one.`,
+      `Compared on the **${cmp.comparedOn} tasks every arm produced code for**, ${cmp.trials} trial(s) each ` +
+        `(${cmp.total} runs per arm). A task missing from any arm is dropped from all of them, so an arm ` +
+        `cannot score higher for having lost one. "Fixes" and "still fails" are majority-of-trials.`,
     );
     lines.push("");
     lines.push(`| Arm | Score | Passed | Scored | vs bare |`);
     lines.push(`|---|---:|---:|---:|---:|`);
-    lines.push(`| bare | ${cmp.baselineScore}/100 | ${Math.round((cmp.baselineScore * cmp.comparedOn) / 100)} | ${cmp.comparedOn} | — |`);
+    lines.push(`| bare | ${cmp.baselineScore}/100 | ${Math.round((cmp.baselineScore * cmp.total) / 100)} | ${cmp.total} | — |`);
     for (const a of r.contextArms) {
       const sign = a.delta > 0 ? `+${a.delta}` : `${a.delta}`;
       lines.push(`| ${a.name} | ${a.score}/100 | ${a.passed} | ${a.total} | **${sign}** |`);
