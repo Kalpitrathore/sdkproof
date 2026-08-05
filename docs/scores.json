@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04",
+  "generatedAt": "2026-08-05",
   "note": "Each score is one model solving 10-15 realistic tasks, type-checked against the installed package. Pass = compiles clean.",
   "scores": [
     {
@@ -28,10 +28,10 @@
       "library": "Zod 4",
       "slug": "zod",
       "libraryVersion": "4.4.3",
-      "model": "claude-opus-5",
-      "score": 100,
-      "passed": 10,
-      "total": 10,
+      "model": "fake-bad",
+      "score": 0,
+      "passed": 0,
+      "total": 3,
       "scorecard": "https://sdkproof.dev/zod.html",
       "badge": "https://sdkproof.dev/badge/zod.svg"
     },

@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "badge.html", "privacy.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "stripe.html", "badge.html", "privacy.html"];
 
 const SITE = "https://sdkproof.dev";
 
@@ -75,6 +75,15 @@ const META = {
     title: "React Router 8 is 93% ready for AI coding agents — SDKProof",
     social: "React Router 8 — 93/100 AI-readiness",
     desc: "React Router 8 scores 93/100 on Claude Opus 5. It drops json() and defer() unprompted; the one consistent miss is meta's removed data argument, now loaderData.",
+    type: "article",
+  },
+  "stripe.html": {
+    // No "N% ready" title here. A third of the task set produced no code, so a
+    // flat readiness claim would overstate a narrower measurement than the other
+    // five pages report.
+    title: "Stripe 22 scores 100 on every AI task that ran — SDKProof",
+    social: "Stripe 22 — 100/100, and 5 of 15 tasks refused",
+    desc: "Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It declined the other five outright.",
     type: "article",
   },
   "badge.html": {

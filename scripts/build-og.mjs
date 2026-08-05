@@ -100,6 +100,7 @@ const PAGES = {
     { short: "Zod 4", score: 100 },
     { short: "React Router", score: 93 },
     { short: "Next.js 16", score: 92 },
+    { short: "Stripe 22", score: 100 },
     { short: "Prisma 7", score: 87 },
   ]),
   "tanstack-query.png": scorecardSvg({
@@ -136,6 +137,13 @@ const PAGES = {
     passed: 14,
     total: 15,
     note: "Only consistent miss: meta's data arg, now loaderData",
+  }),
+  "stripe.png": scorecardSvg({
+    name: "Stripe 22",
+    score: 100,
+    passed: 10,
+    total: 10,
+    note: "5 of 15 tasks refused — measured on the 10 that ran",
   }),
   "prisma7.png": scorecardSvg({
     name: "Prisma 7",

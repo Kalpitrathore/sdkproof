@@ -1,4 +1,43 @@
-<title>SDKProof — React Router 8 AI-Readiness Scorecard</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It declined the other five outright.">
+<title>Stripe 22 scores 100 on every AI task that ran — SDKProof</title>
+<link rel="canonical" href="https://sdkproof.dev/stripe.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:site_name" content="SDKProof">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sdkproof.dev/stripe.html">
+<meta property="og:title" content="Stripe 22 — 100/100, and 5 of 15 tasks refused">
+<meta property="og:description" content="Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It declined the other five outright.">
+<meta property="og:image" content="https://sdkproof.dev/og/stripe.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Stripe 22 — 100/100, and 5 of 15 tasks refused">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stripe 22 — 100/100, and 5 of 15 tasks refused">
+<meta name="twitter:description" content="Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It declined the other five outright.">
+<meta name="twitter:image" content="https://sdkproof.dev/og/stripe.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"SDKProof","url":"https://sdkproof.dev/","logo":"https://sdkproof.dev/icon-512.png","description":"Type-checked scorecards measuring how well AI coding agents write each SDK's current API.","sameAs":["https://github.com/Kalpitrathore/sdkproof"]}</script>
+<!-- Microsoft Clarity — heatmaps and session replay. Loaded in the document head so
+     replay captures from first paint; Cloudflare Web Analytics stays at the end of
+     the document and remains the source of truth for visitor counts. -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xtum7dy1n3");
+</script>
+</head>
+<body>
 <style>
   :root {
     --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
@@ -117,32 +156,43 @@
   footer { margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
   .caveat { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); line-height: 1.75; margin-top: 12px; padding: 16px 20px; border: 1px dashed var(--line); border-radius: 12px; }
   .caveat b { color: var(--ink-soft); font-weight: 650; } .caveat .k { color: var(--brand); }
+
+  .seg.r { background: repeating-linear-gradient(135deg, var(--track), var(--track) 4px, var(--line-strong) 4px, var(--line-strong) 8px); }
+  .dot.r { background: repeating-linear-gradient(135deg, var(--track), var(--track) 3px, var(--line-strong) 3px, var(--line-strong) 6px); }
+  .refused { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--warn, #9a6700); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .refused h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .refused p { margin: 0 0 12px; color: var(--ink-soft); font-size: 14px; } .refused p b { color: var(--ink); }
+  .rtable { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 4px 0 14px; }
+  .rtable th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 0 10px 7px 0; border-bottom: 1px solid var(--line); }
+  .rtable td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+  .rtable td.t { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); white-space: nowrap; }
+  .rtable td.n { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); white-space: nowrap; }
 </style>
 
 <div class="wrap">
   <div class="mast">
-    <span class="logo">SDK<b>Proof</b></span>
+    <a href="index.html" aria-label="SDKProof home" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span></a>
     <span class="tag">AI-Readiness Scorecard</span>
   </div>
 
   <header class="hero">
-    <div class="lib">react-router · v8.3.0</div>
-    <h1>React Router 8 is 93% ready for AI coding agents.</h1>
-    <p class="verdict">The newest breaking major on the board, and Claude Opus 5 already writes most of it. It drops <code>json()</code> and <code>defer()</code> unprompted, reaches for <code>data()</code> when it needs a status, and reads middleware context the v8 way. <b>One task fails, every time:</b> the <code>meta</code> function still receives the <code>data</code> argument that v8 removed.</p>
+    <div class="lib">stripe · v22.4.0</div>
+    <h1>Stripe 22 scores 100. The model refused a third of the tasks.</h1>
+    <p class="verdict">Every task Claude Opus 5 was willing to write compiles clean against <code>stripe@22.4.0</code> — including all three that probe what v21 and v22 actually changed. But <b>five of the fifteen it declined outright</b>, returning no code at all. Those are not failures. Nothing was measured, and the score below covers only what ran.</p>
     <div class="scorerow">
-      <div class="scorebig"><span class="n">93</span><span class="d">/100</span><div class="l">Agent-readiness</div></div>
+      <div class="scorebig"><span class="n">100</span><span class="d">/100</span><div class="l">on 10 measured</div></div>
       <div class="segs">
         <div class="segbar">
           <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
           <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg f"></div><div class="seg p"></div>
+          <div class="seg r"></div><div class="seg r"></div><div class="seg r"></div><div class="seg r"></div><div class="seg r"></div>
         </div>
-        <div class="seglegend"><span><span class="dot p"></span><b>14</b> compile clean</span><span><span class="dot f"></span><b>1</b> fails type-check</span></div>
+        <div class="seglegend"><span><span class="dot p"></span><b>10</b> compile clean</span><span><span class="dot f"></span><b>0</b> fail type-check</span><span><span class="dot r"></span><b>5</b> refused — unmeasured</span></div>
       </div>
     </div>
     <div class="meta">
-      <span><b>Model:</b> claude-opus-5</span><span><b>Tasks:</b> 15</span>
-      <span><b>Method:</b> tsc against real installed package</span><span><b>Run:</b> 2026-07-31</span>
+      <span><b>Model:</b> claude-opus-5</span><span><b>Tasks:</b> 15 written · 10 measured</span>
+      <span><b>Method:</b> tsc against real installed package</span><span><b>Run:</b> 2026-08-04</span>
     </div>
   </header>
 
@@ -150,11 +200,11 @@
     <a class="bcard" href="prisma7.html">
       <div class="bn">Prisma 7</div><div class="bs">87</div><div class="bl">client setup on v6 →</div>
     </a>
-    <a class="bcard" href="nextjs.html">
-      <div class="bn">Next.js 16</div><div class="bs">92</div><div class="bl">revalidateTag arity →</div>
+    <a class="bcard" href="react-router.html">
+      <div class="bn">React Router 8</div><div class="bs">93</div><div class="bl">meta's removed data arg →</div>
     </a>
     <div class="bcard cur">
-      <div class="bn">React Router 8</div><div class="bs">93</div><div class="bl">meta's removed data arg</div>
+      <div class="bn">Stripe 22</div><div class="bs">100</div><div class="bl">5 of 15 refused</div>
     </div>
     <a class="bcard" href="zod.html">
       <div class="bn">Zod 4</div><div class="bs">100</div><div class="bl">clean sweep →</div>
@@ -162,58 +212,52 @@
   </div>
 
   <div class="sec-head">
-    <span class="eyebrow">The one consistent miss</span>
-    <h2>meta() still gets the argument v8 deleted</h2>
-    <p>v8 removed the <code>data</code> parameter from the <code>meta</code> APIs in favour of <code>loaderData</code>, to line up with <code>Route.ComponentProps</code>. The model writes the old one — and it isn't a fluke: re-run three more times, it failed <b>3 of 3</b>.</p>
+    <span class="eyebrow">The part with no number</span>
+    <h2>Five tasks the model would not write</h2>
+    <p>These returned <code>stop_reason: "refusal"</code> — a thinking block and no text. Not a failure, not drift, and not evidence that Stripe's API is hard to use. Simply nothing to measure. Re-sampling the identical prompt four times did not clear them.</p>
   </div>
 
-  <article class="fcard">
-    <div class="top"><span class="x">✗</span><span class="t">Set the page title from the loader's data</span><span class="tsx">TS2339 · 3 of 3 runs</span></div>
-    <div class="fbody">
-      <div class="col bad">
-        <div class="clabel">Opus 5 writes (pre-v8)</div>
-        <pre>export const meta: MetaFunction&lt;typeof loader&gt; =
-  ({ <span class="hl-bad">data</span> }) =&gt; {
-    return [{ title: <span class="hl-bad">data</span>?.user?.name ?? "User" }];
-  };</pre>
-      </div>
-      <div class="col good">
-        <div class="clabel">React Router 8 wants ✓</div>
-        <pre>export const meta: MetaFunction&lt;typeof loader&gt; =
-  ({ <span class="hl-good">loaderData</span> }) =&gt; {
-    return [{ title: <span class="hl-good">loaderData</span>?.user?.name ?? "User" }];
-  };</pre>
-      </div>
-    </div>
-    <div class="errline"><div class="e">error TS2339: Property 'data' does not exist on type 'MetaArgs&lt;() =&gt; Promise&lt;{ user: … }&gt;&gt;'.</div></div>
-    <div class="why"><b>Why it slips through review:</b> the rename touched <code>MetaArgs</code>, <code>MetaMatch</code>, <code>Route.ComponentProps.matches</code> and <code>UIMatch</code> together, and the old name is the more natural word. A reader skims <code>data</code> in a meta function and sees nothing wrong. The compiler doesn't.</div>
+  <article class="refused">
+    <h3>Measured over 10 trials each, on the exact prompts this scorecard uses.</h3>
+    <table class="rtable">
+      <thead><tr><th>Task</th><th>Refused</th><th>What it was written to probe</th></tr></thead>
+      <tbody>
+        <tr><td class="t">payment-intent</td><td class="n">10 / 10</td><td>automatic payment methods, client secret</td></tr>
+        <tr><td class="t">auto-paginate</td><td class="n">10 / 10</td><td>async iteration over <code>list()</code></td></tr>
+        <tr><td class="t">connect-account</td><td class="n">10 / 10</td><td>v22: <code>stripeAccount</code> as a second-argument option</td></tr>
+        <tr><td class="t">per-request-key</td><td class="n">10 / 10</td><td>v22: <code>apiKey</code> moved into <code>RequestOptions</code></td></tr>
+        <tr><td class="t">expand-customer</td><td class="n">9 / 10</td><td>the <code>expand</code> parameter</td></tr>
+      </tbody>
+    </table>
+    <p><b>It is specific to this library, not to the harness.</b> The same rig, same prompts, same model, run against Zod's task set: <b>0 refusals out of 100</b>. Against Stripe's full set: <b>62 out of 150, 41.3%</b>.</p>
+    <p><b>And it is not about missing context.</b> The obvious explanation was that these prompts arrive with no project, no ownership, no stated reason — so "list another account's customers" reads like the code half of a fraud task. Each of the five was rewritten with one clause of ownership context (<i>"our platform onboards sellers as connected accounts, for the seller's own dashboard…"</i>) and run as a paired A/B, both variants interleaved in the same batch. <b>Every pair came back 10/10 refused on both arms.</b> The hypothesis is wrong: the trigger is the shape of the operation, not the absence of a reason.</p>
   </article>
 
   <div class="sec-head">
     <span class="eyebrow">Clean</span>
-    <h2>What it gets right — 14 of 15</h2>
+    <h2>What it gets right — 10 of 10</h2>
   </div>
   <div class="rights">
-    <h3>The removals it could have tripped on, it didn't.</h3>
-    <p>v8 deleted a lot: <code>json()</code>, <code>defer()</code>, the whole <code>react-router-dom</code> package, and the plain-object <code>context</code>. The model wrote <b>none</b> of them. It returns bare objects from loaders, hands back an un-awaited promise for streaming instead of <code>defer()</code>, wraps values in <b><code>data()</code></b> when it needs a 400, calls <b><code>createContext()</code></b> without the old <code>unstable_</code> prefix, and reads middleware state with <b><code>context.get(userContext)</code></b> rather than as a property.</p>
+    <h3>Every version-specific probe that ran, passed.</h3>
+    <p>Stripe ships breaking majors fast — v21 and v22 landed eight days apart — and the three tasks written specifically to catch that drift all compile clean. The model writes the <b>exact pinned <code>apiVersion</code> literal</b> the installed SDK expects, where any remembered older string is a type error. It treats <code>decimal_string</code> fields as <b><code>Stripe.Decimal</code></b>, which v21 changed from <code>string</code>. And it puts <code>idempotencyKey</code> in the <b>second argument</b>, not mixed into params — the v22 separation that removed the old blended call shape.</p>
     <div class="chips">
-      <span class="chip">loader / action</span><span class="chip">redirect()</span><span class="chip">useLoaderData</span>
-      <span class="chip">useFetcher</span><span class="chip">useSubmit</span><span class="chip">useSearchParams</span>
-      <span class="chip">isRouteErrorResponse</span><span class="chip">createBrowserRouter</span>
-      <span class="chip star">no json() — returns plain data</span><span class="chip star">no defer() — raw promise</span>
-      <span class="chip star">data() for status codes</span><span class="chip star">createContext — no unstable_</span>
-      <span class="chip star">context.get() — not a plain object</span>
+      <span class="chip">customers.create</span><span class="chip">checkout.sessions</span><span class="chip">refunds.create</span>
+      <span class="chip">invoices.finalizeInvoice</span><span class="chip">webhooks.constructEvent</span>
+      <span class="chip">StripeCardError narrowing</span>
+      <span class="chip star">exact pinned apiVersion literal</span>
+      <span class="chip star">Stripe.Decimal, not string</span>
+      <span class="chip star">RequestOptions as the 2nd arg</span>
     </div>
   </div>
 
   <div class="sec-head">
-    <span class="eyebrow">Six scores, one pattern</span>
-    <h2>Readiness tracks the drift window</h2>
+    <span class="eyebrow">The shape of it</span>
+    <h2>Taking money refuses. Returning it does not.</h2>
   </div>
   <div class="insight">
-    <p><b>93 on a major this new is the surprise here.</b> The pattern across this board has been that the most recent breaking change scores worst — Prisma 7 sits at 87 for exactly that reason. React Router 8 is newer still and lands at 93, with a single miss.</p>
-    <p>The plausible reason is that v8 mostly <i>finished</i> removals that v7 had already started deprecating: <code>json()</code> and <code>defer()</code> were on the way out long before they were deleted, so the model had years of "don't use this" signal to learn from. <b>The one thing it gets wrong is the one thing that was a genuine rename rather than a long-signposted removal.</b></p>
-    <p>Which is the more useful version of the drift rule: it isn't the age of the release that predicts the gap, it's how much warning the ecosystem had.</p>
+    <p><b>Create a PaymentIntent: refused 10 times out of 10. Issue a refund: refused once out of 10.</b> Same SDK, same money, opposite direction.</p>
+    <p>It holds across the set. Creating <i>a</i> customer never refuses; reading <i>every</i> customer always does. Pulling one customer's full record through <code>expand</code> refuses 9 times in 10. Acting on another account, or with another key, refuses every time. Configuring the client, verifying a webhook signature, finalizing an invoice, reading an exchange rate — all clean.</p>
+    <p>So the trigger is not "Stripe". It is a narrower shape: <b>moving money toward you, reading customer data in bulk or in full, or acting with credentials that might not be yours.</b> Which is a reasonable thing for a safety system to be careful about, and an awkward one for a benchmark that deliberately supplies no context — the same stripped-down prompt that makes the measurement clean is the one that arrives looking unexplained.</p>
   </div>
 
   <div class="sec-head">
@@ -221,11 +265,11 @@
     <h2>How this was measured</h2>
   </div>
   <div class="method">
-    <span class="k">15</span> realistic React Router tasks → generated by <span class="k">claude-opus-5</span> → each written into a project with the <b>real installed <code>react-router</code> v8.3.0</b> and type-checked with <span class="k">tsc --noEmit</span>.<br>
-    A task <b>passes</b> only if it compiles clean. Prompts name the building blocks (loader, action, middleware, useFetcher, …) but never the signatures — so this measures what the model reaches for. Failures are the compiler's own diagnostics. Reproducible: pinned versions, pinned model.
+    <span class="k">15</span> realistic Stripe tasks → generated by <span class="k">claude-opus-5</span> → each written into a project with the <b>real installed <code>stripe</code> v22.4.0</b> and type-checked with <span class="k">tsc --noEmit</span>.<br>
+    A task <b>passes</b> only if it compiles clean. Prompts name the resources (customers, checkout.sessions, webhooks, …) but never the signatures, so this measures what the model reaches for. Refusals are recorded and excluded — never counted as a pass or a failure.
   </div>
   <div class="caveat">
-    <b>One thing this score cannot see.</b> v8 deleted the <code>react-router-dom</code> package and asks you to import <code>RouterProvider</code> from <code>react-router/dom</code>. The model imported it from <code>react-router</code> — which still type-checks, because the root entry re-exports it. <b>So that task passed, and the drift it was written to catch is invisible to a type-checker.</b><br><br>
+    <b>Read this score as covering 10 of 15 written tasks.</b> A third of the set produced no code, so this page reports a narrower measurement than every other scorecard here. The two tasks probing <code>apiKey</code> and <code>stripeAccount</code> as request options are among them — though that same v22 change is covered by the idempotency task, which ran and passed.<br><br>
     Same limit applies board-wide: <span class="k">tsc</span> catches "this does not exist" and "wrong shape". It cannot catch code that compiles and means something else.
   </div>
 
@@ -237,7 +281,13 @@
   </div>
 
   <footer>
-    SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by the React Router project.<br>
-    Measured 2026-07-31 against react-router v8.3.0 with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior.
+    SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by Stripe.<br>
+    Measured 2026-08-04 against stripe v22.4.0 with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior. 10 of 15 tasks measured; 5 refused and excluded.
+    <p class="fine" style="margin-top:10px"><a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
   </footer>
 </div>
+<!-- Cloudflare Web Analytics -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "a50cb1636e514225ad69b1f406df2054"}'></script>
+<!-- End Cloudflare Web Analytics -->
+</body>
+</html>
