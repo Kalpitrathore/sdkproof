@@ -67,4 +67,10 @@ test("refusals are excluded from the score and stated on the scorecard", () => {
   assert.match(md, /1 task refused/);
   assert.match(md, /`c`/);
   assert.match(md, /covering 2 of 3 written tasks/);
+
+  // Both rates, on the same row, with intervals. 2 of 2 written is 100%; 2 of 3
+  // asked is 67%. Publishing only the first is the denominator bug.
+  assert.match(md, /100% \(/, "conditional rate missing");
+  assert.match(md, /67% \(/, "unconditional rate missing");
+  assert.match(md, /Wilson 95%/);
 });

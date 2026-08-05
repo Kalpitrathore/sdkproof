@@ -28,6 +28,11 @@ const LIBS = [
   { slug: "react-router", name: "React Router 8", page: "react-router.html" },
   { slug: "nextjs", name: "Next.js 16", page: "nextjs.html" },
   { slug: "prisma7", name: "Prisma 7", page: "prisma7.html" },
+  // `badge: false` — published scorecard, no SVG. A badge is one number by
+  // construction, and this is the one run where one number is the wrong answer:
+  // 100% of what the model wrote, 67% of what it was asked. It still belongs in
+  // scores.json, where both rates fit.
+  { slug: "stripe", name: "Stripe 22", page: "stripe.html", badge: false },
 ];
 
 // Light-theme brand tokens rather than the shields defaults: white on #4c1 is the
@@ -90,22 +95,55 @@ function badgeSvg({ slug, message, color }) {
   return { svg, width: w };
 }
 
+/**
+ * Wilson 95% interval, kept in sync with src/stats.ts. Duplicated rather than
+ * imported because the build scripts are plain .mjs and the harness is .ts;
+ * test/stats.test.ts pins the arithmetic on the TS side.
+ */
+const wilson = (k, n, z = 1.959963984540054) => {
+  if (!(n > 0)) throw new Error(`wilson: empty denominator (n=${n})`);
+  const p = k / n;
+  const z2 = z * z;
+  const d = 1 + z2 / n;
+  const center = (p + z2 / (2 * n)) / d;
+  const margin = (z / d) * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n));
+  const trim = (x) => Number(x.toFixed(4));
+  return { low: k === 0 ? 0 : trim(Math.max(0, center - margin)), high: k === n ? 1 : trim(Math.min(1, center + margin)) };
+};
+
 const rows = LIBS.map((lib) => {
   const result = JSON.parse(readFileSync(path.join(root, "data", `${lib.slug}.result.json`), "utf8"));
   const model = result.perModel?.[0] ?? {};
+
+  // A `--fake` smoke run writes the same data/<lib>.result.json a real run does.
+  // On 2026-08-04 one did exactly that to zod, and this script published the
+  // result: docs/badge/zod.json went live reading "0/100" from a model called
+  // fake-bad, while the scorecard page still said 100. The badge's whole claim is
+  // that it cannot disagree with the run it reports, so this refuses to build
+  // rather than publish a number no real model produced. cli.ts now writes fake
+  // runs to a .fake label so this should never fire again.
+  if (/^fake-/.test(model.model ?? "")) {
+    throw new Error(
+      `data/${lib.slug}.result.json is a --fake run (model "${model.model}"). ` +
+        `Re-score it for real before building badges — publishing this would put a fake number in someone's README.`,
+    );
+  }
+
   const score = result.overallScore;
   const message = `${score}/100`;
   const color = colorFor(score);
 
   const badge = badgeSvg({ slug: lib.slug, message, color });
-  writeFileSync(path.join(outDir, `${lib.slug}.svg`), badge.svg);
+  if (lib.badge !== false) {
+    writeFileSync(path.join(outDir, `${lib.slug}.svg`), badge.svg);
 
-  // shields.io endpoint, for maintainers who would rather point at shields than at
-  // a stranger's domain. Same numbers, same source file.
-  writeFileSync(
-    path.join(outDir, `${lib.slug}.json`),
-    JSON.stringify({ schemaVersion: 1, label: LABEL, message, color }) + "\n"
-  );
+    // shields.io endpoint, for maintainers who would rather point at shields than at
+    // a stranger's domain. Same numbers, same source file.
+    writeFileSync(
+      path.join(outDir, `${lib.slug}.json`),
+      JSON.stringify({ schemaVersion: 1, label: LABEL, message, color }) + "\n"
+    );
+  }
 
   return {
     ...lib,
@@ -115,6 +153,7 @@ const rows = LIBS.map((lib) => {
     version: result.libraryVersion,
     passed: model.passed,
     total: model.total,
+    refused: (result.refusals ?? []).filter((r) => r.model === model.model).length,
     model: model.model,
   };
 });
@@ -128,16 +167,37 @@ writeFileSync(
     {
       generatedAt: new Date().toISOString().slice(0, 10),
       note: "Each score is one model solving 10-15 realistic tasks, type-checked against the installed package. Pass = compiles clean.",
+      // Two rates per library, never one. `score` stays the conditional number
+      // for anything already reading this file; `unconditionalScore` counts the
+      // tasks the model refused to write as the non-answers they are. Where
+      // nothing was refused the two are equal, which is the point — the gap is
+      // only visible if both are always published. Intervals are Wilson 95%,
+      // because these denominators are 10-15 and a bare 100% overstates that.
+      metrics: {
+        score: "conditional API correctness: passes / completions that produced code",
+        unconditionalScore: "unconditional task success: passes / every task asked, refusals included",
+        ci95: "Wilson 95% interval on the same numerator and denominator, as [low, high] proportions",
+      },
       scores: rows.map((r) => ({
         library: r.name,
         slug: r.slug,
         libraryVersion: r.version,
         model: r.model,
         score: r.score,
+        unconditionalScore: Math.round((100 * r.passed) / (r.total + r.refused)),
         passed: r.passed,
         total: r.total,
+        refused: r.refused,
+        attempted: r.total + r.refused,
+        ci95: {
+          score: [wilson(r.passed, r.total).low, wilson(r.passed, r.total).high],
+          unconditionalScore: [
+            wilson(r.passed, r.total + r.refused).low,
+            wilson(r.passed, r.total + r.refused).high,
+          ],
+        },
         scorecard: `${SITE}/${r.page}`,
-        badge: `${SITE}/badge/${r.slug}.svg`,
+        ...(r.badge === false ? {} : { badge: `${SITE}/badge/${r.slug}.svg` }),
       })),
     },
     null,
@@ -149,6 +209,7 @@ const snippet = (r) =>
   `[![${LABEL}: ${r.message}](${SITE}/badge/${r.slug}.svg)](${SITE}/${r.page}?ref=badge)`;
 
 const cards = rows
+  .filter((r) => r.badge !== false)
   .map(
     (r) => `      <div class="badge-row">
         <div class="badge-head">
@@ -267,6 +328,8 @@ ${cards}
 
 writeFileSync(path.join(root, "scorecards", "badge.html"), page);
 
+const badged = rows.filter((r) => r.badge !== false).length;
 console.log(
-  `Built ${rows.length} badges (svg + shields json) into docs/badge/, plus docs/scores.json and scorecards/badge.html`
+  `Built ${badged} badges (svg + shields json) into docs/badge/, plus docs/scores.json ` +
+    `(${rows.length} libraries, both rates) and scorecards/badge.html`
 );

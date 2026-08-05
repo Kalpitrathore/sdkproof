@@ -143,7 +143,7 @@ const PAGES = {
     score: 100,
     passed: 10,
     total: 10,
-    note: "5 of 15 tasks refused — measured on the 10 that ran",
+    note: "100% conditional, 67% unconditional — 5 of 15 refused",
   }),
   "prisma7.png": scorecardSvg({
     name: "Prisma 7",

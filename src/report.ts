@@ -1,4 +1,5 @@
 import type { LibrarySpec, Result } from "./types.ts";
+import { fmtInterval, rates } from "./stats.ts";
 
 /** Render a Result into a human-readable markdown scorecard. */
 export function renderScorecard(r: Result, spec: LibrarySpec): string {
@@ -13,13 +14,35 @@ export function renderScorecard(r: Result, spec: LibrarySpec): string {
   lines.push("");
   lines.push(`## Overall: ${r.overallScore}/100`);
   lines.push("");
-  lines.push(`| Model | Score | Passed | Scored | Refused |`);
-  lines.push(`|---|---:|---:|---:|---:|`);
+
+  // Two rates, never one. A run that refuses five tasks and passes the other ten
+  // is 100% of what it wrote AND 67% of what it was asked; both are true, and
+  // publishing only the first hides the failure mode. Raised on dev.to 2026-08-06.
+  // Intervals because these denominators are 10-15, where a clean 100% is not
+  // the same claim as a clean 100% over 150.
+  lines.push(
+    `**Conditional API correctness** = passes / completions that produced code. ` +
+      `**Unconditional task success** = passes / every task asked, refusals included. ` +
+      `Ranges are Wilson 95% intervals.`,
+  );
+  lines.push("");
+  lines.push(`| Model | Conditional | Unconditional | Passed | Scored | Refused |`);
+  lines.push(`|---|---:|---:|---:|---:|---:|`);
   for (const m of r.perModel) {
     const refused = r.refusals.filter((x) => x.model === m.model).length;
-    lines.push(`| ${m.model} | ${m.score}/100 | ${m.passed} | ${m.total} | ${refused || "—"} |`);
+    const s = rates({ passed: m.passed, scored: m.total, refused });
+    lines.push(
+      `| ${m.model} ` +
+        `| ${s.conditional.pct}% (${fmtInterval(s.conditional.ci)}) ` +
+        `| ${s.unconditional.pct}% (${fmtInterval(s.unconditional.ci)}) ` +
+        `| ${m.passed} | ${m.total} | ${refused || "—"} |`,
+    );
   }
   lines.push("");
+  if (!r.refusals.length) {
+    lines.push(`_No task was refused, so both rates run over the same set of tasks._`);
+    lines.push("");
+  }
 
   // Refusals are stated before the failures, not in a footnote. A score built on
   // fewer tasks than were written is a weaker measurement, and the reader has to

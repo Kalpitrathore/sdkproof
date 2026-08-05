@@ -82,8 +82,8 @@ const META = {
     // flat readiness claim would overstate a narrower measurement than the other
     // five pages report.
     title: "Stripe 22 scores 100 on every AI task that ran — SDKProof",
-    social: "Stripe 22 — 100/100, and 5 of 15 tasks refused",
-    desc: "Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It declined the other five outright.",
+    social: "Stripe 22 — 100% of answers correct, 67% of tasks answered",
+    desc: "Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It refused the other five outright, so the page publishes both rates.",
     type: "article",
   },
   "badge.html": {

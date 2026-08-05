@@ -183,8 +183,11 @@
       <div class="name">Stripe 22</div>
       <div class="pkg">stripe</div>
       <div class="score">100<span class="d">/100</span></div>
+      <!-- Bar tracks the printed score, so it stays at 100. The split lives in the
+           text below rather than as a 67%-filled bar under a "100/100" label,
+           which reads as a rendering bug rather than as two rates. -->
       <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
-      <div class="gap">Clean on every task that ran, including the pinned <b>apiVersion</b> literal and <b>Stripe.Decimal</b> — but the model <b>refused 5 of 15 tasks</b>, so this covers 10.</div>
+      <div class="gap"><b>100% of the answers, 67% of the tasks.</b> Clean on every task that ran, including the pinned <b>apiVersion</b> literal and <b>Stripe.Decimal</b> — but the model <b>refused 5 of 15</b>, so the score covers 10.</div>
       <div class="view">View scorecard →</div>
     </a>
     <a class="card" href="tanstack-query.html">

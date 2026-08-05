@@ -1,6 +1,11 @@
 {
   "generatedAt": "2026-08-05",
   "note": "Each score is one model solving 10-15 realistic tasks, type-checked against the installed package. Pass = compiles clean.",
+  "metrics": {
+    "score": "conditional API correctness: passes / completions that produced code",
+    "unconditionalScore": "unconditional task success: passes / every task asked, refusals included",
+    "ci95": "Wilson 95% interval on the same numerator and denominator, as [low, high] proportions"
+  },
   "scores": [
     {
       "library": "TanStack Query v5",
@@ -8,8 +13,21 @@
       "libraryVersion": "5.101.4",
       "model": "claude-opus-5",
       "score": 100,
+      "unconditionalScore": 100,
       "passed": 13,
       "total": 13,
+      "refused": 0,
+      "attempted": 13,
+      "ci95": {
+        "score": [
+          0.7719,
+          1
+        ],
+        "unconditionalScore": [
+          0.7719,
+          1
+        ]
+      },
       "scorecard": "https://sdkproof.dev/tanstack-query.html",
       "badge": "https://sdkproof.dev/badge/tanstack-query.svg"
     },
@@ -19,8 +37,21 @@
       "libraryVersion": "7.0.30",
       "model": "claude-opus-5",
       "score": 100,
+      "unconditionalScore": 100,
       "passed": 10,
       "total": 10,
+      "refused": 0,
+      "attempted": 10,
+      "ci95": {
+        "score": [
+          0.7225,
+          1
+        ],
+        "unconditionalScore": [
+          0.7225,
+          1
+        ]
+      },
       "scorecard": "https://sdkproof.dev/aisdk.html",
       "badge": "https://sdkproof.dev/badge/aisdk.svg"
     },
@@ -28,10 +59,23 @@
       "library": "Zod 4",
       "slug": "zod",
       "libraryVersion": "4.4.3",
-      "model": "fake-bad",
-      "score": 0,
-      "passed": 0,
-      "total": 3,
+      "model": "claude-opus-5",
+      "score": 100,
+      "unconditionalScore": 100,
+      "passed": 10,
+      "total": 10,
+      "refused": 0,
+      "attempted": 10,
+      "ci95": {
+        "score": [
+          0.7225,
+          1
+        ],
+        "unconditionalScore": [
+          0.7225,
+          1
+        ]
+      },
       "scorecard": "https://sdkproof.dev/zod.html",
       "badge": "https://sdkproof.dev/badge/zod.svg"
     },
@@ -41,8 +85,21 @@
       "libraryVersion": "8.3.0",
       "model": "claude-opus-5",
       "score": 93,
+      "unconditionalScore": 93,
       "passed": 14,
       "total": 15,
+      "refused": 0,
+      "attempted": 15,
+      "ci95": {
+        "score": [
+          0.7018,
+          0.9881
+        ],
+        "unconditionalScore": [
+          0.7018,
+          0.9881
+        ]
+      },
       "scorecard": "https://sdkproof.dev/react-router.html",
       "badge": "https://sdkproof.dev/badge/react-router.svg"
     },
@@ -52,8 +109,21 @@
       "libraryVersion": "16.2.11",
       "model": "claude-opus-5",
       "score": 92,
+      "unconditionalScore": 92,
       "passed": 12,
       "total": 13,
+      "refused": 0,
+      "attempted": 13,
+      "ci95": {
+        "score": [
+          0.6669,
+          0.9863
+        ],
+        "unconditionalScore": [
+          0.6669,
+          0.9863
+        ]
+      },
       "scorecard": "https://sdkproof.dev/nextjs.html",
       "badge": "https://sdkproof.dev/badge/nextjs.svg"
     },
@@ -63,10 +133,46 @@
       "libraryVersion": "7.8.0",
       "model": "claude-opus-5",
       "score": 87,
+      "unconditionalScore": 87,
       "passed": 13,
       "total": 15,
+      "refused": 0,
+      "attempted": 15,
+      "ci95": {
+        "score": [
+          0.6212,
+          0.9626
+        ],
+        "unconditionalScore": [
+          0.6212,
+          0.9626
+        ]
+      },
       "scorecard": "https://sdkproof.dev/prisma7.html",
       "badge": "https://sdkproof.dev/badge/prisma7.svg"
+    },
+    {
+      "library": "Stripe 22",
+      "slug": "stripe",
+      "libraryVersion": "22.4.0",
+      "model": "claude-opus-5",
+      "score": 100,
+      "unconditionalScore": 67,
+      "passed": 10,
+      "total": 10,
+      "refused": 5,
+      "attempted": 15,
+      "ci95": {
+        "score": [
+          0.7225,
+          1
+        ],
+        "unconditionalScore": [
+          0.4171,
+          0.8482
+        ]
+      },
+      "scorecard": "https://sdkproof.dev/stripe.html"
     }
   ]
 }

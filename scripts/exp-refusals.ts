@@ -26,6 +26,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { projectRoot } from "../src/env.ts";
+import { fmtInterval, wilson } from "../src/stats.ts";
 import { GENERATION_SYSTEM, buildUserPrompt } from "../src/prompt.ts";
 import { prismaSpec } from "../src/libraries/prisma.ts";
 import { aisdkSpec } from "../src/libraries/aisdk.ts";
@@ -164,6 +165,9 @@ if (errorCount > records.length / 2) {
   process.exit(1);
 }
 
+/** Every rate printed here carries its interval. Ten trials is ten trials. */
+const summary = [];
+
 for (const l of libs) {
   const forLib = records.filter((r) => r.lib === l);
   const errored = forLib.filter(isError).length;
@@ -172,7 +176,10 @@ for (const l of libs) {
   const pct = valid ? ((100 * refused) / valid).toFixed(1) : "n/a";
   // The denominator is VALID responses. An errored request measured nothing and
   // must never be counted as a non-refusal.
-  console.log(`${l} — ${refused}/${valid} refused (${pct}%)${errored ? `  [${errored} errored, excluded]` : ""}`);
+  const ci = valid ? ` 95% CI ${fmtInterval(wilson(refused, valid))}` : "";
+  console.log(
+    `${l} — ${refused}/${valid} refused (${pct}%)${ci}${errored ? `  [${errored} errored, excluded]` : ""}`,
+  );
 
   const byTask = [...new Set(forLib.map((r) => r.taskId))]
     .map((id) => {
@@ -181,14 +188,28 @@ for (const l of libs) {
     })
     .sort((a, b) => b.refused - a.refused);
 
+  // Per-task rows get intervals too, and the 0/n rows get printed rather than
+  // summarised away. At n=10 a 0/10 row is consistent with a true rate near 30%
+  // — reading it as "never refuses" is the same overclaim as reading 10/10 as
+  // "always refuses". Both were on the published scorecard until 2026-08-06.
   for (const t of byTask) {
-    if (t.refused === 0) continue;
-    const bar = "█".repeat(Math.round((10 * t.refused) / t.n));
-    console.log(`  ${t.id.padEnd(22)} ${String(t.refused).padStart(3)}/${t.n}  ${bar}`);
+    const bar = "█".repeat(Math.round((10 * t.refused) / t.n)).padEnd(10, "·");
+    const w = t.n ? wilson(t.refused, t.n) : null;
+    console.log(
+      `  ${t.id.padEnd(22)} ${String(t.refused).padStart(3)}/${t.n}  ${bar}  ${w ? fmtInterval(w) : "n/a"}`,
+    );
   }
-  const clean = byTask.filter((t) => t.refused === 0).map((t) => t.id);
-  if (clean.length) console.log(`  never refused (${clean.length}): ${clean.join(", ")}`);
   console.log("");
+
+  summary.push({
+    lib: l,
+    refused,
+    valid,
+    errored,
+    rate: valid ? refused / valid : null,
+    ci95: valid ? wilson(refused, valid) : null,
+    byTask: byTask.map((t) => ({ ...t, ci95: t.n ? wilson(t.refused, t.n) : null })),
+  });
 }
 
 // A refusal should be the ONLY way an empty candidate appears. If an empty text
@@ -203,9 +224,31 @@ if (oddEmpties.length) {
 }
 
 await mkdir(path.join(projectRoot, "data"), { recursive: true });
-const out = path.join(projectRoot, "data", "exp-refusals.result.json");
+// An A/B run (--tasks) gets its own output file. The first version wrote one
+// fixed filename, so the 2026-08-05 paired A/B overwrote the 250-request
+// baseline whose 62/150 the scorecard quotes — the numbers survived only
+// because they were already on the page. Same shape as a --fake run clobbering
+// a published score: a side experiment must not overwrite the run of record.
+const tasksLabel = flag("tasks") ? `.${path.basename(flag("tasks")!).replace(/\.tasks\.json$/, "")}` : "";
+const out = path.join(projectRoot, "data", `exp-refusals${tasksLabel}.result.json`);
 await writeFile(
   out,
-  JSON.stringify({ model: MODEL, trials, libs, ranAt: new Date().toISOString(), records }, null, 2),
+  JSON.stringify(
+    {
+      model: MODEL,
+      trials,
+      libs,
+      // One attempt per trial, recorded so this can never be confused with the
+      // scored pipeline, which re-samples a refused prompt up to 4x before
+      // giving up. Those are two different systems and they produce two
+      // different refusal rates; whichever number is quoted has to say which.
+      attemptsPerTrial: 1,
+      ranAt: new Date().toISOString(),
+      summary,
+      records,
+    },
+    null,
+    2,
+  ),
 );
 console.log(`raw → ${out}`);

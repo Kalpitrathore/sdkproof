@@ -128,6 +128,19 @@
   .rtable td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
   .rtable td.t { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); white-space: nowrap; }
   .rtable td.n { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); white-space: nowrap; }
+  .rtable td.ci { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+
+  /* Two rates, side by side. One score over one denominator hides which
+     denominator it used — 100% of what the model wrote and 67% of what it was
+     asked are both true of this run. */
+  .rates { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+  .rate { flex: 1; min-width: 230px; background: var(--panel); border: 1px solid var(--line); border-radius: 11px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .rate .rk { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  .rate .rv { font-family: var(--font-mono); font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 6px; line-height: 1; }
+  .rate .rv .rci { font-size: 11.5px; font-weight: 600; color: var(--ink-faint); margin-left: 9px; letter-spacing: 0; }
+  .rate .rd { font-size: 12.5px; color: var(--ink-soft); margin-top: 7px; }
+  .ratenote { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); line-height: 1.7; margin-top: 10px; max-width: 78ch; }
+  .ratenote b { color: var(--ink-soft); font-weight: 650; }
 </style>
 
 <div class="wrap">
@@ -151,6 +164,21 @@
         <div class="seglegend"><span><span class="dot p"></span><b>10</b> compile clean</span><span><span class="dot f"></span><b>0</b> fail type-check</span><span><span class="dot r"></span><b>5</b> refused — unmeasured</span></div>
       </div>
     </div>
+    <div class="rates">
+      <div class="rate">
+        <div class="rk">Unconditional task success</div>
+        <div class="rv">67%<span class="rci">95% CI 41.7–84.8%</span></div>
+        <div class="rd">10 passed / <b>15 tasks asked</b> — a refusal counts as no answer</div>
+      </div>
+      <div class="rate">
+        <div class="rk">Conditional API correctness</div>
+        <div class="rv">100%<span class="rci">95% CI 72.2–100%</span></div>
+        <div class="rd">10 passed / <b>10 completions that produced code</b></div>
+      </div>
+    </div>
+    <p class="ratenote">
+      <b>Both are true of the same run, and one of them alone is misleading.</b> The 100 says every line of Stripe code the model wrote uses the current API. The 67 says a third of the job came back empty. Collapsing them into one number hides which failure you are looking at — so both are published, here and in <a href="scores.json">scores.json</a>. Ranges are Wilson 95% intervals: at n=10–15, a clean 100% is a weaker claim than it looks.
+    </p>
     <div class="meta">
       <span><b>Model:</b> claude-opus-5</span><span><b>Tasks:</b> 15 written · 10 measured</span>
       <span><b>Method:</b> tsc against real installed package</span><span><b>Run:</b> 2026-08-04</span>
@@ -179,18 +207,19 @@
   </div>
 
   <article class="refused">
-    <h3>Measured over 10 trials each, on the exact prompts this scorecard uses.</h3>
+    <h3>Measured over 10 trials each, one attempt per trial, on the exact prompts this scorecard uses.</h3>
     <table class="rtable">
-      <thead><tr><th>Task</th><th>Refused</th><th>What it was written to probe</th></tr></thead>
+      <thead><tr><th>Task</th><th>Refused</th><th>95% CI</th><th>What it was written to probe</th></tr></thead>
       <tbody>
-        <tr><td class="t">payment-intent</td><td class="n">10 / 10</td><td>automatic payment methods, client secret</td></tr>
-        <tr><td class="t">auto-paginate</td><td class="n">10 / 10</td><td>async iteration over <code>list()</code></td></tr>
-        <tr><td class="t">connect-account</td><td class="n">10 / 10</td><td>v22: <code>stripeAccount</code> as a second-argument option</td></tr>
-        <tr><td class="t">per-request-key</td><td class="n">10 / 10</td><td>v22: <code>apiKey</code> moved into <code>RequestOptions</code></td></tr>
-        <tr><td class="t">expand-customer</td><td class="n">9 / 10</td><td>the <code>expand</code> parameter</td></tr>
+        <tr><td class="t">payment-intent</td><td class="n">10 / 10</td><td class="ci">72.2–100%</td><td>automatic payment methods, client secret</td></tr>
+        <tr><td class="t">auto-paginate</td><td class="n">10 / 10</td><td class="ci">72.2–100%</td><td>async iteration over <code>list()</code></td></tr>
+        <tr><td class="t">connect-account</td><td class="n">10 / 10</td><td class="ci">72.2–100%</td><td>v22: <code>stripeAccount</code> as a second-argument option</td></tr>
+        <tr><td class="t">per-request-key</td><td class="n">10 / 10</td><td class="ci">72.2–100%</td><td>v22: <code>apiKey</code> moved into <code>RequestOptions</code></td></tr>
+        <tr><td class="t">expand-customer</td><td class="n">9 / 10</td><td class="ci">59.6–98.2%</td><td>the <code>expand</code> parameter</td></tr>
       </tbody>
     </table>
-    <p><b>It is specific to this library, not to the harness.</b> The same rig, same prompts, same model, run against Zod's task set: <b>0 refusals out of 100</b>. Against Stripe's full set: <b>62 out of 150, 41.3%</b>.</p>
+    <p><b>Ten trials is ten trials.</b> A 10/10 row is not proof of a 100% refusal rate — it is consistent with anything above 72%. The rows not listed here refused 0/10, which is consistent with anything up to <b>28%</b>, so read them as "did not refuse in ten tries", not as "never refuses". The intervals are Wilson 95%.</p>
+    <p><b>It is specific to this library, not to the harness.</b> The same rig, same prompts, same model, run against Zod's task set: <b>0 refusals out of 100</b> (95% CI 0–3.7%). Against Stripe's full set: <b>62 out of 150, 41.3%</b> (95% CI 33.8–49.3%). The intervals do not come close to overlapping, which is what makes the control worth running.</p>
     <p><b>And it is not about missing context.</b> The obvious explanation was that these prompts arrive with no project, no ownership, no stated reason — so "list another account's customers" reads like the code half of a fraud task. Each of the five was rewritten with one clause of ownership context (<i>"our platform onboards sellers as connected accounts, for the seller's own dashboard…"</i>) and run as a paired A/B, both variants interleaved in the same batch. <b>Every pair came back 10/10 refused on both arms.</b> The hypothesis is wrong: the trigger is the shape of the operation, not the absence of a reason.</p>
   </article>
 
@@ -227,7 +256,8 @@
   </div>
   <div class="method">
     <span class="k">15</span> realistic Stripe tasks → generated by <span class="k">claude-opus-5</span> → each written into a project with the <b>real installed <code>stripe</code> v22.4.0</b> and type-checked with <span class="k">tsc --noEmit</span>.<br>
-    A task <b>passes</b> only if it compiles clean. Prompts name the resources (customers, checkout.sessions, webhooks, …) but never the signatures, so this measures what the model reaches for. Refusals are recorded and excluded — never counted as a pass or a failure.
+    A task <b>passes</b> only if it compiles clean. Prompts name the resources (customers, checkout.sessions, webhooks, …) but never the signatures, so this measures what the model reaches for. Refusals are recorded and excluded from the conditional score — never counted as a pass or a failure — and counted in full in the unconditional one.<br>
+    <b>Retry policy, stated up front, because the two numbers on this page were produced under different ones.</b> The scored run re-samples a refused prompt <span class="k">up to 4 times</span> at identical wording before recording a refusal. The 10-trial refusal table is <span class="k">1 attempt per trial</span>. Up-to-4-attempts and one-attempt evaluate different systems, so neither rate is quoted without saying which it was.
   </div>
   <div class="caveat">
     <b>Read this score as covering 10 of 15 written tasks.</b> A third of the set produced no code, so this page reports a narrower measurement than every other scorecard here. The two tasks probing <code>apiKey</code> and <code>stripeAccount</code> as request options are among them — though that same v22 change is covered by the idempotency task, which ran and passed.<br><br>
@@ -243,6 +273,6 @@
 
   <footer>
     SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by Stripe.<br>
-    Measured 2026-08-04 against stripe v22.4.0 with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior. 10 of 15 tasks measured; 5 refused and excluded.
+    Measured 2026-08-04 against stripe v22.4.0 with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior. 10 of 15 tasks measured; 5 refused and excluded. Conditional 100% (95% CI 72.2–100%) · unconditional 67% (95% CI 41.7–84.8%).
   </footer>
 </div>

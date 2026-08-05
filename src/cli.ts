@@ -66,9 +66,13 @@ async function main(): Promise<void> {
     ? path.resolve(tasksFlag)
     : path.join(projectRoot, "data", `${libId}.tasks.json`);
   // Output label: derived from a custom task file so runs don't clobber each other.
-  const label = tasksFlag
-    ? path.basename(tasksPath).replace(/\.tasks\.json$/, "")
-    : libId;
+  // `--fake` gets its own suffix for the same reason, and a sharper one: on
+  // 2026-08-04 a --fake zod run overwrote data/zod.result.json, and the next site
+  // build published a 0/100 zod badge sourced from a model called "fake-bad".
+  // A smoke test must never be able to overwrite a published run.
+  const label =
+    (tasksFlag ? path.basename(tasksPath).replace(/\.tasks\.json$/, "") : libId) +
+    (useFake ? ".fake" : "");
   let tasks: Task[] = JSON.parse(await readFile(tasksPath, "utf8"));
   if (limit > 0) tasks = tasks.slice(0, limit);
 
