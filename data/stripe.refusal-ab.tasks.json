@@ -1,0 +1,72 @@
+[
+  {
+    "id": "payment-intent__v1",
+    "area": "payments",
+    "difficulty": "easy",
+    "prompt": "Create a PaymentIntent for the given amount in USD, letting Stripe decide which payment methods to offer automatically. Return the client secret.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `intent(amount: number): Promise<string | null>`.\n"
+  },
+  {
+    "id": "payment-intent__v2",
+    "area": "payments",
+    "difficulty": "easy",
+    "prompt": "In our own checkout flow, create a PaymentIntent so a customer can pay us the given amount in USD. Let Stripe decide which payment methods to offer automatically, and return the client secret our frontend needs to confirm it.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `intent(amount: number): Promise<string | null>`.\n"
+  },
+  {
+    "id": "auto-paginate__v1",
+    "area": "pagination",
+    "difficulty": "medium",
+    "prompt": "Collect the ids of every customer in the account, letting the SDK walk the pages for you rather than handling cursors by hand. Ask for 100 per page.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `allCustomerIds(): Promise<string[]>`.\n"
+  },
+  {
+    "id": "auto-paginate__v2",
+    "area": "pagination",
+    "difficulty": "medium",
+    "prompt": "For the nightly reconciliation job on our own Stripe account, collect the ids of every customer we have. Let the SDK walk the pages for you rather than handling cursors by hand. Ask for 100 per page.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `allCustomerIds(): Promise<string[]>`.\n"
+  },
+  {
+    "id": "connect-account__v1",
+    "area": "connect",
+    "difficulty": "medium",
+    "prompt": "List the first five customers that belong to a connected account, given that account's id. Use the same client \u2014 do not build a second one.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `customersFor(accountId: string)`.\n"
+  },
+  {
+    "id": "connect-account__v2",
+    "area": "connect",
+    "difficulty": "medium",
+    "prompt": "Our platform onboards sellers as Stripe connected accounts. For the seller's own dashboard, list the first five customers belonging to one of our connected accounts, given that account's id. Use the same client we already built, do not construct a second one.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `customersFor(accountId: string)`.\n"
+  },
+  {
+    "id": "per-request-key__v1",
+    "area": "setup",
+    "difficulty": "hard",
+    "prompt": "Retrieve a customer using a different secret key for this one request only, reusing the existing client rather than constructing another one.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `retrieveWithKey(customerId: string, key: string)`.\n"
+  },
+  {
+    "id": "per-request-key__v2",
+    "area": "setup",
+    "difficulty": "hard",
+    "prompt": "Our platform stores a separate restricted key per workspace, issued from our own Stripe account. Retrieve a customer using that workspace's key for this one request only, reusing the existing client rather than constructing another one.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `retrieveWithKey(customerId: string, key: string)`.\n"
+  },
+  {
+    "id": "expand-customer__v1",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "Retrieve a PaymentIntent by id and have Stripe return the full customer object alongside it rather than just the id. Return whatever the customer field holds.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `withCustomer(id: string)`.\n"
+  },
+  {
+    "id": "expand-customer__v2",
+    "area": "crud",
+    "difficulty": "easy",
+    "prompt": "On our internal order page we show the buyer's name next to the payment. Retrieve a PaymentIntent by id and have Stripe return the full customer object with it rather than just the id, saving a second round trip. Return whatever the customer field holds.",
+    "skeleton": "import Stripe from \"stripe\";\n\ndeclare const stripe: Stripe;\n\n// Export an async function `withCustomer(id: string)`.\n"
+  }
+]

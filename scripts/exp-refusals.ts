@@ -20,6 +20,7 @@
  *
  *   npx tsx scripts/exp-refusals.ts --libs stripe,zod --trials 10
  *   npx tsx scripts/exp-refusals.ts --libs stripe --trials 3 --dry-run
+ *   npx tsx scripts/exp-refusals.ts --libs stripe --tasks data/stripe.refusal-ab.tasks.json --trials 10
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
@@ -90,9 +91,11 @@ for (const l of libs) {
 const jobs: { spec: LibrarySpec; task: Task; trial: number }[] = [];
 for (const l of libs) {
   const spec = SPECS[l];
-  const tasks: Task[] = JSON.parse(
-    await readFile(path.join(projectRoot, "data", `${spec.id}.tasks.json`), "utf8"),
-  );
+  // --tasks measures an A/B file without touching the live task set, so a prompt
+  // rewrite can be tested before it is promoted. Used 2026-08-05 to falsify the
+  // "add ownership context" fix.
+  const tasksFile = flag("tasks") ?? path.join(projectRoot, "data", `${spec.id}.tasks.json`);
+  const tasks: Task[] = JSON.parse(await readFile(tasksFile, "utf8"));
   for (const task of tasks) for (let t = 1; t <= trials; t++) jobs.push({ spec, task, trial: t });
 }
 
