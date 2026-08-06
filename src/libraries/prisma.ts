@@ -23,6 +23,11 @@ export const prismaSpec: LibrarySpec = {
     dir: path.resolve(here, "../../fixtures/prisma/agent-context"),
     arms: [
       {
+        name: "just-the-line",
+        label: "only the adapter sentence from prisma7-client.md, ~170 characters",
+        files: ["minimal.md"],
+      },
+      {
         name: "client-api",
         label: "the pack an agent routes to by name for client construction",
         files: ["prisma-client-api/SKILL.md", "prisma-client-api/references/constructor.md"],

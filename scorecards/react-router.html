@@ -122,6 +122,7 @@
   .arms td.n { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--ink); text-align: right; }
   .arms td.d { font-family: var(--font-mono); font-size: 14px; font-weight: 700; text-align: right; }
   .arms td.d.flat { color: var(--ink-faint); }
+  .arms td.d.up { color: var(--pass); }
   .arms tr.base td { color: var(--ink-faint); }
   .caveat { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); line-height: 1.75; margin-top: 12px; padding: 16px 20px; border: 1px dashed var(--line); border-radius: 12px; }
   .caveat b { color: var(--ink-soft); font-weight: 650; } .caveat .k { color: var(--brand); }
@@ -217,28 +218,29 @@
   <!-- RECOMMENDATION -->
   <div class="sec-head">
     <span class="eyebrow">What would move this number</span>
-    <h2>Not documentation — that was tested, and it did not work</h2>
+    <h2>One sentence fixes it. The same sentence, buried, does not.</h2>
   </div>
   <div class="rights">
-    <h3>The fix is already written. It is in your repo, and you do not publish it.</h3>
-    <p><code>.agents/skills/react-router/references/framework-mode.md</code>, line 182, says: <i>"Important: <code>meta</code> receives <code>loaderData</code>; do not use deprecated <code>data</code> args."</i> That is exactly the failure above, named and corrected. <code>npm i react-router</code> does not install it, and <code>reactrouter.com/llms.txt</code> returns 404 — of <a href="agent-docs.html">nine libraries surveyed</a>, this is the only one publishing neither file.</p>
+    <h3>You have already written the fix. It is at line 182 of a file you do not publish.</h3>
+    <p><code>.agents/skills/react-router/references/framework-mode.md</code> says: <i>"Important: <code>meta</code> receives <code>loaderData</code>; do not use deprecated <code>data</code> args."</i> <code>npm i react-router</code> does not install it, and <code>reactrouter.com/llms.txt</code> returns 404 — of <a href="agent-docs.html">nine libraries surveyed</a>, this is the only one publishing neither file.</p>
 
-    <h3>So we put it in the prompt. It changed nothing.</h3>
-    <p>Same 15 tasks, 3 trials each, with that whole skill pack in context — 25,000 characters including the sentence above. <b>The model wrote <code>data</code> in 3 of 3 trials anyway</b>, failing with the identical <code>TS2339</code>. Loading only <code>SKILL.md</code>, which never names the field, did no better.</p>
+    <h3>Put that sentence in front of the model and the failure disappears.</h3>
+    <p>Ten trials per row, on the one task this library fails:</p>
     <table class="arms">
-      <thead><tr><th>Context in the prompt</th><th style="text-align:right">Score</th><th style="text-align:right">vs bare</th><th>meta-from-loader</th></tr></thead>
+      <thead><tr><th>Context in the prompt</th><th style="text-align:right">Size</th><th style="text-align:right">Passes</th></tr></thead>
       <tbody>
-        <tr class="base"><td class="a">nothing</td><td class="n">91</td><td class="d flat">—</td><td>fails</td></tr>
-        <tr><td class="a">SKILL.md only</td><td class="n">93</td><td class="d flat">+2</td><td>still fails</td></tr>
-        <tr><td class="a">+ the four mode references</td><td class="n">91</td><td class="d flat">+0</td><td><b>still fails, 3 of 3</b></td></tr>
+        <tr class="base"><td class="a">nothing</td><td class="n">—</td><td class="d flat">0 / 10</td></tr>
+        <tr><td class="a">SKILL.md only</td><td class="n">6 KB</td><td class="d flat">0 / 10</td></tr>
+        <tr><td class="a">the full skill pack</td><td class="n">25 KB</td><td class="d flat">0 / 10</td></tr>
+        <tr><td class="a"><b>that one sentence, alone</b></td><td class="n">76 B</td><td class="d up"><b>9 / 10</b></td></tr>
       </tbody>
     </table>
-    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin:-6px 0 16px">Both deltas are inside noise — one task-trial is worth about 2 points across 45 cells.</p>
+    <p><b>Seventy-six characters fixes it nine times out of ten. The identical sentence inside twenty-five thousand characters fixes it zero times out of ten.</b> The model is not refusing the instruction. It is not finding it.</p>
 
-    <h3>This is the second library where that happened.</h3>
-    <p>Prisma ships a file saying <i>"Adapter is mandatory: <code>new PrismaClient()</code> with no arguments throws."</i> With it in context, the model writes a bare client <a href="prisma7.html">3 times out of 3</a>. Two libraries, two flat and unambiguous instructions, both loaded, both ignored — and in Prisma's case the model wrote the correct form into a comment before shipping the wrong one below it.</p>
-    <p><b>So the honest recommendation is that we do not have one for this failure.</b> Publishing the file would be good for other reasons and would cost almost nothing — but on this evidence it should not be expected to fix <code>meta()</code>. Documentation in context is not the lever it is widely assumed to be, and saying so is more useful than repeating advice this site's own measurements contradict.</p>
-    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-top:14px">Revised 2026-08-06. An earlier version of this section recommended publishing the file as the likely fix. Measuring it showed otherwise, so the recommendation is withdrawn rather than left standing.</p>
+    <h3>Which makes the recommendation the opposite of the usual advice.</h3>
+    <p>The standard suggestion is to publish comprehensive documentation for agents. On this evidence that is the thing that breaks it. <b>Small and specific beats complete.</b> A short file naming the v8 renames — the handful of things a model provably gets wrong — would outperform a full documentation bundle, and it is far less work.</p>
+    <p><a href="prisma7.html">Prisma shows the same shape</a>: its adapter requirement passes 10 of 10 as a single sentence and 5 of 10 buried in the same 25 KB of its own shipped docs. Two libraries, one pattern.</p>
+    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-top:14px">Revised twice on 2026-08-06. This section first recommended publishing the file, then — after the buried arms failed 3 of 3 — claimed documentation does not help at all. Testing the sentence on its own showed both were wrong. The numbers above are the third and current answer.</p>
   </div>
 
   <div class="sec-head">

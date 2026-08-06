@@ -291,8 +291,8 @@ new PrismaClient({ adapter })</pre>
     </table>
     <h3>The skills work. The one an agent reaches for first doesn't.</h3>
     <p><b><code>prisma-client-api</code> contains a file called <code>constructor.md</code></b> — it is the pack an agent routing on skill <i>name</i> would load for "construct a PrismaClient". Loading it moves the score by <b>zero</b>. What actually fixes a task is <code>prisma-postgres-setup/references/prisma7-client.md</code> and <code>prisma-upgrade-v7/references/driver-adapters.md</code>, which state the adapter requirement flatly. That is a routing problem, not a content problem, and it is the kind of thing only a measurement finds.</p>
-    <h3>And one failure survives everything.</h3>
-    <p>With all of those docs in context, bare <code>new PrismaClient()</code> <b>still fails 3 of 3</b>. In one of those runs the model wrote the correct form into a comment and then shipped the wrong one directly beneath it:</p>
+    <h3>And one failure survives the full pack — but not a single sentence.</h3>
+    <p>With all of those docs in context, bare <code>new PrismaClient()</code> <b>still fails</b>. Measured properly at ten trials it is <b>5 of 10</b> with the full 25&nbsp;KB pack — and <b>10 of 10 passing</b> when the adapter sentence is the <i>only</i> thing in context. Same words, 174 characters instead of 25,000. In one of the failing runs the model wrote the correct form into a comment and shipped the wrong one directly beneath it:</p>
     <pre class="codeblock"><span class="cmt">/** Prisma 7 requires a driver adapter:
  *   const prisma = new PrismaClient({ adapter });
  */</span>
@@ -306,7 +306,7 @@ const prisma = new PrismaClient({
   <!-- RECOMMENDATIONS -->
   <div class="sec-head">
     <span class="eyebrow">What would move this number</span>
-    <h2>Three changes, each one derived from a measurement above</h2>
+    <h2>Four changes, each one derived from a measurement above</h2>
     <p>Not general advice about writing good documentation. Every item below is something this run measured, and every one of them is checkable against Prisma's own shipped files.</p>
   </div>
 
@@ -319,11 +319,11 @@ const prisma = new PrismaClient({
     <p><code>constructor.md</code> heads the field <code>adapter (Required for the SQL provider workflow)</code> — a condition the reader has to decide applies to them. <code>prisma7-client.md</code> instead says: <i>"Adapter is mandatory: <code>new PrismaClient()</code> with no arguments throws."</i></p>
     <p>Same requirement, two registers, and <b>the unambiguous one is in the file an agent is least likely to load.</b> Stating the failure rather than the condition costs one sentence.</p>
 
-    <h3>3. And an honest limit: neither change is proven to fix the second failure.</h3>
-    <p>Bare <code>new PrismaClient()</code> still fails <b>3 of 3</b> with <i>every</i> document above already in context, including the flat "throws" sentence. In one of those runs the model wrote the correct form into a comment and shipped the wrong one directly beneath it. <b>It had the instruction and did not apply it.</b></p>
-    <p>So recommendations 1 and 2 are supported for the <code>datasourceUrl</code> failure and <i>unproven</i> for this one. Anything further would be a guess, and a guess does not belong on this page.</p>
+    <h3>3. And the strongest one: make it shorter.</h3>
+    <p>The adapter sentence, on its own, fixes bare <code>new PrismaClient()</code> <b>10 times out of 10</b>. The same sentence inside your 25&nbsp;KB pack fixes it <b>5 times out of 10</b>. Nothing about the wording changed — only how much surrounded it.</p>
+    <p>So the failure is not comprehension and not refusal. <b>The model follows the instruction when it can find it.</b> That inverts the usual advice: a short file covering the few things a model provably gets wrong will outperform a complete one, and <a href="react-router.html">React Router shows the same pattern</a> more starkly — 9 of 10 from a single sentence, 0 of 10 from the same sentence buried in 25&nbsp;KB.</p>
 
-    <h3>Worth saying plainly: the docs themselves are unusually good.</h3>
+    <h3>4. Worth saying plainly: the docs themselves are unusually good.</h3>
     <p>Across <a href="agent-docs.html">nine libraries surveyed</a>, Prisma's <code>llms-full.txt</code> is one of only three files a model can use without fetching anything — 6,915 characters of prose, no link index. The comparable file from another library on this board is 5.7&nbsp;MB. <b>This is a routing problem, not a writing problem.</b></p>
   </div>
 

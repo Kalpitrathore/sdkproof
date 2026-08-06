@@ -1,0 +1,9 @@
+[
+  {
+    "id": "construct-client",
+    "area": "setup",
+    "difficulty": "medium",
+    "prompt": "Create and configure a PrismaClient instance, then export an async function `run()` that returns all users via findMany.",
+    "skeleton": "import { PrismaClient } from \"@prisma/client\";\n\n// Create a PrismaClient instance yourself, then export an async run() returning all users.\n"
+  }
+]

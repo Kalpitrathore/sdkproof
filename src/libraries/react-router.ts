@@ -30,6 +30,11 @@ export const reactRouterSpec: LibrarySpec = {
     dir: path.resolve(here, "../../fixtures/react-router/agent-context"),
     arms: [
       {
+        name: "just-the-line",
+        label: "only the one sentence from framework-mode.md, ~75 characters",
+        files: ["minimal.md"],
+      },
+      {
         name: "skill-only",
         label: "SKILL.md alone — what an agent routing by name would load first",
         files: ["SKILL.md"],

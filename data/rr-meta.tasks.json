@@ -1,0 +1,9 @@
+[
+  {
+    "id": "meta-from-loader",
+    "area": "meta",
+    "difficulty": "medium",
+    "prompt": "Given the exported `loader`, complete the `meta` function so the page title is the loaded user's name, falling back to \"User\" when there is none. Keep the `MetaFunction` type annotation exactly as given \u2014 do not declare your own argument type.",
+    "skeleton": "import type { MetaFunction } from \"react-router\";\n\nexport async function loader() {\n  return { user: { id: \"1\", name: \"Ada\" } as { id: string; name: string } | null };\n}\n\n// Fill in the body. The type annotation below is part of the task; keep it as-is.\nexport const meta: MetaFunction<typeof loader> = (args) => {\n  // return [{ title: ... }]\n};\n"
+  }
+]
