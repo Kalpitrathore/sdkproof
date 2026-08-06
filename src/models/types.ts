@@ -22,3 +22,17 @@ export class RefusalError extends Error {
     this.name = "RefusalError";
   }
 }
+
+/**
+ * An error that makes every remaining request pointless — an exhausted credit
+ * balance, a revoked key. Distinct from a refusal (one task) or a 529 (retry),
+ * because the right response is to stop the run, not to keep paying for
+ * failures. On 2026-08-05 a credit exhaustion burned 30 further attempts
+ * against a dead key before the run ended with nothing.
+ */
+export class FatalApiError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "FatalApiError";
+  }
+}

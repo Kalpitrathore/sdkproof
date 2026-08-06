@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { GenerateRequest, ModelAdapter } from "./types.ts";
-import { RefusalError } from "./types.ts";
+import { FatalApiError, RefusalError } from "./types.ts";
 
 /** Stochastic refusals on benign SDK tasks; re-sample the same prompt this many times. */
 const REFUSAL_ATTEMPTS = 4;
@@ -13,11 +13,18 @@ const TRANSIENT_ATTEMPTS = 5;
  * the 5-family. Thinking is omitted (single-shot generation); the system
  * prompt forces code-only output.
  */
+/**
+ * Set once a fatal error is seen, so in-flight siblings fail instantly instead
+ * of each making its own doomed request.
+ */
+let fatal: string | null = null;
+
 export function anthropicAdapter(model = "claude-opus-5"): ModelAdapter {
   const client = new Anthropic();
   return {
     id: model,
     async generate({ system, user, maxTokens = 16000 }: GenerateRequest): Promise<string> {
+      if (fatal) throw new FatalApiError(fatal);
       // Both guards exist because either failure used to arrive as an EMPTY
       // candidate, and an empty file compiles clean — so a generation failure
       // was scored as a perfect answer. Found 2026-08-04 on the first Stripe
@@ -40,6 +47,16 @@ export function anthropicAdapter(model = "claude-opus-5"): ModelAdapter {
             break;
           } catch (e) {
             const status = (e as { status?: number }).status;
+            const msg = String((e as Error).message ?? "");
+            // Terminal for the whole run: no credit, bad key. Stop, do not retry.
+            if (status === 400 && /credit balance|billing/i.test(msg)) {
+              fatal = msg.slice(0, 160);
+              throw new FatalApiError(fatal);
+            }
+            if (status === 401 || status === 403) {
+              fatal = msg.slice(0, 160);
+              throw new FatalApiError(fatal);
+            }
             if ((status !== 529 && status !== 429) || t === TRANSIENT_ATTEMPTS) throw e;
             await new Promise((r) => setTimeout(r, 1500 * 2 ** (t - 1)));
           }

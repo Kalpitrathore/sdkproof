@@ -10,7 +10,10 @@ import { stripeSpec } from "./libraries/stripe.ts";
 import { projectRoot, tscEntry } from "./env.ts";
 import { generate } from "./generate.ts";
 import { loadArms } from "./context.ts";
-import { RefusalError } from "./models/types.ts";
+import { FatalApiError, RefusalError } from "./models/types.ts";
+
+/** Concurrent generations in flight. Keeps a long multi-arm run under the rate limit. */
+const CONCURRENCY = 5;
 import { verify } from "./verify.ts";
 import { score } from "./score.ts";
 import { renderScorecard } from "./report.ts";
@@ -19,6 +22,20 @@ import { fakeAdapters } from "./models/fake.ts";
 import type { ArmScore, Candidate, LibrarySpec, Refusal, Task, Verdict } from "./types.ts";
 
 const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec, "react-router": reactRouterSpec, stripe: stripeSpec };
+
+/**
+ * Bounded concurrency. The generation loop used to fire every task at once; on
+ * a 135-request run that produced 14 timeouts. exp-refusals.ts has had a pool
+ * since it was written — this is the same thing for the real pipeline.
+ */
+async function pool<T>(items: T[], limit: number, fn: (item: T) => Promise<void>) {
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) await fn(items[next++]);
+    }),
+  );
+}
 
 function flag(argv: string[], name: string): string | undefined {
   const i = argv.indexOf(name);
@@ -94,23 +111,21 @@ async function main(): Promise<void> {
   // code, so nothing about the library was tested. Kept apart from generic
   // failures so the scorecard can say so out loud instead of quietly shrinking.
   const refusals: Refusal[] = [];
-  await Promise.all(
-    adapters.flatMap((m) =>
-      tasks.map(async (t) => {
-        try {
-          candidates.push(await generate(t, m, spec));
-          process.stdout.write(".");
-        } catch (e) {
-          if (e instanceof RefusalError) {
-            refusals.push({ taskId: t.id, model: m.id, attempts: e.attempts });
-            process.stdout.write("R");
-          } else {
-            console.error(`\n  generate failed [${m.id}/${t.id}]: ${(e as Error).message}`);
-          }
-        }
-      }),
-    ),
-  );
+  const bareJobs = adapters.flatMap((m) => tasks.map((t) => ({ m, t })));
+  await pool(bareJobs, CONCURRENCY, async ({ m, t }) => {
+    try {
+      candidates.push(await generate(t, m, spec));
+      process.stdout.write(".");
+    } catch (e) {
+      if (e instanceof FatalApiError) throw e;
+      if (e instanceof RefusalError) {
+        refusals.push({ taskId: t.id, model: m.id, attempts: e.attempts });
+        process.stdout.write("R");
+      } else {
+        console.error(`\n  generate failed [${m.id}/${t.id}]: ${(e as Error).message}`);
+      }
+    }
+  });
   process.stdout.write("\n");
   if (refusals.length) {
     console.log(
@@ -146,19 +161,17 @@ async function main(): Promise<void> {
 
     const runTrial = async (label2: string, context: string | undefined) => {
       const got: Candidate[] = [];
-      await Promise.all(
-        adapters.flatMap((m) =>
-          tasks.map(async (t) => {
-            try {
-              got.push(await generate(t, m, spec, context));
-              process.stdout.write(".");
-            } catch (e) {
-              if (e instanceof RefusalError) process.stdout.write("R");
-              else console.error(`\n  generate failed [${label2}/${t.id}]: ${(e as Error).message}`);
-            }
-          }),
-        ),
-      );
+      const jobs = adapters.flatMap((m) => tasks.map((t) => ({ m, t })));
+      await pool(jobs, CONCURRENCY, async ({ m, t }) => {
+        try {
+          got.push(await generate(t, m, spec, context));
+          process.stdout.write(".");
+        } catch (e) {
+          if (e instanceof FatalApiError) throw e;
+          if (e instanceof RefusalError) process.stdout.write("R");
+          else console.error(`\n  generate failed [${label2}/${t.id}]: ${(e as Error).message}`);
+        }
+      });
       return got;
     };
 
@@ -303,6 +316,13 @@ async function main(): Promise<void> {
 }
 
 main().catch((e) => {
+  // A fatal API error is an operator problem, not a bug — print the one line
+  // that says what to do instead of a stack trace nobody needs to read.
+  if (e instanceof FatalApiError) {
+    console.error(`\n\nRUN ABORTED — ${e.message}`);
+    console.error("Nothing further was attempted. Fix the account, then re-run.");
+    process.exit(2);
+  }
   console.error(e);
   process.exit(1);
 });
