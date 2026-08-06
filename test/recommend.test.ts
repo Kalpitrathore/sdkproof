@@ -48,3 +48,18 @@ test("the survey alone never produces advice without a measured library match", 
   const recs = await recommend(base, prismaSpec, { rows: [{ name: "Some Other Library", files: [] }] });
   assert.deepEqual(recs, []);
 });
+
+test("a library that publishes nothing still gets the recommendation", async () => {
+  // The first version only fired when a file existed, so the strongest version
+  // of this item — "you ship nothing at all" — was silently dropped for the one
+  // library it applied to.
+  const recs = await recommend(base, prismaSpec, {
+    rows: [{ name: "Prisma", files: [
+      { url: "example.com/llms.txt", chars: 0 },
+      { url: "example.com/llms-full.txt", chars: 0 },
+    ] }],
+  });
+  assert.equal(recs.length, 1);
+  assert.match(recs[0].title, /publish nothing/i);
+  assert.ok(recs[0].evidence.length === 2);
+});

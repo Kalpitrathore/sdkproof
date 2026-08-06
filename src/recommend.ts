@@ -144,6 +144,21 @@ export async function recommend(
           `problem, not a writing problem.`,
         evidence: [`${usable[0].url}: ${usable[0].chars.toLocaleString()} chars, ${usable[0].linkPct}% link lines`],
       });
+    } else if (!row.files.some((f) => f.chars > 0)) {
+      // RULE 5 — nothing published at all. The earlier version only fired when
+      // a file existed, so "you ship nothing for agents" was silently dropped —
+      // the strongest version of this recommendation going missing because
+      // there was no file to measure.
+      out.push({
+        id: "agent-docs-absent",
+        severity: "medium",
+        title: `You publish nothing for coding agents`,
+        detail:
+          `Neither \`llms.txt\` nor \`llms-full.txt\` resolves on your docs domain. Most libraries on this board ` +
+          `publish something, and a small self-contained file covering the surface that fails above would be the ` +
+          `cheapest change available — it is the only one a model can read without fetching anything.`,
+        evidence: row.files.map((f) => `${f.url}: absent`),
+      });
     } else if (biggest?.chars) {
       out.push({
         id: "agent-docs-unusable",
