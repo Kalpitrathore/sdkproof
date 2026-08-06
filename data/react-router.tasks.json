@@ -31,7 +31,7 @@
     "id": "streaming-slow-data",
     "area": "data",
     "difficulty": "hard",
-    "prompt": "Write a route loader that returns the post immediately while letting the slow comments stream in afterwards — await `getPost`, but hand back `getComments`' promise without awaiting it.",
+    "prompt": "Write a route loader that returns the post immediately while letting the slow comments stream in afterwards \u2014 await `getPost`, but hand back `getComments`' promise without awaiting it.",
     "skeleton": "declare function getPost(id: string): Promise<{ id: string; title: string }>;\ndeclare function getComments(id: string): Promise<string[]>;\n\n// Export a route loader named `loader`.\n"
   },
   {
@@ -59,8 +59,8 @@
     "id": "meta-from-loader",
     "area": "meta",
     "difficulty": "medium",
-    "prompt": "Given the exported `loader`, write a route meta function that sets the page title to the loaded user's name, falling back to \"User\" when there is none.",
-    "skeleton": "export async function loader() {\n  return { user: { id: \"1\", name: \"Ada\" } as { id: string; name: string } | null };\n}\n\n// Export a route meta function named `meta`.\n"
+    "prompt": "Given the exported `loader`, complete the `meta` function so the page title is the loaded user's name, falling back to \"User\" when there is none. Keep the `MetaFunction` type annotation exactly as given \u2014 do not declare your own argument type.",
+    "skeleton": "import type { MetaFunction } from \"react-router\";\n\nexport async function loader() {\n  return { user: { id: \"1\", name: \"Ada\" } as { id: string; name: string } | null };\n}\n\n// Fill in the body. The type annotation below is part of the task; keep it as-is.\nexport const meta: MetaFunction<typeof loader> = (args) => {\n  // return [{ title: ... }]\n};\n"
   },
   {
     "id": "create-data-router",
@@ -101,7 +101,7 @@
     "id": "route-error-message",
     "area": "errors",
     "difficulty": "medium",
-    "prompt": "Write a hook that returns a display message for the current route error — including the status code when the error is a thrown route error response, and a generic message otherwise.",
+    "prompt": "Write a hook that returns a display message for the current route error \u2014 including the status code when the error is a thrown route error response, and a generic message otherwise.",
     "skeleton": "// Export a hook named `useErrorMessage`.\n"
   }
 ]

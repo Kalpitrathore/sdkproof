@@ -115,6 +115,14 @@
   .cta .btn { display: inline-block; font-family: var(--font-mono); font-size: 14px; font-weight: 650; background: var(--brand); color: var(--brand-ink); padding: 11px 22px; border-radius: 9px; text-decoration: none; }
   .cta .note { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 14px; }
   footer { margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
+  .arms { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 16px; }
+  .arms th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
+  .arms td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
+  .arms td.a { font-family: var(--font-mono); font-size: 13px; color: var(--ink); white-space: nowrap; }
+  .arms td.n { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--ink); text-align: right; }
+  .arms td.d { font-family: var(--font-mono); font-size: 14px; font-weight: 700; text-align: right; }
+  .arms td.d.flat { color: var(--ink-faint); }
+  .arms tr.base td { color: var(--ink-faint); }
   .caveat { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); line-height: 1.75; margin-top: 12px; padding: 16px 20px; border: 1px dashed var(--line); border-radius: 12px; }
   .caveat b { color: var(--ink-soft); font-weight: 650; } .caveat .k { color: var(--brand); }
 </style>
@@ -209,14 +217,28 @@
   <!-- RECOMMENDATION -->
   <div class="sec-head">
     <span class="eyebrow">What would move this number</span>
-    <h2>One change, and it is the cheapest one available</h2>
+    <h2>Not documentation — that was tested, and it did not work</h2>
   </div>
   <div class="rights">
-    <h3>React Router publishes nothing for coding agents.</h3>
-    <p>Both <code>reactrouter.com/llms.txt</code> and <code>llms-full.txt</code> return 404. Of <a href="agent-docs.html">nine libraries surveyed</a>, this is the only one that publishes neither.</p>
-    <p>That matters here because the single failure on this page is a <b>rename with no deprecation runway</b> — <code>meta()</code>'s <code>data</code> argument became <code>loaderData</code>, and a model has no way to learn that except from training data it does not have yet. Everything else in v8 was signposted by v7 deprecations, and the model gets all of it right. <b>The one thing that was not signposted is the one thing it gets wrong.</b></p>
-    <p>A short, self-contained file naming the v8 renames would be readable by a model in a single request, with nothing to fetch. On the evidence from the <a href="prisma7.html">Prisma scorecard</a>, where the equivalent documents move the score by six points, that is the change with the best chance of closing this.</p>
-    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-top:14px">Derived from measurements on this site: the failing task and its diagnostic above, the agent-docs survey, and the measured effect of shipped docs on Prisma. No item appears here without one.</p>
+    <h3>The fix is already written. It is in your repo, and you do not publish it.</h3>
+    <p><code>.agents/skills/react-router/references/framework-mode.md</code>, line 182, says: <i>"Important: <code>meta</code> receives <code>loaderData</code>; do not use deprecated <code>data</code> args."</i> That is exactly the failure above, named and corrected. <code>npm i react-router</code> does not install it, and <code>reactrouter.com/llms.txt</code> returns 404 — of <a href="agent-docs.html">nine libraries surveyed</a>, this is the only one publishing neither file.</p>
+
+    <h3>So we put it in the prompt. It changed nothing.</h3>
+    <p>Same 15 tasks, 3 trials each, with that whole skill pack in context — 25,000 characters including the sentence above. <b>The model wrote <code>data</code> in 3 of 3 trials anyway</b>, failing with the identical <code>TS2339</code>. Loading only <code>SKILL.md</code>, which never names the field, did no better.</p>
+    <table class="arms">
+      <thead><tr><th>Context in the prompt</th><th style="text-align:right">Score</th><th style="text-align:right">vs bare</th><th>meta-from-loader</th></tr></thead>
+      <tbody>
+        <tr class="base"><td class="a">nothing</td><td class="n">91</td><td class="d flat">—</td><td>fails</td></tr>
+        <tr><td class="a">SKILL.md only</td><td class="n">93</td><td class="d flat">+2</td><td>still fails</td></tr>
+        <tr><td class="a">+ the four mode references</td><td class="n">91</td><td class="d flat">+0</td><td><b>still fails, 3 of 3</b></td></tr>
+      </tbody>
+    </table>
+    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin:-6px 0 16px">Both deltas are inside noise — one task-trial is worth about 2 points across 45 cells.</p>
+
+    <h3>This is the second library where that happened.</h3>
+    <p>Prisma ships a file saying <i>"Adapter is mandatory: <code>new PrismaClient()</code> with no arguments throws."</i> With it in context, the model writes a bare client <a href="prisma7.html">3 times out of 3</a>. Two libraries, two flat and unambiguous instructions, both loaded, both ignored — and in Prisma's case the model wrote the correct form into a comment before shipping the wrong one below it.</p>
+    <p><b>So the honest recommendation is that we do not have one for this failure.</b> Publishing the file would be good for other reasons and would cost almost nothing — but on this evidence it should not be expected to fix <code>meta()</code>. Documentation in context is not the lever it is widely assumed to be, and saying so is more useful than repeating advice this site's own measurements contradict.</p>
+    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-top:14px">Revised 2026-08-06. An earlier version of this section recommended publishing the file as the likely fix. Measuring it showed otherwise, so the recommendation is withdrawn rather than left standing.</p>
   </div>
 
   <div class="sec-head">

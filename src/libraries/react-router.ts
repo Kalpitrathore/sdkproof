@@ -20,4 +20,31 @@ export const reactRouterSpec: LibrarySpec = {
     "Redirect with redirect(), attach a status or headers to a returned value with data(), " +
     "and create typed router context with createContext(). " +
     "Write plain functions and hooks that call the APIs — no JSX, no React components.",
+  // React Router publishes nothing for agents — reactrouter.com/llms.txt is 404.
+  // But its repo contains a user-facing skill pack whose framework-mode.md states
+  // the exact fix for the one task this library fails. These files are NOT shipped;
+  // scoring them tests whether publishing them would work, which is the
+  // recommendation already on the scorecard. See PROVENANCE.md.
+  agentContext: {
+    source: "remix-run/react-router .agents/skills/react-router — in the repo, NOT shipped to users",
+    dir: path.resolve(here, "../../fixtures/react-router/agent-context"),
+    arms: [
+      {
+        name: "skill-only",
+        label: "SKILL.md alone — what an agent routing by name would load first",
+        files: ["SKILL.md"],
+      },
+      {
+        name: "full-pack",
+        label: "plus the four mode references, one of which names the meta rename",
+        files: [
+          "SKILL.md",
+          "references/framework-mode.md",
+          "references/data-mode.md",
+          "references/declarative-mode.md",
+          "references/rsc.md",
+        ],
+      },
+    ],
+  },
 };
