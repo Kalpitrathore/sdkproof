@@ -158,6 +158,16 @@
   .method { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; line-height: 1.7; }
   .method b { color: var(--ink); }
   .method .k { color: var(--brand); }
+  .arms { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 16px; }
+  .arms th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
+  .arms td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
+  .arms td.a { font-family: var(--font-mono); font-size: 13px; color: var(--ink); white-space: nowrap; }
+  .arms td.n { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--ink); text-align: right; white-space: nowrap; }
+  .arms td.d { font-family: var(--font-mono); font-size: 14px; font-weight: 700; text-align: right; white-space: nowrap; }
+  .arms td.d.up { color: var(--pass); } .arms td.d.flat { color: var(--ink-faint); }
+  .arms tr.base td { color: var(--ink-faint); }
+  .codeblock { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.65; color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--fail); border-radius: 0 8px 8px 0; padding: 14px 16px; margin: 10px 0 0; overflow-x: auto; white-space: pre; }
+  .codeblock .cmt { color: var(--ink-faint); }
   .caveat { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); line-height: 1.75; margin-top: 12px; padding: 16px 20px; border: 1px dashed var(--line); border-radius: 12px; }
   .caveat b { color: var(--ink-soft); font-weight: 650; }
   .caveat .k { color: var(--brand); }
@@ -303,6 +313,35 @@ new PrismaClient({ adapter })</pre>
     </div>
   </div>
 
+  <!-- CONTEXT ARMS -->
+  <div class="sec-head">
+    <span class="eyebrow">Do Prisma's own docs fix it?</span>
+    <h2>Scored again with the skills <code>prisma init</code> installs</h2>
+    <p>Same 15 tasks, same model, 3 trials each. The only thing that changes is how much of Prisma's shipped agent context is in the prompt. Asked for by a Prisma maintainer, which is the reason this measurement exists.</p>
+  </div>
+  <div class="rights">
+    <table class="arms">
+      <thead><tr><th>Context in the prompt</th><th style="text-align:right">Score</th><th style="text-align:right">vs bare</th><th>What changed</th></tr></thead>
+      <tbody>
+        <tr class="base"><td class="a">nothing (the score above)</td><td class="n">87</td><td class="d flat">—</td><td>fails both construction tasks</td></tr>
+        <tr><td class="a">prisma-client-api</td><td class="n">87</td><td class="d flat">+0</td><td><b>fixes neither</b>, 0 of 3 trials on both</td></tr>
+        <tr><td class="a">+ setup &amp; upgrade docs</td><td class="n">93</td><td class="d up">+6</td><td>fixes <code>datasourceUrl</code>, 3 of 3</td></tr>
+      </tbody>
+    </table>
+    <h3>The skills work. The one an agent reaches for first doesn't.</h3>
+    <p><b><code>prisma-client-api</code> contains a file called <code>constructor.md</code></b> — it is the pack an agent routing on skill <i>name</i> would load for "construct a PrismaClient". Loading it moves the score by <b>zero</b>. What actually fixes a task is <code>prisma-postgres-setup/references/prisma7-client.md</code> and <code>prisma-upgrade-v7/references/driver-adapters.md</code>, which state the adapter requirement flatly. That is a routing problem, not a content problem, and it is the kind of thing only a measurement finds.</p>
+    <h3>And one failure survives everything.</h3>
+    <p>With all of those docs in context, bare <code>new PrismaClient()</code> <b>still fails 3 of 3</b>. In one of those runs the model wrote the correct form into a comment and then shipped the wrong one directly beneath it:</p>
+    <pre class="codeblock"><span class="cmt">/** Prisma 7 requires a driver adapter:
+ *   const prisma = new PrismaClient({ adapter });
+ */</span>
+const prisma = new PrismaClient({
+  log: ["warn", "error"],
+  errorFormat: "pretty",
+});</pre>
+    <p style="margin-top:12px">It had read the requirement well enough to document it. It did not apply it.</p>
+  </div>
+
   <!-- INSIGHT -->
   <div class="sec-head">
     <span class="eyebrow">Why this matters</span>
@@ -324,7 +363,7 @@ new PrismaClient({ adapter })</pre>
   </div>
   <div class="caveat">
     <b>Scope — measured with no project context.</b> The model gets the task and the package's type definitions, nothing else: no <code>AGENTS.md</code>, no editor rules, <b>no agent skills</b>. That is the point — it measures what a model reaches for unaided.<br><br>
-    <b>It matters here.</b> From <span class="k">v7.9</span>, <code>prisma init</code> installs agent skills that address both misses on this page directly. Re-running the same three client-construction tasks with those docs in context: <b>0/9 bare → 7/9</b> with Prisma's setup and upgrade docs (claude-opus-5, 3 trials each; one-shot injection, not a full agent loop).<br><br>
+    <b>It matters here.</b> From <span class="k">v7.9</span>, <code>prisma init</code> installs agent skills that address these misses. Scored with them, on all 15 tasks and 3 trials: <b>87 → 93</b>. The full breakdown is above; the short version is that their docs fix one of the two failures and the pack named after the task fixes neither. One-shot injection, not a full agent loop.<br><br>
     So read <span class="k">87</span> as <b>the floor — what an unconfigured agent produces</b> — not as what a properly set-up Prisma project produces. Scored against <code>@prisma/client</code> <span class="k">7.8.0</span>, which predates those skills.
   </div>
 
