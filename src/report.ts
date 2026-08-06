@@ -102,6 +102,24 @@ export function renderScorecard(r: Result, spec: LibrarySpec): string {
     lines.push("");
   }
 
+  if (r.recommendations?.length) {
+    lines.push(`## What would move this number`);
+    lines.push("");
+    lines.push(
+      `Derived from the measurements above, not from general advice. Every item carries the evidence behind it; ` +
+        `an item without a measurement is not listed.`,
+    );
+    lines.push("");
+    for (const rec of r.recommendations) {
+      lines.push(`### ${rec.severity === "info" ? "" : `[${rec.severity}] `}${rec.title}`);
+      lines.push("");
+      lines.push(rec.detail);
+      lines.push("");
+      for (const e of rec.evidence) lines.push(`- _${e}_`);
+      lines.push("");
+    }
+  }
+
   if (r.failurePatterns.length) {
     lines.push(`## Top failure patterns`);
     lines.push("");

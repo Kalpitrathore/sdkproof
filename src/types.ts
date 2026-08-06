@@ -150,6 +150,15 @@ export interface ArmScore {
   fixed: string[];
 }
 
+export interface Recommendation {
+  id: string;
+  severity: "high" | "medium" | "info";
+  title: string;
+  detail: string;
+  /** never empty — an item without a measurement behind it is not emitted */
+  evidence: string[];
+}
+
 export interface Result {
   library: string;
   libraryVersion: string;
@@ -164,4 +173,6 @@ export interface Result {
   refusals: Refusal[];
   /** present only on a --with-context run: the same tasks scored with the library's own agent files */
   contextArms?: ArmScore[];
+  /** derived changes a maintainer could make; every one carries its evidence */
+  recommendations?: Recommendation[];
 }

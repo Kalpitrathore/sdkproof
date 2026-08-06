@@ -16,6 +16,7 @@ import { FatalApiError, RefusalError } from "./models/types.ts";
 const CONCURRENCY = 5;
 import { verify } from "./verify.ts";
 import { score } from "./score.ts";
+import { recommend } from "./recommend.ts";
 import { renderScorecard } from "./report.ts";
 import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
@@ -300,6 +301,21 @@ async function main(): Promise<void> {
   );
 
   const md = renderScorecard(result, spec);
+  // Derived from the run that just happened plus the agent-docs survey, if it
+  // has been taken. Costs nothing — no model call, only files already on disk.
+  try {
+    const surveyPath = path.join(projectRoot, "data", "agent-docs.json");
+    const survey = JSON.parse(await readFile(surveyPath, "utf8"));
+    const recs = await recommend(result, spec, survey);
+    if (recs.length) {
+      result.recommendations = recs;
+      console.log(`\n${recs.length} recommendation(s) derived — see the scorecard`);
+    }
+  } catch {
+    const recs = await recommend(result, spec);
+    if (recs.length) result.recommendations = recs;
+  }
+
   await mkdir(path.join(projectRoot, "scorecards"), { recursive: true });
   const cardPath = path.join(projectRoot, "scorecards", `${label}.md`);
   await writeFile(cardPath, md);
