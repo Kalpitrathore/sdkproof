@@ -342,6 +342,30 @@ const prisma = new PrismaClient({
     <p style="margin-top:12px">It had read the requirement well enough to document it. It did not apply it.</p>
   </div>
 
+  <!-- RECOMMENDATIONS -->
+  <div class="sec-head">
+    <span class="eyebrow">What would move this number</span>
+    <h2>Three changes, each one derived from a measurement above</h2>
+    <p>Not general advice about writing good documentation. Every item below is something this run measured, and every one of them is checkable against Prisma's own shipped files.</p>
+  </div>
+
+  <div class="rights">
+    <h3>1. <code>constructor.md</code> never mentions <code>datasourceUrl</code>.</h3>
+    <p>The failing task writes <code>new PrismaClient({ datasourceUrl })</code>, a field v7 removed. It is fixed only in the arm that includes <code>prisma-postgres-setup/references/prisma7-client.md</code> — <b>the only file in the set that names <code>datasourceUrl</code> at all</b>. The pack an agent routes to for client construction, <code>prisma-client-api</code>, mentions it zero times.</p>
+    <p>So the fix arrived from a file about <i>Postgres setup</i>, which an agent working on client construction has no reason to load. <b>Moving the removed-field list into <code>constructor.md</code> would put the answer where the question gets asked.</b></p>
+
+    <h3>2. The file agents reach for hedges; the file they don't reach for is direct.</h3>
+    <p><code>constructor.md</code> heads the field <code>adapter (Required for the SQL provider workflow)</code> — a condition the reader has to decide applies to them. <code>prisma7-client.md</code> instead says: <i>"Adapter is mandatory: <code>new PrismaClient()</code> with no arguments throws."</i></p>
+    <p>Same requirement, two registers, and <b>the unambiguous one is in the file an agent is least likely to load.</b> Stating the failure rather than the condition costs one sentence.</p>
+
+    <h3>3. And an honest limit: neither change is proven to fix the second failure.</h3>
+    <p>Bare <code>new PrismaClient()</code> still fails <b>3 of 3</b> with <i>every</i> document above already in context, including the flat "throws" sentence. In one of those runs the model wrote the correct form into a comment and shipped the wrong one directly beneath it. <b>It had the instruction and did not apply it.</b></p>
+    <p>So recommendations 1 and 2 are supported for the <code>datasourceUrl</code> failure and <i>unproven</i> for this one. Anything further would be a guess, and a guess does not belong on this page.</p>
+
+    <h3>Worth saying plainly: the docs themselves are unusually good.</h3>
+    <p>Across <a href="agent-docs.html">nine libraries surveyed</a>, Prisma's <code>llms-full.txt</code> is one of only three files a model can use without fetching anything — 6,915 characters of prose, no link index. The comparable file from another library on this board is 5.7&nbsp;MB. <b>This is a routing problem, not a writing problem.</b></p>
+  </div>
+
   <!-- INSIGHT -->
   <div class="sec-head">
     <span class="eyebrow">Why this matters</span>
