@@ -87,9 +87,9 @@ const META = {
     type: "article",
   },
   "agent-docs.html": {
-    title: "What libraries actually ship for AI coding agents — SDKProof",
-    social: "Nine libraries publish docs for LLMs. Almost none of it is usable without fetching.",
-    desc: "A survey of llms.txt and llms-full.txt across nine TypeScript libraries: same filename, a 2,500x spread in size, and no agreement on whether the file is documentation or a list of links to it.",
+    title: "Your AI-agent docs work. Their size is what breaks them — SDKProof",
+    social: "One sentence fixes it 9/10. The same sentence inside 25KB fixes it 0/10.",
+    desc: "A 76-byte instruction from a library’s own docs fixes a model failure 9 times in 10. The identical sentence inside the 25KB file it lives in fixes it 0 times in 10. Two libraries measured, plus a survey of what nine actually publish.",
     type: "article",
   },
   "badge.html": {

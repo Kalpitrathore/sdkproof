@@ -71,56 +71,76 @@
   </div>
 
   <header class="hero">
-    <div class="eyebrow">Survey · 6 August 2026</div>
-    <h1>What libraries actually ship for AI coding agents</h1>
-    <p class="sub">Nine popular TypeScript libraries publish documentation aimed at LLMs. The filename is a convention; the contents are not. Same name, a 2,500× spread in size, and no agreement on whether the file contains documentation or a list of links to it.</p>
+    <div class="eyebrow">Measurement · 6 August 2026</div>
+    <h1>Your docs for AI agents work. Their size is what breaks them.</h1>
+    <p class="sub">One sentence from React Router's own documentation fixes a failure nine times out of ten. The identical sentence, inside the 25&nbsp;KB file it actually lives in, fixes it zero times out of ten. Meanwhile the bundles libraries publish for agents run to five megabytes.</p>
   </header>
 
   <div class="doc">
+    <h2>The experiment</h2>
+    <p>Two libraries, each with one task an AI assistant reliably gets wrong, and each with a sentence in its own documentation that names the fix. Ten trials per row. The only variable is how much text surrounds that sentence.</p>
+
     <div class="wrapx">
     <table class="t">
-      <thead><tr><th>Library</th><th>llms.txt</th><th>llms-full.txt</th><th>Usable without fetching?</th></tr></thead>
+      <thead><tr><th>What was in the prompt</th><th>Size</th><th>React Router<br><code>meta()</code> arg</th><th>Prisma<br>client constructor</th></tr></thead>
+      <tbody>
+        <tr><td class="l">Nothing</td><td class="n">—</td><td class="n no">0 / 10</td><td class="n no">0 / 10</td></tr>
+        <tr><td class="l">The library's summary skill file</td><td class="n">6 KB</td><td class="n no">0 / 10</td><td class="n no">0 / 10</td></tr>
+        <tr><td class="l">Its full documentation pack<br><span style="color:var(--ink-faint);font-size:12.5px">— containing the sentence</span></td><td class="n">25 KB</td><td class="n no">0 / 10</td><td class="n">5 / 10</td></tr>
+        <tr><td class="l"><b>That one sentence, alone</b></td><td class="n">76–174 B</td><td class="n ok"><b>9 / 10</b></td><td class="n ok"><b>10 / 10</b></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout">
+      <p><b>Nothing about the wording changed between the last two rows.</b> React Router's sentence is <i>"Important: <code>meta</code> receives <code>loaderData</code>; do not use deprecated <code>data</code> args."</i> In the 25&nbsp;KB pack it sits at line 182 of a 213-line file and the model writes <code>data</code> every time. On its own, the model writes <code>loaderData</code>.</p>
+    </div>
+
+    <p><b>So the failure is not comprehension, and it is not refusal.</b> The model follows the instruction when it can find it. That is a retrieval problem, and it has the opposite fix from the one usually recommended.</p>
+
+    <h2>Which matters, because of what libraries actually publish</h2>
+    <p>Nine TypeScript libraries, surveyed the same day. The filename is a convention; the contents are not.</p>
+
+    <div class="wrapx">
+    <table class="t">
+      <thead><tr><th>Library</th><th>llms.txt</th><th>llms-full.txt</th><th>Usable in one prompt?</th></tr></thead>
       <tbody>
         <tr><td class="l">Prisma</td><td class="n">2,450 · 71% links</td><td class="n">6,915 · 0% links</td><td class="ok">yes — prose, and small</td></tr>
-        <tr><td class="l">tRPC</td><td class="n">15,699 · 0% links</td><td class="n">599,762 · 2% links</td><td class="ok">yes — the index itself is prose</td></tr>
+        <tr><td class="l">tRPC</td><td class="n">15,699 · 0% links</td><td class="n">599,762</td><td class="ok">yes — the index is prose</td></tr>
         <tr><td class="l">Zod</td><td class="n">21,522 · 94% links</td><td class="n">259,341 · 1% links</td><td class="ok">the full file, at ~65k tokens</td></tr>
-        <tr><td class="l">Vercel AI SDK</td><td class="n">2,217 · 33% links</td><td class="n">5,673,960 · 2% links</td><td class="no">full file is ~1.4M tokens</td></tr>
-        <tr><td class="l">Drizzle ORM</td><td class="n">37,377 · 84% links</td><td class="n">3,553,515 · 1% links</td><td class="no">full file is ~890k tokens</td></tr>
-        <tr><td class="l">Next.js</td><td class="n">8,792 · 58% links</td><td class="n">— (404)</td><td class="no">index only; docs index is 96% links</td></tr>
+        <tr><td class="l">Vercel AI SDK</td><td class="n">2,217 · 33% links</td><td class="n">5,673,960</td><td class="no">~1.4M tokens</td></tr>
+        <tr><td class="l">Drizzle ORM</td><td class="n">37,377 · 84% links</td><td class="n">3,553,515</td><td class="no">~890k tokens</td></tr>
+        <tr><td class="l">Next.js</td><td class="n">8,792 · 58% links</td><td class="n">— (404)</td><td class="no">index only</td></tr>
         <tr><td class="l">Stripe</td><td class="n">93,150 · 87% links</td><td class="n">— (404)</td><td class="no">index only</td></tr>
-        <tr><td class="l">TanStack Query</td><td class="n">11,396 · 78% links</td><td class="n">identical file</td><td class="no">index only; "full" is the same bytes</td></tr>
+        <tr><td class="l">TanStack Query</td><td class="n">11,396 · 78% links</td><td class="n">identical file</td><td class="no">index only</td></tr>
         <tr><td class="l">React Router</td><td class="n">— (404)</td><td class="n">— (404)</td><td class="no">nothing published</td></tr>
       </tbody>
     </table>
     </div>
     <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint)">"% links" = share of non-empty lines carrying a markdown link. Token estimates at ~4 chars/token.</p>
 
-    <h2>The same filename means three different things</h2>
-    <p>For <b>tRPC</b>, <code>llms.txt</code> is documentation — 15k of prose, no links. For <b>Zod</b>, the same filename is 94% links: a table of contents. For <b>TanStack Query</b>, <code>llms-full.txt</code> is byte-identical to <code>llms.txt</code>, so the "full" version is the index. For <b>Next.js</b> and <b>Stripe</b>, it 404s entirely.</p>
-    <p>Sizes span <b>2,217 characters to 5,673,960</b> — a factor of about 2,500. Nothing in the name tells a consumer which of those it is about to receive.</p>
+    <p>Sizes span <b>2,217 characters to 5,673,960</b> — a factor of about 2,500 — under two filenames that promise the same thing. For <b>tRPC</b>, <code>llms.txt</code> is documentation. For <b>Zod</b>, it is 94% links. For <b>TanStack Query</b>, <code>llms-full.txt</code> is byte-identical to <code>llms.txt</code>. For <b>Next.js</b> and <b>Stripe</b> it 404s.</p>
 
     <div class="callout">
-      <p><b>The practical consequence:</b> an agent cannot write generic code to consume these. Fetching <code>llms.txt</code> gets you documentation from one library and a link list from the next, and fetching <code>llms-full.txt</code> gets you 7KB from Prisma or 5.7MB from the Vercel AI SDK. Any tool that uses these has to special-case each library — which is the thing a convention exists to prevent.</p>
+      <p><b>Put the two tables together and the problem is visible.</b> A 76-byte instruction changes what a model writes. A 25 KB file containing the same instruction does not. And the direction the ecosystem is moving is 3.8 MB, 5.7 MB, 3.6 MB — bundles that are, on this evidence, the shape least likely to work.</p>
     </div>
 
-    <h2>What this means if a model cannot fetch</h2>
-    <p>A coding agent with web access can follow a link index. A model answering from its context alone cannot — it gets a list of URLs it has no way to open. So for the common case of a single request with documentation pasted in, <b>only the self-contained prose files do anything at all</b>: Prisma's 7KB <code>llms-full.txt</code>, tRPC's 15KB index, and Zod's full file if you are willing to spend ~65k tokens on it.</p>
-    <p>Everything else is either a menu with no kitchen behind it, or too large to put in a prompt.</p>
+    <h2>What to do instead</h2>
+    <p>Not "write better documentation" — the documentation is already right. The two sentences measured here were written by the libraries themselves, and both work.</p>
+    <p><b>Ship a short file containing only the things a model provably gets wrong.</b> For React Router that is a handful of v8 renames. For Prisma it is the driver adapter and the removed <code>datasourceUrl</code>. Both fit in under 200 characters each. A complete documentation bundle is a different artifact for a different purpose, and it does not substitute for this.</p>
+    <p>Prisma's approach comes closest today: <code>prisma init</code> installs small, task-scoped skill files into your project, so nothing has to be fetched and each file is narrow. It is the only mechanism in this survey that works for a model with no network access.</p>
 
-    <h2>The one approach that sidesteps this</h2>
-    <p><b>Prisma installs its documentation into your project.</b> From v7.9, <code>prisma init</code> writes a tree of skill files into <code>.agents/skills/</code> — small, task-scoped, and already on disk, so no fetching is involved. It is the only mechanism in this survey that works for a model with no network access, and the only one this site has been able to measure directly.</p>
-    <p>The measurement is worth reading alongside this, because it is not a clean win. Prisma's shipped docs move their score from <b>87 to 93</b> — but the pack an agent would route to <i>by name</i> for the failing task fixes nothing at all, and one failure survives every document they ship. <a href="prisma7.html">The Prisma scorecard has the numbers</a>.</p>
+    <h2>Honest limits</h2>
+    <p>One model (Claude Opus 5), two libraries, one failing task each, ten trials per cell, and a one-shot prompt rather than a real agent loop with retrieval. <b>The minimal arm is close to handing the model the answer</b> — its entire context <i>is</i> the correction — so this measures whether a salient instruction is followed, not whether realistic documentation works. That is still the useful half: it locates the failure in retrieval rather than in the model's willingness to comply.</p>
+    <p>An agent that can search documentation may not have this problem at all. The result applies to the common case of documentation pasted into a prompt.</p>
 
     <h2>Check it yourself</h2>
-    <p>Every figure above is one request. Nothing here needs to be taken on trust:</p>
+    <p>Every survey figure is one request:</p>
     <pre class="sh">curl -sL https://prisma.io/llms-full.txt | wc -c
 curl -sL https://ai-sdk.dev/llms-full.txt | wc -c</pre>
-    <p style="margin-top:12px">The survey script is in the repo (<code>scripts/survey-agent-docs.mjs</code>) and writes <code>data/agent-docs.json</code>. Re-run it and any of these numbers can be checked, or shown to have changed.</p>
+    <p style="margin-top:12px">The survey script is <code>scripts/survey-agent-docs.mjs</code> and writes <code>data/agent-docs.json</code>. The experiment is the <code>--with-context</code> path in the same repo; per-library numbers are on the <a href="react-router.html">React Router</a> and <a href="prisma7.html">Prisma</a> scorecards.</p>
 
-    <h2>Why this site cares</h2>
-    <p>SDKProof measures whether AI coding agents write a library's <b>current</b> API or an older one they remember. The obvious fix a maintainer reaches for is to ship documentation for agents. This is what that looks like today across nine libraries — and mostly, it is not yet something a model can use.</p>
-
-    <p class="updated">Surveyed 6 August 2026. These files change; the script re-runs in seconds.</p>
+    <p class="updated">Measured and surveyed 6 August 2026. These files change; the script re-runs in seconds.</p>
   </div>
 
   <footer>
