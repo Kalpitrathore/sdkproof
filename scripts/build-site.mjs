@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "stripe.html", "badge.html", "privacy.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "stripe.html", "agent-docs.html", "badge.html", "privacy.html"];
 
 const SITE = "https://sdkproof.dev";
 
@@ -86,6 +86,12 @@ const META = {
     desc: "Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It refused the other five outright, so the page publishes both rates.",
     type: "article",
   },
+  "agent-docs.html": {
+    title: "What libraries actually ship for AI coding agents — SDKProof",
+    social: "Nine libraries publish docs for LLMs. Almost none of it is usable without fetching.",
+    desc: "A survey of llms.txt and llms-full.txt across nine TypeScript libraries: same filename, a 2,500x spread in size, and no agreement on whether the file is documentation or a list of links to it.",
+    type: "article",
+  },
   "badge.html": {
     title: "SDKProof badges — put your AI-readiness score in your README",
     social: "Put your AI-readiness score in your README",
@@ -100,7 +106,7 @@ const META = {
 };
 
 // Pages without a dedicated OG card fall back to the board image.
-const OG_FALLBACK = new Set(["privacy.html", "badge.html"]);
+const OG_FALLBACK = new Set(["privacy.html", "badge.html", "agent-docs.html"]);
 
 const canonicalFor = (page) => (page === "index.html" ? `${SITE}/` : `${SITE}/${page}`);
 const ogImageFor = (page) =>
@@ -132,7 +138,7 @@ for (const page of PAGES) {
   // separate fragments by hand.
   html = html.replace(
     "</footer>",
-    '  <p class="fine" style="margin-top:10px"><a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>\n  </footer>'
+    '  <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>\n  </footer>'
   );
 
   const sourceTitle = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "SDKProof").trim();
@@ -223,7 +229,7 @@ const urls = PAGES.map((page) => {
     <loc>${canonicalFor(page)}</loc>
     <lastmod>${mtime.toISOString().slice(0, 10)}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${page === "index.html" ? "1.0" : page === "privacy.html" ? "0.3" : page === "badge.html" ? "0.6" : "0.8"}</priority>
+    <priority>${page === "index.html" ? "1.0" : page === "privacy.html" ? "0.3" : page === "badge.html" ? "0.6" : page === "agent-docs.html" ? "0.7" : "0.8"}</priority>
   </url>`;
 }).join("\n");
 

@@ -1,0 +1,129 @@
+<title>What libraries actually ship for AI coding agents — SDKProof</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
+    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
+    --brand: #0e9aa7; --brand-ink: #ffffff;
+    --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
+      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
+      --brand: #2dd4bf; --brand-ink: #06231f;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
+    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
+    --brand: #0e9aa7; --brand-ink: #ffffff;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
+    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
+    --brand: #2dd4bf; --brand-ink: #06231f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 90px; }
+  h1, h2 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
+  code { font-family: var(--font-mono); font-size: .92em; }
+  a { color: var(--brand); }
+  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+
+  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
+  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); }
+  .logo b { color: var(--brand); }
+  .mast .gh { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-decoration: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 11px; }
+
+  .hero { padding: 40px 0 30px; border-bottom: 1px solid var(--line-strong); margin-bottom: 34px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; }
+  .hero .sub { color: var(--ink-soft); font-size: 17px; margin: 14px 0 0; max-width: 62ch; }
+
+  .doc h2 { font-size: 19px; font-weight: 700; margin: 34px 0 10px; }
+  .doc p { color: var(--ink-soft); margin: 0 0 12px; max-width: 68ch; }
+  .doc ul { color: var(--ink-soft); margin: 0 0 12px; padding-left: 20px; max-width: 68ch; }
+  .doc li { margin-bottom: 7px; }
+  .doc b { color: var(--ink); }
+  .updated { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); margin-top: 30px; }
+
+  footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
+  footer .fine { margin: 0; }
+  .doc h3 { font-size: 15.5px; font-weight: 700; margin: 22px 0 8px; }
+  .t { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 6px 0 14px; }
+  .t th { text-align: left; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
+  .t td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); white-space: nowrap; }
+  .t td.l { color: var(--ink); font-weight: 650; white-space: normal; }
+  .t td.n { font-family: var(--font-mono); font-size: 12.5px; }
+  .t td.ok { color: var(--brand); }
+  .t td.no { color: var(--ink-faint); }
+  .wrapx { overflow-x: auto; }
+  .callout { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--brand); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 0 0 14px; }
+  .callout p { margin: 0; color: var(--ink-soft); font-size: 14.5px; } .callout b { color: var(--ink); }
+  pre.sh { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 8px 0 0; }
+</style>
+
+<div class="wrap">
+  <div class="mast">
+    <span class="logo">SDK<b>Proof</b></span>
+    <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">GitHub ↗</a>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">Survey · 6 August 2026</div>
+    <h1>What libraries actually ship for AI coding agents</h1>
+    <p class="sub">Nine popular TypeScript libraries publish documentation aimed at LLMs. The filename is a convention; the contents are not. Same name, a 2,500× spread in size, and no agreement on whether the file contains documentation or a list of links to it.</p>
+  </header>
+
+  <div class="doc">
+    <div class="wrapx">
+    <table class="t">
+      <thead><tr><th>Library</th><th>llms.txt</th><th>llms-full.txt</th><th>Usable without fetching?</th></tr></thead>
+      <tbody>
+        <tr><td class="l">Prisma</td><td class="n">2,450 · 71% links</td><td class="n">6,915 · 0% links</td><td class="ok">yes — prose, and small</td></tr>
+        <tr><td class="l">tRPC</td><td class="n">15,699 · 0% links</td><td class="n">599,762 · 2% links</td><td class="ok">yes — the index itself is prose</td></tr>
+        <tr><td class="l">Zod</td><td class="n">21,522 · 94% links</td><td class="n">259,341 · 1% links</td><td class="ok">the full file, at ~65k tokens</td></tr>
+        <tr><td class="l">Vercel AI SDK</td><td class="n">2,217 · 33% links</td><td class="n">5,673,960 · 2% links</td><td class="no">full file is ~1.4M tokens</td></tr>
+        <tr><td class="l">Drizzle ORM</td><td class="n">37,377 · 84% links</td><td class="n">3,553,515 · 1% links</td><td class="no">full file is ~890k tokens</td></tr>
+        <tr><td class="l">Next.js</td><td class="n">8,792 · 58% links</td><td class="n">— (404)</td><td class="no">index only; docs index is 96% links</td></tr>
+        <tr><td class="l">Stripe</td><td class="n">93,150 · 87% links</td><td class="n">— (404)</td><td class="no">index only</td></tr>
+        <tr><td class="l">TanStack Query</td><td class="n">11,396 · 78% links</td><td class="n">identical file</td><td class="no">index only; "full" is the same bytes</td></tr>
+        <tr><td class="l">React Router</td><td class="n">— (404)</td><td class="n">— (404)</td><td class="no">nothing published</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint)">"% links" = share of non-empty lines carrying a markdown link. Token estimates at ~4 chars/token.</p>
+
+    <h2>The same filename means three different things</h2>
+    <p>For <b>tRPC</b>, <code>llms.txt</code> is documentation — 15k of prose, no links. For <b>Zod</b>, the same filename is 94% links: a table of contents. For <b>TanStack Query</b>, <code>llms-full.txt</code> is byte-identical to <code>llms.txt</code>, so the "full" version is the index. For <b>Next.js</b> and <b>Stripe</b>, it 404s entirely.</p>
+    <p>Sizes span <b>2,217 characters to 5,673,960</b> — a factor of about 2,500. Nothing in the name tells a consumer which of those it is about to receive.</p>
+
+    <div class="callout">
+      <p><b>The practical consequence:</b> an agent cannot write generic code to consume these. Fetching <code>llms.txt</code> gets you documentation from one library and a link list from the next, and fetching <code>llms-full.txt</code> gets you 7KB from Prisma or 5.7MB from the Vercel AI SDK. Any tool that uses these has to special-case each library — which is the thing a convention exists to prevent.</p>
+    </div>
+
+    <h2>What this means if a model cannot fetch</h2>
+    <p>A coding agent with web access can follow a link index. A model answering from its context alone cannot — it gets a list of URLs it has no way to open. So for the common case of a single request with documentation pasted in, <b>only the self-contained prose files do anything at all</b>: Prisma's 7KB <code>llms-full.txt</code>, tRPC's 15KB index, and Zod's full file if you are willing to spend ~65k tokens on it.</p>
+    <p>Everything else is either a menu with no kitchen behind it, or too large to put in a prompt.</p>
+
+    <h2>The one approach that sidesteps this</h2>
+    <p><b>Prisma installs its documentation into your project.</b> From v7.9, <code>prisma init</code> writes a tree of skill files into <code>.agents/skills/</code> — small, task-scoped, and already on disk, so no fetching is involved. It is the only mechanism in this survey that works for a model with no network access, and the only one this site has been able to measure directly.</p>
+    <p>The measurement is worth reading alongside this, because it is not a clean win. Prisma's shipped docs move their score from <b>87 to 93</b> — but the pack an agent would route to <i>by name</i> for the failing task fixes nothing at all, and one failure survives every document they ship. <a href="prisma7.html">The Prisma scorecard has the numbers</a>.</p>
+
+    <h2>Check it yourself</h2>
+    <p>Every figure above is one request. Nothing here needs to be taken on trust:</p>
+    <pre class="sh">curl -sL https://prisma.io/llms-full.txt | wc -c
+curl -sL https://ai-sdk.dev/llms-full.txt | wc -c</pre>
+    <p style="margin-top:12px">The survey script is in the repo (<code>scripts/survey-agent-docs.mjs</code>) and writes <code>data/agent-docs.json</code>. Re-run it and any of these numbers can be checked, or shown to have changed.</p>
+
+    <h2>Why this site cares</h2>
+    <p>SDKProof measures whether AI coding agents write a library's <b>current</b> API or an older one they remember. The obvious fix a maintainer reaches for is to ship documentation for agents. This is what that looks like today across nine libraries — and mostly, it is not yet something a model can use.</p>
+
+    <p class="updated">Surveyed 6 August 2026. These files change; the script re-runs in seconds.</p>
+  </div>
+
+  <footer>
+    <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with any library surveyed.</p>
+  </footer>
+</div>

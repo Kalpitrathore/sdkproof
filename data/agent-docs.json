@@ -1,0 +1,209 @@
+{
+  "surveyedAt": "2026-08-06",
+  "rows": [
+    {
+      "name": "Prisma",
+      "docs": "prisma.io",
+      "scored": "prisma7.html",
+      "files": [
+        {
+          "url": "prisma.io/llms.txt",
+          "status": 200,
+          "chars": 2450,
+          "lines": 17,
+          "linkLines": 12,
+          "linkPct": 71
+        },
+        {
+          "url": "prisma.io/llms-full.txt",
+          "status": 200,
+          "chars": 6915,
+          "lines": 108,
+          "linkLines": 0,
+          "linkPct": 0
+        }
+      ]
+    },
+    {
+      "name": "Next.js",
+      "docs": "nextjs.org",
+      "extra": [
+        "nextjs.org/docs/llms.txt"
+      ],
+      "scored": "nextjs.html",
+      "files": [
+        {
+          "url": "nextjs.org/llms.txt",
+          "status": 200,
+          "chars": 8792,
+          "lines": 67,
+          "linkLines": 39,
+          "linkPct": 58
+        },
+        {
+          "url": "nextjs.org/llms-full.txt",
+          "status": 404,
+          "chars": 0
+        },
+        {
+          "url": "nextjs.org/docs/llms.txt",
+          "status": 200,
+          "chars": 46349,
+          "lines": 293,
+          "linkLines": 282,
+          "linkPct": 96
+        }
+      ]
+    },
+    {
+      "name": "React Router",
+      "docs": "reactrouter.com",
+      "scored": "react-router.html",
+      "files": [
+        {
+          "url": "reactrouter.com/llms.txt",
+          "status": 404,
+          "chars": 0
+        },
+        {
+          "url": "reactrouter.com/llms-full.txt",
+          "status": 404,
+          "chars": 0
+        }
+      ]
+    },
+    {
+      "name": "Vercel AI SDK",
+      "docs": "ai-sdk.dev",
+      "scored": "aisdk.html",
+      "files": [
+        {
+          "url": "ai-sdk.dev/llms.txt",
+          "status": 200,
+          "chars": 2217,
+          "lines": 30,
+          "linkLines": 10,
+          "linkPct": 33
+        },
+        {
+          "url": "ai-sdk.dev/llms-full.txt",
+          "status": 200,
+          "chars": 5673960,
+          "lines": 126290,
+          "linkLines": 1938,
+          "linkPct": 2
+        }
+      ]
+    },
+    {
+      "name": "Zod",
+      "docs": "zod.dev",
+      "scored": "zod.html",
+      "files": [
+        {
+          "url": "zod.dev/llms.txt",
+          "status": 200,
+          "chars": 21522,
+          "lines": 334,
+          "linkLines": 313,
+          "linkPct": 94
+        },
+        {
+          "url": "zod.dev/llms-full.txt",
+          "status": 200,
+          "chars": 259341,
+          "lines": 6475,
+          "linkLines": 62,
+          "linkPct": 1
+        }
+      ]
+    },
+    {
+      "name": "TanStack Query",
+      "docs": "tanstack.com",
+      "scored": "tanstack-query.html",
+      "files": [
+        {
+          "url": "tanstack.com/llms.txt",
+          "status": 200,
+          "chars": 11396,
+          "lines": 45,
+          "linkLines": 35,
+          "linkPct": 78
+        },
+        {
+          "url": "tanstack.com/llms-full.txt",
+          "status": 200,
+          "chars": 11396,
+          "lines": 45,
+          "linkLines": 35,
+          "linkPct": 78
+        }
+      ]
+    },
+    {
+      "name": "Stripe",
+      "docs": "docs.stripe.com",
+      "scored": "stripe.html",
+      "files": [
+        {
+          "url": "docs.stripe.com/llms.txt",
+          "status": 200,
+          "chars": 93150,
+          "lines": 567,
+          "linkLines": 496,
+          "linkPct": 87
+        },
+        {
+          "url": "docs.stripe.com/llms-full.txt",
+          "status": 404,
+          "chars": 0
+        }
+      ]
+    },
+    {
+      "name": "Drizzle ORM",
+      "docs": "orm.drizzle.team",
+      "files": [
+        {
+          "url": "orm.drizzle.team/llms.txt",
+          "status": 200,
+          "chars": 37377,
+          "lines": 528,
+          "linkLines": 442,
+          "linkPct": 84
+        },
+        {
+          "url": "orm.drizzle.team/llms-full.txt",
+          "status": 200,
+          "chars": 3553515,
+          "lines": 95893,
+          "linkLines": 800,
+          "linkPct": 1
+        }
+      ]
+    },
+    {
+      "name": "tRPC",
+      "docs": "trpc.io",
+      "files": [
+        {
+          "url": "trpc.io/llms.txt",
+          "status": 200,
+          "chars": 15699,
+          "lines": 93,
+          "linkLines": 0,
+          "linkPct": 0
+        },
+        {
+          "url": "trpc.io/llms-full.txt",
+          "status": 200,
+          "chars": 599762,
+          "lines": 14608,
+          "linkLines": 236,
+          "linkPct": 2
+        }
+      ]
+    }
+  ]
+}
