@@ -135,6 +135,14 @@
   .ask .plain { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-faint);
                 text-decoration: none; white-space: nowrap; }
   .ask .plain:hover { color: var(--brand); }
+  .finding { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 26px 0 0; padding: 15px 20px;
+             background: var(--panel-2); border: 1px solid var(--line-strong); border-left: 3px solid var(--brand);
+             border-radius: 0 12px 12px 0; text-decoration: none; }
+  .finding .fl { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+                 color: var(--brand); font-weight: 700; white-space: nowrap; }
+  .finding .ft { color: var(--ink); font-size: 14.5px; font-weight: 600; flex: 1; min-width: 260px; }
+  .finding .fa { font-family: var(--font-mono); font-size: 12.5px; color: var(--brand); white-space: nowrap; }
+  .finding:hover { border-color: var(--brand); }
   .cta { text-align: center; margin-top: 50px; padding: 32px 24px; background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--line-strong); border-radius: 16px; }
   .cta h2 { font-size: clamp(21px, 3.6vw, 27px); font-weight: 800; }
   .cta p { color: var(--ink-soft); font-size: 15px; margin: 12px auto 20px; max-width: 54ch; }
@@ -246,6 +254,12 @@
       <a class="plain" href="https://github.com/Kalpitrathore/sdkproof">★ Star for new ones</a>
     </div>
   </div>
+
+  <a class="finding" href="agent-docs.html">
+    <span class="fl">New measurement</span>
+    <span class="ft">A library's own docs bury its own correction — one sentence fixes what 25&nbsp;KB of their documentation doesn't</span>
+    <span class="fa">Read the numbers →</span>
+  </a>
 
   <div class="sec-head">
     <span class="eyebrow">What the scores mean</span>

@@ -28,6 +28,7 @@ compiler decides.
 | **Prisma 7** | `@prisma/client` | **87 / 100** | still writes v6 client setup — omits v7's required driver `adapter`, uses the removed `datasourceUrl` |
 | **Next.js 16** | `next` | **92 / 100** | misses Next 16's new 2-arg `revalidateTag()` — but nails the Next 15 async APIs |
 | **React Router 8** | `react-router` | **93 / 100** | drops the deleted `json()` and `defer()` unprompted, but `meta()` still takes the removed `data` arg — now `loaderData` |
+| **Stripe 22** | `stripe` | **100 / 100** | clean on every task that ran — but the model refused 5 of 15 outright, so this covers 10 |
 | **Vercel AI SDK 7** | `ai` | **100 / 100** | clean sweep — now wires tools the v7 way (`inputSchema`, `stopWhen`). Was 90 on Opus 4.8 |
 | **Zod 4** | `zod` | **100 / 100** | clean sweep — the new 2-arg `z.record()` and unified `error`. Was 90 on Opus 4.8 |
 | **TanStack Query 5** | `@tanstack/react-query` | **100 / 100** | fully absorbed — every v4→v5 trap navigated |
@@ -66,6 +67,38 @@ isn't a defect in your code.
 
 Scores are also published as JSON at <https://sdkproof.dev/scores.json>.
 
+## Beyond the score: does your documentation actually reach the model?
+
+A score tells a maintainer how well models know their API — which they cannot
+change. The more useful question is whether the docs they *ship* close the gap.
+
+```bash
+npm start -- run --lib prisma --with-context --trials 3
+```
+
+Scores the same tasks twice: bare, and with the library's own agent files in
+context. The delta is the part a maintainer can act on.
+
+**What that turned up, measured across three libraries** ([full method and
+numbers](https://sdkproof.dev/agent-docs.html)):
+
+- A **short sentence** quoted from a library's own docs fixes the failure it
+  names — **9–10 times out of 10**.
+- The **same sentence inside that library's own documentation** fixes nothing.
+  React Router's sits at line 182 of `framework-mode.md`; there it works 0/10.
+- **It is not length.** 25 KB of *unrelated* documentation leaves the fix
+  working (8/10). 7.3 KB of the library's *own routing docs* destroys it (0/10).
+  What crowds out a correction is the amount of same-domain material around it.
+
+Each scorecard then derives its own fix list from those measurements — see
+["What would move this number"](https://sdkproof.dev/prisma7.html). Rules, not a
+model: an item without a measurement behind it is never emitted.
+
+**Also surveyed:** what nine TypeScript libraries actually publish for coding
+agents. Same filename, sizes from 2 KB to 5.7 MB, and no agreement on whether
+`llms.txt` is documentation or a list of links to it.
+→ [sdkproof.dev/agent-docs.html](https://sdkproof.dev/agent-docs.html)
+
 ## How it works
 
 1. **Generate** — a model solves ~10–15 realistic tasks. Prompts name the functions, never the option names — so it measures what the model *reaches for*.
@@ -97,7 +130,7 @@ Get an Anthropic key at <https://console.anthropic.com> (a run costs a few cents
 OpenAI is optional — set `OPENAI_API_KEY` (+ `SDKPROOF_OPENAI_MODEL`) to also score GPT.
 
 ```bash
-npm start -- run --lib prisma     # or: aisdk, zod, tanstack-query, nextjs, react-router
+npm start -- run --lib prisma     # or: aisdk, zod, tanstack-query, nextjs, react-router, stripe
 npm start -- run --lib tanstack-query
 npm start -- run --lib nextjs
 ```
@@ -117,7 +150,9 @@ Flags: `--fake` (offline), `--limit N`, `--tasks <file>` (custom task set).
 ```
 src/
   types.ts            shared types
-  libraries/          LibrarySpec per SDK (prisma, aisdk, zod, tanstack-query, nextjs, react-router)
+  libraries/          LibrarySpec per SDK (prisma, aisdk, zod, tanstack-query, nextjs, react-router, stripe)
+  context.ts          loads a library's own agent docs for --with-context
+  recommend.ts        measurements -> a maintainer's fix list
   prompt.ts           generation prompt + code extraction
   generate.ts         (task × model) -> candidate
   verify.ts           type-check a candidate against the fixture   [load-bearing]
