@@ -71,76 +71,90 @@
   </div>
 
   <header class="hero">
-    <div class="eyebrow">Measurement · 6 August 2026</div>
-    <h1>Your docs for AI agents work. Their size is what breaks them.</h1>
-    <p class="sub">One sentence from React Router's own documentation fixes a failure nine times out of ten. The identical sentence, inside the 25&nbsp;KB file it actually lives in, fixes it zero times out of ten. Meanwhile the bundles libraries publish for agents run to five megabytes.</p>
+    <div class="eyebrow">Measurement · 7 August 2026</div>
+    <h1>One sentence fixes what a library's full documentation does not.</h1>
+    <p class="sub">Across three libraries, a single sentence naming a breaking change fixes the failure it names, nine or ten times out of ten. Two of those libraries ship the same sentence inside their own larger documentation, and there it fixes nothing. <b>Why is genuinely unclear — the obvious explanation was tested and did not hold.</b></p>
   </header>
 
   <div class="doc">
-    <h2>The experiment</h2>
-    <p>Two libraries, each with one task an AI assistant reliably gets wrong, and each with a sentence in its own documentation that names the fix. Ten trials per row. The only variable is how much text surrounds that sentence.</p>
+    <h2>What is measured</h2>
+    <p>Three libraries, each with one task an AI assistant reliably gets wrong, and each with a sentence in its own documentation that names the fix. Ten trials per cell. The only thing that changes is how that sentence reaches the model.</p>
 
     <div class="wrapx">
     <table class="t">
-      <thead><tr><th>What was in the prompt</th><th>Size</th><th>React Router<br><code>meta()</code> arg</th><th>Prisma<br>client constructor</th></tr></thead>
+      <thead><tr><th>Library &amp; failing task</th><th>No context</th><th>The sentence alone</th><th>Inside the library's own docs</th></tr></thead>
       <tbody>
-        <tr><td class="l">Nothing</td><td class="n">—</td><td class="n no">0 / 10</td><td class="n no">0 / 10</td></tr>
-        <tr><td class="l">The library's summary skill file</td><td class="n">6 KB</td><td class="n no">0 / 10</td><td class="n no">0 / 10</td></tr>
-        <tr><td class="l">Its full documentation pack<br><span style="color:var(--ink-faint);font-size:12.5px">— containing the sentence</span></td><td class="n">25 KB</td><td class="n no">0 / 10</td><td class="n">5 / 10</td></tr>
-        <tr><td class="l"><b>That one sentence, alone</b></td><td class="n">76–174 B</td><td class="n ok"><b>9 / 10</b></td><td class="n ok"><b>10 / 10</b></td></tr>
+        <tr><td class="l">React Router — <code>meta()</code> arg</td><td class="n no">0 / 10</td><td class="n ok">9 / 10 <span style="color:var(--ink-faint)">(76 B)</span></td><td class="n no">0 / 10 <span style="color:var(--ink-faint)">(25 KB pack)</span></td></tr>
+        <tr><td class="l">Prisma — client constructor</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(174 B)</span></td><td class="n">5 / 10 <span style="color:var(--ink-faint)">(25 KB pack)</span></td></tr>
+        <tr><td class="l">Next.js — <code>revalidateTag</code> arity</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(137 B)</span></td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(6.6 KB page)</span></td></tr>
       </tbody>
     </table>
     </div>
 
     <div class="callout">
-      <p><b>Nothing about the wording changed between the last two rows.</b> React Router's sentence is <i>"Important: <code>meta</code> receives <code>loaderData</code>; do not use deprecated <code>data</code> args."</i> In the 25&nbsp;KB pack it sits at line 182 of a 213-line file and the model writes <code>data</code> every time. On its own, the model writes <code>loaderData</code>.</p>
+      <p><b>The one thing that holds across all three: the sentence works.</b> These are not corrections written for the experiment — every one is quoted verbatim from the library's own documentation. The model reads the instruction and follows it.</p>
     </div>
 
-    <p><b>So the failure is not comprehension, and it is not refusal.</b> The model follows the instruction when it can find it. That is a retrieval problem, and it has the opposite fix from the one usually recommended.</p>
-
-    <h2>Which matters, because of what libraries actually publish</h2>
-    <p>Nine TypeScript libraries, surveyed the same day. The filename is a convention; the contents are not.</p>
+    <h2>The obvious explanation, and why it is wrong</h2>
+    <p>Two of three libraries fail when the same sentence sits inside a 25&nbsp;KB document. The natural reading is that volume buries it — React Router's sentence is at line 182 of a 213-line file, and there it never works.</p>
+    <p><b>So that was tested directly.</b> One library, one task, one sentence, and nothing varying but the amount of surrounding text and where the sentence sits in it. The padding is real Next.js documentation for unrelated APIs, checked to make sure it never states the signature being tested:</p>
 
     <div class="wrapx">
     <table class="t">
-      <thead><tr><th>Library</th><th>llms.txt</th><th>llms-full.txt</th><th>Usable in one prompt?</th></tr></thead>
+      <thead><tr><th>Context</th><th>Size</th><th>Sentence position</th><th>Passes</th></tr></thead>
       <tbody>
-        <tr><td class="l">Prisma</td><td class="n">2,450 · 71% links</td><td class="n">6,915 · 0% links</td><td class="ok">yes — prose, and small</td></tr>
-        <tr><td class="l">tRPC</td><td class="n">15,699 · 0% links</td><td class="n">599,762</td><td class="ok">yes — the index is prose</td></tr>
-        <tr><td class="l">Zod</td><td class="n">21,522 · 94% links</td><td class="n">259,341 · 1% links</td><td class="ok">the full file, at ~65k tokens</td></tr>
-        <tr><td class="l">Vercel AI SDK</td><td class="n">2,217 · 33% links</td><td class="n">5,673,960</td><td class="no">~1.4M tokens</td></tr>
-        <tr><td class="l">Drizzle ORM</td><td class="n">37,377 · 84% links</td><td class="n">3,553,515</td><td class="no">~890k tokens</td></tr>
-        <tr><td class="l">Next.js</td><td class="n">8,792 · 58% links</td><td class="n">— (404)</td><td class="no">index only</td></tr>
-        <tr><td class="l">Stripe</td><td class="n">93,150 · 87% links</td><td class="n">— (404)</td><td class="no">index only</td></tr>
-        <tr><td class="l">TanStack Query</td><td class="n">11,396 · 78% links</td><td class="n">identical file</td><td class="no">index only</td></tr>
-        <tr><td class="l">React Router</td><td class="n">— (404)</td><td class="n">— (404)</td><td class="no">nothing published</td></tr>
+        <tr class="base"><td class="l">nothing</td><td class="n">—</td><td class="n">—</td><td class="n no">0 / 10</td></tr>
+        <tr><td class="l">the sentence alone</td><td class="n">137 B</td><td class="n">—</td><td class="n ok">10 / 10</td></tr>
+        <tr><td class="l">sentence, then padding</td><td class="n">25 KB</td><td class="n">first</td><td class="n ok">10 / 10</td></tr>
+        <tr><td class="l">padding, then sentence</td><td class="n">25 KB</td><td class="n">last (char 24,960)</td><td class="n ok">10 / 10</td></tr>
+        <tr><td class="l">sentence, then padding</td><td class="n">50 KB</td><td class="n">first</td><td class="n ok">9 / 10</td></tr>
       </tbody>
     </table>
     </div>
-    <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint)">"% links" = share of non-empty lines carrying a markdown link. Token estimates at ~4 chars/token.</p>
 
-    <p>Sizes span <b>2,217 characters to 5,673,960</b> — a factor of about 2,500 — under two filenames that promise the same thing. For <b>tRPC</b>, <code>llms.txt</code> is documentation. For <b>Zod</b>, it is 94% links. For <b>TanStack Query</b>, <code>llms-full.txt</code> is byte-identical to <code>llms.txt</code>. For <b>Next.js</b> and <b>Stripe</b> it 404s.</p>
+    <p><b>Neither size nor position reproduced the failure.</b> The instruction survived being buried at the end of 25&nbsp;KB and survived 50&nbsp;KB of padding. Whatever stops it working inside React Router's and Prisma's own packs, it is not simply that those packs are long.</p>
 
     <div class="callout">
-      <p><b>Put the two tables together and the problem is visible.</b> A 76-byte instruction changes what a model writes. A 25 KB file containing the same instruction does not. And the direction the ecosystem is moving is 3.8 MB, 5.7 MB, 3.6 MB — bundles that are, on this evidence, the shape least likely to work.</p>
+      <p><b>The live hypothesis, untested:</b> the padding used here is topically distant — <code>headers</code>, <code>redirect</code>, <code>link</code>, <code>image</code>. The documentation that <i>did</i> smother the correction was densely about the same API surface, full of adjacent guidance competing for the same decision. <b>Competing content, rather than volume, would explain all three results — and it has not been measured.</b> Until it is, this page does not claim a cause.</p>
     </div>
 
-    <h2>What to do instead</h2>
-    <p>Not "write better documentation" — the documentation is already right. The two sentences measured here were written by the libraries themselves, and both work.</p>
-    <p><b>Ship a short file containing only the things a model provably gets wrong.</b> For React Router that is a handful of v8 renames. For Prisma it is the driver adapter and the removed <code>datasourceUrl</code>. Both fit in under 200 characters each. A complete documentation bundle is a different artifact for a different purpose, and it does not substitute for this.</p>
-    <p>Prisma's approach comes closest today: <code>prisma init</code> installs small, task-scoped skill files into your project, so nothing has to be fetched and each file is narrow. It is the only mechanism in this survey that works for a model with no network access.</p>
+    <h2>A confound worth stating</h2>
+    <p>The three failures are not equally hard to correct. Next.js's is an arity error — <i>"the second argument is required"</i> is about as direct as a fix gets. React Router's is a field rename inside a destructured argument. It is entirely possible that some corrections are robust to their surroundings and others are fragile, and that this explains the table above better than anything about the documents.</p>
 
-    <h2>Honest limits</h2>
-    <p>One model (Claude Opus 5), two libraries, one failing task each, ten trials per cell, and a one-shot prompt rather than a real agent loop with retrieval. <b>The minimal arm is close to handing the model the answer</b> — its entire context <i>is</i> the correction — so this measures whether a salient instruction is followed, not whether realistic documentation works. That is still the useful half: it locates the failure in retrieval rather than in the model's willingness to comply.</p>
-    <p>An agent that can search documentation may not have this problem at all. The result applies to the common case of documentation pasted into a prompt.</p>
+    <h2>What can be said, and what cannot</h2>
+    <p><b>Supported:</b> a short, specific sentence naming a breaking change fixes the failure it names, on all three libraries measured, 9–10 times out of ten. It is worth shipping one.</p>
+    <p><b>Supported:</b> two of these three libraries already contain that sentence somewhere in their own documentation, and it is not reaching the model there.</p>
+    <p><b>Not supported:</b> that document length is the cause. That was the earlier conclusion on this page and the controlled test did not reproduce it.</p>
+
+    <h2>What libraries publish today</h2>
+    <p>The same nine-library survey that prompted all of this. The filename is a convention; the contents are not.</p>
+    <div class="wrapx">
+    <table class="t">
+      <thead><tr><th>Library</th><th>llms.txt</th><th>llms-full.txt</th></tr></thead>
+      <tbody>
+        <tr><td class="l">Prisma</td><td class="n">2,450 · 71% links</td><td class="n">6,915 · 0% links</td></tr>
+        <tr><td class="l">tRPC</td><td class="n">15,699 · 0% links</td><td class="n">599,762</td></tr>
+        <tr><td class="l">Zod</td><td class="n">21,522 · 94% links</td><td class="n">259,341 · 1% links</td></tr>
+        <tr><td class="l">Vercel AI SDK</td><td class="n">2,217 · 33% links</td><td class="n">5,673,960</td></tr>
+        <tr><td class="l">Drizzle ORM</td><td class="n">37,377 · 84% links</td><td class="n">3,553,515</td></tr>
+        <tr><td class="l">Next.js</td><td class="n">8,792 · 58% links</td><td class="n">— (404)</td></tr>
+        <tr><td class="l">Stripe</td><td class="n">93,150 · 87% links</td><td class="n">— (404)</td></tr>
+        <tr><td class="l">TanStack Query</td><td class="n">11,396 · 78% links</td><td class="n">identical file</td></tr>
+        <tr><td class="l">React Router</td><td class="n">— (404)</td><td class="n">— (404)</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Sizes span 2,217 characters to 5,673,960 under two filenames that promise the same thing. A model with no ability to fetch gets nothing usable from a link index, and nothing at all from a five-megabyte bundle. <b>Next.js is worth copying on one point regardless of the above:</b> it serves a Markdown version alongside every docs page — 6.6&nbsp;KB where the HTML is 490&nbsp;KB — and that file fixed its failure ten times out of ten.</p>
+
+    <h2>Limits</h2>
+    <p>One model (Claude Opus 5), three libraries, one failing task each, ten trials per cell, one-shot prompts rather than an agent that can search. <b>The single-sentence arm is close to handing the model the answer</b> — its entire context <i>is</i> the correction — so it measures whether a salient instruction is followed, not whether documentation works in normal use.</p>
 
     <h2>Check it yourself</h2>
-    <p>Every survey figure is one request:</p>
-    <pre class="sh">curl -sL https://prisma.io/llms-full.txt | wc -c
+    <pre class="sh">curl -sL https://nextjs.org/docs/app/api-reference/functions/revalidateTag.md | wc -c
 curl -sL https://ai-sdk.dev/llms-full.txt | wc -c</pre>
-    <p style="margin-top:12px">The survey script is <code>scripts/survey-agent-docs.mjs</code> and writes <code>data/agent-docs.json</code>. The experiment is the <code>--with-context</code> path in the same repo; per-library numbers are on the <a href="react-router.html">React Router</a> and <a href="prisma7.html">Prisma</a> scorecards.</p>
+    <p style="margin-top:12px">Survey script: <code>scripts/survey-agent-docs.mjs</code> → <code>data/agent-docs.json</code>. The arms are the <code>--with-context</code> path in the same repo; per-library numbers are on the <a href="react-router.html">React Router</a>, <a href="prisma7.html">Prisma</a> and <a href="nextjs.html">Next.js</a> scorecards.</p>
 
-    <p class="updated">Measured and surveyed 6 August 2026. These files change; the script re-runs in seconds.</p>
+    <p class="updated">Revised 7 August 2026. An earlier version of this page concluded that document size was the cause. A controlled size-and-position sweep did not reproduce that, so the claim is withdrawn and the page now reports only what survived testing.</p>
   </div>
 
   <footer>

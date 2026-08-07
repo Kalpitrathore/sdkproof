@@ -360,7 +360,8 @@ const prisma = new PrismaClient({
 
     <h3>3. And the strongest one: make it shorter.</h3>
     <p>The adapter sentence, on its own, fixes bare <code>new PrismaClient()</code> <b>10 times out of 10</b>. The same sentence inside your 25&nbsp;KB pack fixes it <b>5 times out of 10</b>. Nothing about the wording changed — only how much surrounded it.</p>
-    <p>So the failure is not comprehension and not refusal. <b>The model follows the instruction when it can find it.</b> That inverts the usual advice: a short file covering the few things a model provably gets wrong will outperform a complete one, and <a href="react-router.html">React Router shows the same pattern</a> more starkly — 9 of 10 from a single sentence, 0 of 10 from the same sentence buried in 25&nbsp;KB.</p>
+    <p>So the failure is not comprehension and not refusal — <b>the model follows the instruction when it reaches it</b>. <a href="react-router.html">React Router shows the same pattern</a> more starkly: 9 of 10 from a single sentence, 0 of 10 from that sentence inside its own 25&nbsp;KB pack.</p>
+    <p><b>Length is the obvious culprit and it is not supported.</b> A controlled sweep on Next.js put the same sentence at the end of 25&nbsp;KB of unrelated docs and it still passed 10 of 10 — <a href="agent-docs.html">details here</a>. Ship the short file, because that provably works. The reason the full pack does not is still an open question.</p>
 
     <h3>4. Worth saying plainly: the docs themselves are unusually good.</h3>
     <p>Across <a href="agent-docs.html">nine libraries surveyed</a>, Prisma's <code>llms-full.txt</code> is one of only three files a model can use without fetching anything — 6,915 characters of prose, no link index. The comparable file from another library on this board is 5.7&nbsp;MB. <b>This is a routing problem, not a writing problem.</b></p>

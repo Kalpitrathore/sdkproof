@@ -1,0 +1,9 @@
+[
+  {
+    "id": "revalidate-tag",
+    "area": "cache",
+    "difficulty": "medium",
+    "prompt": "Export an async function `refreshUsers()` that revalidates everything tagged `users`, using Next's tag-based cache revalidation helper.",
+    "skeleton": "import { revalidateTag } from \"next/cache\";\n\n// Export async `refreshUsers()`: revalidate the 'users' cache tag.\nexport async function refreshUsers() {\n  // implement\n}\n"
+  }
+]

@@ -87,9 +87,9 @@ const META = {
     type: "article",
   },
   "agent-docs.html": {
-    title: "Your AI-agent docs work. Their size is what breaks them — SDKProof",
-    social: "One sentence fixes it 9/10. The same sentence inside 25KB fixes it 0/10.",
-    desc: "A 76-byte instruction from a library’s own docs fixes a model failure 9 times in 10. The identical sentence inside the 25KB file it lives in fixes it 0 times in 10. Two libraries measured, plus a survey of what nine actually publish.",
+    title: "One sentence fixes what a library's full documentation does not — SDKProof",
+    social: "A sentence from a library's own docs fixes the bug 10/10. The same sentence inside their docs pack fixes nothing.",
+    desc: "Across three libraries, one sentence quoted from their own documentation fixes the failure it names 9-10 times out of 10. Two of them ship that sentence inside larger docs, where it fixes nothing. The obvious explanation — document size — was tested and did not hold.",
     type: "article",
   },
   "badge.html": {
