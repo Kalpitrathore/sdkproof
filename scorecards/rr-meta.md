@@ -1,7 +1,7 @@
 # React Router — AI-Readiness Scorecard
 
 **Library:** `react-router` v8.3.0  
-**Generated:** 2026-08-06T15:22:45.346Z  
+**Generated:** 2026-08-07T08:48:01.019Z  
 **Method:** type-check only — measures whether agent-generated code uses the real, current API surface. Not a runtime test.
 
 ## Overall: 0/100
@@ -23,13 +23,16 @@ Compared on the **1 tasks every arm produced code for**, 10 trial(s) each (10 ru
 | Arm | Score | Passed | Scored | vs bare |
 |---|---:|---:|---:|---:|
 | bare | 0/100 | 0 | 10 | — |
-| just-the-line | 90/100 | 9 | 10 | **+90** |
-| skill-only | 0/100 | 0 | 10 | **0** |
+| just-the-line | 100/100 | 10 | 10 | **+100** |
+| metadata-only | 100/100 | 10 | 10 | **+100** |
+| framework-only | 0/100 | 0 | 10 | **0** |
 | full-pack | 0/100 | 0 | 10 | **0** |
 
 - `just-the-line` — only the one sentence from framework-mode.md, ~75 characters
   - fixes: `meta-from-loader`
-- `skill-only` — SKILL.md alone — what an agent routing by name would load first
+- `metadata-only` — just the Metadata section that contains it, 215 B
+  - fixes: `meta-from-loader`
+- `framework-only` — the whole file it lives in — 7.3 KB, all about routing
   - still fails: `meta-from-loader`
 - `full-pack` — plus the four mode references, one of which names the meta rename
   - still fails: `meta-from-loader`

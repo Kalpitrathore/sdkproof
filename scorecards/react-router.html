@@ -239,7 +239,20 @@
 
     <h3>So ship the sentence. Why the pack fails is still open.</h3>
     <p>The actionable half is settled: <b>a short file naming the v8 renames would work</b>, and it is far less effort than publishing everything. <a href="prisma7.html">Prisma shows the same shape</a> — its adapter requirement passes 10 of 10 alone and 5 of 10 inside its own 25 KB pack.</p>
-    <p><b>The tempting explanation is that length buries it. That was tested and did not hold.</b> On Next.js, the same experiment with the sentence at the <i>end</i> of 25 KB of unrelated documentation still passed 10 of 10, and 9 of 10 inside 50 KB. Size and position alone do not reproduce this failure — see <a href="agent-docs.html">the measurement page</a>. What distinguishes the packs that smother a correction from the padding that does not is not yet known, and this page will not guess at it.</p>
+    <h3>And it narrows to one file — this one.</h3>
+    <p>Bisecting the pack, ten trials each:</p>
+    <table class="arms">
+      <thead><tr><th>What was in the prompt</th><th style="text-align:right">Size</th><th style="text-align:right">Passes</th></tr></thead>
+      <tbody>
+        <tr><td class="a">the sentence alone</td><td class="n">76 B</td><td class="d up">10 / 10</td></tr>
+        <tr><td class="a">the Metadata section it sits in</td><td class="n">215 B</td><td class="d up">10 / 10</td></tr>
+        <tr><td class="a">25 KB of unrelated docs + the sentence</td><td class="n">25 KB</td><td class="d up">8 / 10</td></tr>
+        <tr><td class="a"><b>references/framework-mode.md</b></td><td class="n">7.3 KB</td><td class="d flat"><b>0 / 10</b></td></tr>
+        <tr><td class="a">the whole pack</td><td class="n">25 KB</td><td class="d flat">0 / 10</td></tr>
+      </tbody>
+    </table>
+    <p><b>The other four files are irrelevant.</b> <code>framework-mode.md</code> on its own is enough to stop the line inside it working. And it is not length — twenty-five kilobytes of Zod documentation, with the same sentence at the very end, still passes 8 of 10. <b>It is the 7 KB of routing guidance around it.</b></p>
+    <p>So the concrete version: <b>line 182 does not survive the other 212 lines of the file it lives in.</b> A short standalone file naming the v8 renames would work — that is measured, not assumed. <a href="agent-docs.html">Full method and the size-and-position sweep here.</a></p>
     <p class="fine" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-top:14px">Revised twice on 2026-08-06. This section first recommended publishing the file, then — after the buried arms failed 3 of 3 — claimed documentation does not help at all. Testing the sentence on its own showed both were wrong. The numbers above are the third and current answer.</p>
   </div>
 

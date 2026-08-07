@@ -35,9 +35,14 @@ export const reactRouterSpec: LibrarySpec = {
         files: ["minimal.md"],
       },
       {
-        name: "skill-only",
-        label: "SKILL.md alone — what an agent routing by name would load first",
-        files: ["SKILL.md"],
+        name: "metadata-only",
+        label: "just the Metadata section that contains it, 215 B",
+        files: ["metadata-only.md"],
+      },
+      {
+        name: "framework-only",
+        label: "the whole file it lives in — 7.3 KB, all about routing",
+        files: ["references/framework-mode.md"],
       },
       {
         name: "full-pack",

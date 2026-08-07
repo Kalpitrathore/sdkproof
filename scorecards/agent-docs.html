@@ -72,8 +72,8 @@
 
   <header class="hero">
     <div class="eyebrow">Measurement · 7 August 2026</div>
-    <h1>One sentence fixes what a library's full documentation does not.</h1>
-    <p class="sub">Across three libraries, a single sentence naming a breaking change fixes the failure it names, nine or ten times out of ten. Two of those libraries ship the same sentence inside their own larger documentation, and there it fixes nothing. <b>Why is genuinely unclear — the obvious explanation was tested and did not hold.</b></p>
+    <h1>A library's own docs bury its own correction.</h1>
+    <p class="sub">Across three libraries, a single sentence naming a breaking change fixes the failure it names, nine or ten times out of ten. Two of those libraries ship the same sentence inside their own larger documentation, and there it fixes nothing. <b>It is not the length. Twenty-five kilobytes of unrelated documentation leaves the fix working; seven kilobytes of their own routing docs destroys it.</b></p>
   </header>
 
   <div class="doc">
@@ -95,9 +95,9 @@
       <p><b>The one thing that holds across all three: the sentence works.</b> These are not corrections written for the experiment — every one is quoted verbatim from the library's own documentation. The model reads the instruction and follows it.</p>
     </div>
 
-    <h2>The obvious explanation, and why it is wrong</h2>
-    <p>Two of three libraries fail when the same sentence sits inside a 25&nbsp;KB document. The natural reading is that volume buries it — React Router's sentence is at line 182 of a 213-line file, and there it never works.</p>
-    <p><b>So that was tested directly.</b> One library, one task, one sentence, and nothing varying but the amount of surrounding text and where the sentence sits in it. The padding is real Next.js documentation for unrelated APIs, checked to make sure it never states the signature being tested:</p>
+    <h2>It is not length. It is how much related material surrounds it.</h2>
+    <p>The obvious reading of the table above is that long documents bury a correction — React Router's sentence sits at line 182 of a 213-line file, and there it never works. <b>That was tested directly and it is wrong.</b></p>
+    <p>On Next.js: same task, same sentence, nothing varying but the amount of surrounding text and where the sentence sat in it. The padding was real Next.js documentation for unrelated APIs, checked never to state the signature under test.</p>
 
     <div class="wrapx">
     <table class="t">
@@ -112,11 +112,31 @@
     </table>
     </div>
 
-    <p><b>Neither size nor position reproduced the failure.</b> The instruction survived being buried at the end of 25&nbsp;KB and survived 50&nbsp;KB of padding. Whatever stops it working inside React Router's and Prisma's own packs, it is not simply that those packs are long.</p>
+    <p>Neither size nor position reproduced the failure. So the question became what is different about the documents that <i>do</i> smother it.</p>
+
+    <h2>Two controlled comparisons, and they agree</h2>
+    <p>Both run on React Router, on the one task it fails, ten trials per cell.</p>
+
+    <div class="wrapx">
+    <table class="t">
+      <thead><tr><th>What was in the prompt</th><th>Size</th><th>Topic</th><th>Passes</th></tr></thead>
+      <tbody>
+        <tr><td class="l">the sentence alone</td><td class="n">76 B</td><td class="n">—</td><td class="n ok">10 / 10</td></tr>
+        <tr><td class="l">the section it sits in</td><td class="n">215 B</td><td class="n">routing</td><td class="n ok">10 / 10</td></tr>
+        <tr><td class="l">25 KB of Zod docs, then the sentence</td><td class="n">25 KB</td><td class="n">unrelated</td><td class="n ok">8 / 10</td></tr>
+        <tr><td class="l"><b>the file it sits in</b></td><td class="n">7.3 KB</td><td class="n">routing</td><td class="n no"><b>0 / 10</b></td></tr>
+        <tr><td class="l">all five files of the pack</td><td class="n">25 KB</td><td class="n">routing</td><td class="n no">0 / 10</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p><b>Read the two middle rows together.</b> Twenty-five kilobytes of schema-validation documentation leaves the correction working. Seven kilobytes of the library's own routing documentation destroys it — and it is the same sentence, from the same file, in both cases.</p>
 
     <div class="callout">
-      <p><b>The live hypothesis, untested:</b> the padding used here is topically distant — <code>headers</code>, <code>redirect</code>, <code>link</code>, <code>image</code>. The documentation that <i>did</i> smother the correction was densely about the same API surface, full of adjacent guidance competing for the same decision. <b>Competing content, rather than volume, would explain all three results — and it has not been measured.</b> Until it is, this page does not claim a cause.</p>
+      <p><b>So it is neither length nor topic on its own.</b> 25 KB of unrelated text is harmless. 215 bytes of the library's own routing text is harmless. About 7 KB of it is not. What crowds out a correction is <b>the quantity of material about the same domain</b> — and the other four files in React Router's pack turned out to be irrelevant. Its own containing file is enough.</p>
     </div>
+
+    <p>That also explains Next.js, which looked like a counterexample. Its 6.6 KB page is the same domain as the correction but is <i>entirely about the failing API</i> — there is nothing in it competing for the same decision, so nothing to crowd anything out.</p>
 
     <h2>A confound worth stating</h2>
     <p>The three failures are not equally hard to correct. Next.js's is an arity error — <i>"the second argument is required"</i> is about as direct as a fix gets. React Router's is a field rename inside a destructured argument. It is entirely possible that some corrections are robust to their surroundings and others are fragile, and that this explains the table above better than anything about the documents.</p>
@@ -124,7 +144,8 @@
     <h2>What can be said, and what cannot</h2>
     <p><b>Supported:</b> a short, specific sentence naming a breaking change fixes the failure it names, on all three libraries measured, 9–10 times out of ten. It is worth shipping one.</p>
     <p><b>Supported:</b> two of these three libraries already contain that sentence somewhere in their own documentation, and it is not reaching the model there.</p>
-    <p><b>Not supported:</b> that document length is the cause. That was the earlier conclusion on this page and the controlled test did not reproduce it.</p>
+    <p><b>Supported:</b> the cause is not length. It is how much same-domain material surrounds the correction — 25 KB of unrelated docs leaves it working, 7.3 KB of the library's own routing docs does not.</p>
+    <p><b>Not supported, and withdrawn:</b> that document length alone is the cause. That was an earlier conclusion on this page; the size-and-position sweep did not reproduce it.</p>
 
     <h2>What libraries publish today</h2>
     <p>The same nine-library survey that prompted all of this. The filename is a convention; the contents are not.</p>
@@ -154,7 +175,7 @@
 curl -sL https://ai-sdk.dev/llms-full.txt | wc -c</pre>
     <p style="margin-top:12px">Survey script: <code>scripts/survey-agent-docs.mjs</code> → <code>data/agent-docs.json</code>. The arms are the <code>--with-context</code> path in the same repo; per-library numbers are on the <a href="react-router.html">React Router</a>, <a href="prisma7.html">Prisma</a> and <a href="nextjs.html">Next.js</a> scorecards.</p>
 
-    <p class="updated">Revised 7 August 2026. An earlier version of this page concluded that document size was the cause. A controlled size-and-position sweep did not reproduce that, so the claim is withdrawn and the page now reports only what survived testing.</p>
+    <p class="updated">Revised 7 August 2026, twice. An earlier version concluded document size was the cause; a controlled size-and-position sweep did not reproduce it, and that claim is withdrawn. The current claim rests on two controlled comparisons — one holding size constant, one holding topic constant — and on a bisection that narrowed the effect to a single file.</p>
   </div>
 
   <footer>
