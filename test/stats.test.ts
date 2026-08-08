@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { wilson, fmtInterval, rates } from "../src/stats.ts";
+import { wilson, fmtInterval, rates, armDelta } from "../src/stats.ts";
 
 const near = (a: number, b: number, tol = 5e-4) =>
   assert.ok(Math.abs(a - b) < tol, `expected ${b}, got ${a}`);
@@ -70,4 +70,39 @@ test("rates collapses to one number when nothing was refused", () => {
   assert.equal(r.unconditional.pct, 87);
   assert.equal(r.unconditional.n, 15);
   assert.equal(r.split, false);
+});
+
+/**
+ * The question this was added for (2026-08-08): a context arm and its baseline
+ * are two rates over two independent sets of generations, and the whole point
+ * of an arm is the difference between them. Two overlapping Wilson intervals
+ * are not a test of that difference, and eyeballing "42/45 vs 41/45" as an
+ * improvement is exactly the mistake this module exists to prevent — one
+ * generation out of forty-five.
+ */
+test("armDelta refuses to call a one-generation difference an effect", () => {
+  // React Router, skill-only 42/45 against a 41/45 baseline: +2.2 points.
+  const d = armDelta(42, 45, 41, 45);
+  near(d.diff, 0.0222);
+  assert.ok(d.low < 0 && d.high > 0, "interval must straddle zero");
+  assert.equal(d.significant, false);
+});
+
+test("armDelta reports the sign only when the interval clears zero", () => {
+  // Prisma's full-setup arm, 42/45 vs 39/45 — the biggest whole-scorecard
+  // delta on the board, and still not separable at n=45.
+  const small = armDelta(42, 45, 39, 45);
+  near(small.diff, 0.0667);
+  assert.equal(small.significant, false);
+
+  // The same docs measured on the one task that actually fails: 10/10 vs 0/10.
+  // That is what an effect looks like.
+  const real = armDelta(10, 10, 0, 10);
+  near(real.diff, 1);
+  assert.ok(real.low > 0, "a 0/10 -> 10/10 move must clear zero");
+  assert.equal(real.significant, true);
+});
+
+test("armDelta rejects an empty denominator rather than returning zero", () => {
+  assert.throws(() => armDelta(0, 0, 1, 10), /empty denominator/);
 });

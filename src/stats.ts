@@ -108,3 +108,55 @@ export function rates(run: { passed: number; scored: number; refused: number }):
     split: run.refused > 0,
   };
 }
+
+export interface Delta {
+  /** point estimate of arm − baseline, -1 to 1 */
+  diff: number;
+  /** lower bound on the difference */
+  low: number;
+  /** upper bound on the difference */
+  high: number;
+  /** true iff the 95% interval excludes zero, i.e. the sign is supported */
+  significant: boolean;
+}
+
+/**
+ * 95% interval for the difference between a context arm and its baseline,
+ * by Newcombe's method — the two Wilson intervals combined, rather than a
+ * normal approximation on the difference.
+ *
+ * Why this exists (2026-08-08): every context arm on the site was published as
+ * a bare delta. React Router's skill-only arm is 42/45 against a 41/45
+ * baseline and was rendered as "+2", which is one generation out of
+ * forty-five. Prisma's best arm is +6, which is three. Neither survives a
+ * moment's arithmetic, and a site whose argument is that unmeasured numbers
+ * mislead cannot ship a delta without an interval on it.
+ *
+ * Newcombe rather than the textbook two-proportion interval for the same
+ * reason wilson() is used above: the interesting arms sit at the edges
+ * (0/10 -> 10/10), where the normal approximation runs outside [-1, 1].
+ *
+ * `significant` is deliberately the only boolean here. Everything downstream
+ * must branch on it rather than on the sign of `diff`, so a direction can
+ * never be reported from noise.
+ */
+export function armDelta(
+  armPassed: number,
+  armN: number,
+  basePassed: number,
+  baseN: number,
+): Delta {
+  const a = wilson(armPassed, armN);
+  const b = wilson(basePassed, baseN);
+  const diff = a.p - b.p;
+  // Newcombe method 10: each side takes the far bound of one interval and the
+  // near bound of the other, so the result inherits Wilson's edge behaviour.
+  const low = diff - Math.sqrt((a.p - a.low) ** 2 + (b.high - b.p) ** 2);
+  const high = diff + Math.sqrt((a.high - a.p) ** 2 + (b.p - b.low) ** 2);
+  return {
+    diff,
+    low: Math.max(-1, low),
+    high: Math.min(1, high),
+    significant: low > 0 || high < 0,
+  };
+}

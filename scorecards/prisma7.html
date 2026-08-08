@@ -349,7 +349,8 @@ const prisma = new PrismaClient({
   </div>
   <div class="caveat">
     <b>Scope — measured with no project context.</b> The model gets the task and the package's type definitions, nothing else: no <code>AGENTS.md</code>, no editor rules, <b>no agent skills</b>. That is the point — it measures what a model reaches for unaided.<br><br>
-    <b>It matters here.</b> From <span class="k">v7.9</span>, <code>prisma init</code> installs agent skills that address these misses. Scored with them, on all 15 tasks and 3 trials: <b>87 → 93</b>. The full breakdown is above; the short version is that their docs fix one of the two failures and the pack named after the task fixes neither. One-shot injection, not a full agent loop.<br><br>
+    <b>It matters here.</b> From <span class="k">v7.9</span>, <code>prisma init</code> installs agent skills that address these misses. Scored with them, on all 15 tasks and 3 trials: <b>87 → 93</b> — <b>and that move is not measurable.</b> It is 42 of 45 generations against 39 of 45, a difference of <b>+6.7 points with a 95% interval of −6.6 to +20.2</b>, which includes zero. Thirteen of the fifteen tasks already passed without any context, so the denominator drowns the one task the skills address.<br><br>
+    <b>Measure the failing task instead and the effect is unmistakable.</b> On <code>construct-with-url</code> alone the same files go <b>0/10 → 5/10</b> (+50 points, interval +11.7 to +76.3). That is the finding, and it is the reason "score twice and report the delta" is the wrong instrument: a whole-scorecard delta cannot see a fix to the only thing that was broken. One-shot injection, not a full agent loop.<br><br>
     So read <span class="k">87</span> as <b>the floor — what an unconfigured agent produces</b> — not as what a properly set-up Prisma project produces. Scored against <code>@prisma/client</code> <span class="k">7.8.0</span>, which predates those skills.
   </div>
 
