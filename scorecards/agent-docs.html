@@ -73,7 +73,7 @@
   <header class="hero">
     <div class="eyebrow">Measurement · 7 August 2026</div>
     <h1>A library's own docs bury its own correction.</h1>
-    <p class="sub">Across three libraries, a single sentence naming a breaking change fixes the failure it names, nine or ten times out of ten. Two of those libraries ship the same sentence inside their own larger documentation, and there it fixes nothing. <b>It is not the length. Twenty-five kilobytes of unrelated documentation leaves the fix working; seven kilobytes of their own routing docs destroys it.</b></p>
+    <p class="sub">Across three libraries, a single sentence naming a breaking change fixes the failure it names, ten times out of ten. Two of those libraries ship the same sentence inside their own larger documentation, and there it fixes nothing. <b>It is not the length. Twenty-five kilobytes of unrelated documentation leaves the fix working; seven kilobytes of their own routing docs destroys it.</b></p>
   </header>
 
   <div class="doc">
@@ -84,7 +84,7 @@
     <table class="t">
       <thead><tr><th>Library &amp; failing task</th><th>No context</th><th>The sentence alone</th><th>Inside the library's own docs</th></tr></thead>
       <tbody>
-        <tr><td class="l">React Router — <code>meta()</code> arg</td><td class="n no">0 / 10</td><td class="n ok">9 / 10 <span style="color:var(--ink-faint)">(76 B)</span></td><td class="n no">0 / 10 <span style="color:var(--ink-faint)">(25 KB pack)</span></td></tr>
+        <tr><td class="l">React Router — <code>meta()</code> arg</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(76 B)</span></td><td class="n no">0 / 10 <span style="color:var(--ink-faint)">(25 KB pack)</span></td></tr>
         <tr><td class="l">Prisma — client constructor</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(174 B)</span></td><td class="n">5 / 10 <span style="color:var(--ink-faint)">(25 KB pack)</span></td></tr>
         <tr><td class="l">Next.js — <code>revalidateTag</code> arity</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(137 B)</span></td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(6.6 KB page)</span></td></tr>
       </tbody>

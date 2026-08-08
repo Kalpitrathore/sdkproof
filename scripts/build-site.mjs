@@ -89,7 +89,7 @@ const META = {
   "agent-docs.html": {
     title: "One sentence fixes what a library's full documentation does not — SDKProof",
     social: "A sentence from a library's own docs fixes the bug 10/10. The same sentence inside their docs pack fixes nothing.",
-    desc: "Across three libraries, one sentence quoted from their own documentation fixes the failure it names 9-10 times out of 10. Two of them ship that sentence inside larger docs, where it fixes nothing. The obvious explanation — document size — was tested and did not hold.",
+    desc: "Across three libraries, one sentence quoted from their own documentation fixes the failure it names 10 times out of 10. Two of them ship that sentence inside larger docs, where it fixes nothing. The obvious explanation — document size — was tested and did not hold.",
     type: "article",
   },
   "badge.html": {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07",
+  "generatedAt": "2026-08-08",
   "note": "Each score is one model solving 10-15 realistic tasks, type-checked against the installed package. Pass = compiles clean.",
   "metrics": {
     "score": "conditional API correctness: passes / completions that produced code",
