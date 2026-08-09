@@ -55,6 +55,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sdkproof.dev/skills-delta.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sdkproof.dev/badge.html</loc>
     <lastmod>2026-08-08</lastmod>
     <changefreq>weekly</changefreq>

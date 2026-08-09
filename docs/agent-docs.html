@@ -212,6 +212,8 @@
     <h2>Check it yourself</h2>
     <pre class="sh">curl -sL https://nextjs.org/docs/app/api-reference/functions/revalidateTag.md | wc -c
 curl -sL https://ai-sdk.dev/llms-full.txt | wc -c</pre>
+    <div class="callout"><p><b>A follow-on question this raises:</b> if a library's own docs can bury its own correction, does scoring a library with and without those docs detect anything at all? <a href="skills-delta.html">Measured — and the answer is no, for a structural reason</a>: across six arms not one difference clears zero, and for one library a perfect fix would not register either.</p></div>
+
     <p style="margin-top:12px">Survey script: <code>scripts/survey-agent-docs.mjs</code> → <code>data/agent-docs.json</code>. The arms are the <code>--with-context</code> path in the same repo; per-library numbers are on the <a href="react-router.html">React Router</a>, <a href="prisma7.html">Prisma</a> and <a href="nextjs.html">Next.js</a> scorecards.</p>
 
     <p class="updated">Revised 7 August 2026, twice. An earlier version concluded document size was the cause; a controlled size-and-position sweep did not reproduce it, and that claim is withdrawn. The current claim rests on two controlled comparisons — one holding size constant, one holding topic constant — and on a bisection that narrowed the effect to a single file.</p>
@@ -219,7 +221,7 @@ curl -sL https://ai-sdk.dev/llms-full.txt | wc -c</pre>
 
   <footer>
     <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with any library surveyed.</p>
-    <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
+    <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="skills-delta.html">Do agent docs work?</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
   </footer>
 </div>
 <!-- Cloudflare Web Analytics -->

@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "stripe.html", "agent-docs.html", "badge.html", "privacy.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "stripe.html", "agent-docs.html", "skills-delta.html", "badge.html", "privacy.html"];
 
 const SITE = "https://sdkproof.dev";
 
@@ -92,6 +92,12 @@ const META = {
     desc: "Across three libraries, one sentence quoted from their own documentation fixes the failure it names 10 times out of 10. Two of them ship that sentence inside larger docs, where it fixes nothing. The obvious explanation — document size — was tested and did not hold.",
     type: "article",
   },
+  "skills-delta.html": {
+    title: "Scoring a library twice cannot tell you whether its agent docs work — SDKProof",
+    social: "Score a library with and without its own agent skill files. Across six arms, not one difference clears zero.",
+    desc: "Three libraries publish agent context. Scored bare and again with their own files, across all 15 tasks, not one of six arms is distinguishable from zero — and for React Router a perfect fix would not register either. Isolate the one failing task and the same files move it 50 to 100 points.",
+    type: "article",
+  },
   "badge.html": {
     title: "SDKProof badges — put your AI-readiness score in your README",
     social: "Put your AI-readiness score in your README",
@@ -106,7 +112,7 @@ const META = {
 };
 
 // Pages without a dedicated OG card fall back to the board image.
-const OG_FALLBACK = new Set(["privacy.html", "badge.html", "agent-docs.html"]);
+const OG_FALLBACK = new Set(["privacy.html", "badge.html", "agent-docs.html", "skills-delta.html"]);
 
 const canonicalFor = (page) => (page === "index.html" ? `${SITE}/` : `${SITE}/${page}`);
 const ogImageFor = (page) =>
@@ -138,7 +144,7 @@ for (const page of PAGES) {
   // separate fragments by hand.
   html = html.replace(
     "</footer>",
-    '  <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>\n  </footer>'
+    '  <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="skills-delta.html">Do agent docs work?</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>\n  </footer>'
   );
 
   const sourceTitle = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "SDKProof").trim();
@@ -229,7 +235,7 @@ const urls = PAGES.map((page) => {
     <loc>${canonicalFor(page)}</loc>
     <lastmod>${mtime.toISOString().slice(0, 10)}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${page === "index.html" ? "1.0" : page === "privacy.html" ? "0.3" : page === "badge.html" ? "0.6" : page === "agent-docs.html" ? "0.7" : "0.8"}</priority>
+    <priority>${page === "index.html" ? "1.0" : page === "privacy.html" ? "0.3" : page === "badge.html" ? "0.6" : page === "agent-docs.html" || page === "skills-delta.html" ? "0.7" : "0.8"}</priority>
   </url>`;
 }).join("\n");
 
