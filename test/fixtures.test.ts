@@ -5,6 +5,7 @@ import path from "node:path";
 import { tscEntry } from "../src/env.ts";
 import { verify } from "../src/verify.ts";
 import { prismaSpec } from "../src/libraries/prisma.ts";
+import { apolloSpec } from "../src/libraries/apollo.ts";
 import { aisdkSpec } from "../src/libraries/aisdk.ts";
 import { zodSpec } from "../src/libraries/zod.ts";
 import { tanstackQuerySpec } from "../src/libraries/tanstack-query.ts";
@@ -31,6 +32,7 @@ import type { LibrarySpec } from "../src/types.ts";
  * should fail. Update `known-good.ts` to the new API before trusting any score.
  */
 const SPECS: LibrarySpec[] = [
+  apolloSpec,
   prismaSpec,
   aisdkSpec,
   zodSpec,

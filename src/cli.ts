@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { prismaSpec } from "./libraries/prisma.ts";
+import { apolloSpec } from "./libraries/apollo.ts";
 import { aisdkSpec } from "./libraries/aisdk.ts";
 import { zodSpec } from "./libraries/zod.ts";
 import { tanstackQuerySpec } from "./libraries/tanstack-query.ts";
@@ -22,7 +23,7 @@ import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
 import type { ArmScore, Candidate, LibrarySpec, Refusal, Task, Verdict } from "./types.ts";
 
-const SPECS: Record<string, LibrarySpec> = { prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec, "react-router": reactRouterSpec, stripe: stripeSpec };
+const SPECS: Record<string, LibrarySpec> = { apollo: apolloSpec, prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec, "react-router": reactRouterSpec, stripe: stripeSpec };
 
 /**
  * Bounded concurrency. The generation loop used to fire every task at once; on

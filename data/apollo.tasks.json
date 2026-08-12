@@ -1,0 +1,37 @@
+[
+  {
+    "id": "use-query-hook",
+    "area": "react",
+    "difficulty": "easy",
+    "prompt": "Write a React hook `useUsers()` that runs a GraphQL query for all users (id and name) with Apollo Client and returns the hook result.",
+    "skeleton": "// Write a React hook useUsers() that runs a GraphQL query for users { id name }\n// using Apollo Client, and export it.\n"
+  },
+  {
+    "id": "use-mutation-hook",
+    "area": "react",
+    "difficulty": "easy",
+    "prompt": "Write a React hook `useAddUser()` that exposes an Apollo Client mutation adding a user by name, returning the mutation tuple.",
+    "skeleton": "// Write a React hook useAddUser() wrapping an Apollo mutation addUser(name: String!)\n// and export it.\n"
+  },
+  {
+    "id": "lazy-query",
+    "area": "react",
+    "difficulty": "medium",
+    "prompt": "Write a React hook `useSearchUsers()` that runs a GraphQL search query only when triggered, not on render, and export it.",
+    "skeleton": "// Write a React hook useSearchUsers() that runs the query on demand rather than\n// on mount, and export it.\n"
+  },
+  {
+    "id": "client-setup",
+    "area": "setup",
+    "difficulty": "easy",
+    "prompt": "Create and export a configured ApolloClient instance pointing at https://example.com/graphql with an in-memory cache.",
+    "skeleton": "// Create and export a configured ApolloClient named `client`.\n"
+  },
+  {
+    "id": "suspense-query",
+    "area": "react",
+    "difficulty": "medium",
+    "prompt": "Write a React hook `useUsersSuspense()` that reads users with Apollo Client's Suspense-enabled query hook, and export it.",
+    "skeleton": "// Write a React hook useUsersSuspense() using Apollo's Suspense query hook,\n// and export it.\n"
+  }
+]

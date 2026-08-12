@@ -21,9 +21,11 @@
   "dependencies": {
     "@ai-sdk/openai": "^4.0.15",
     "@anthropic-ai/sdk": "^0.111.0",
+    "@apollo/client": "^4.2.11",
     "@prisma/client": "^7.8.0",
     "@tanstack/react-query": "^5.101.4",
     "ai": "^7.0.30",
+    "graphql": "^16.14.2",
     "next": "^16.2.11",
     "openai": "^6.47.0",
     "react": "^19.2.8",
