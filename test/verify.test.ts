@@ -79,3 +79,35 @@ for (const [name, code] of [
     );
   });
 }
+
+/**
+ * TS2305 and TS1192 are the two canonical shapes of "you imported the old API":
+ * the member moved out of this entrypoint, or the default export is gone. Both
+ * are exactly what this project measures, and both were missing from
+ * API_SHAPE_CODES — they were classified as library drift only when the error
+ * text happened to contain the package name, which is an accident of how tsc
+ * renders module paths, not a rule.
+ *
+ * Found 2026-08-13 measuring zustand 5, whose removed default export reports
+ * TS1192 against a resolved *filesystem path*. It matched "zustand" only
+ * because the path contains the package directory name.
+ *
+ * TS2724 — the same error as TS2305 with a did-you-mean suggestion attached —
+ * was already in the set, so excluding TS2305 was an inconsistency rather than
+ * a decision.
+ */
+test("the two import-drift codes are classified as API shape", () => {
+  const drift = parseDiagnostics(
+    'candidate.ts(1,10): error TS2305: Module \'"somelib"\' has no exported member \'useQuery\'.',
+    { packageName: "unrelated-package" } as never,
+  );
+  assert.equal(drift[0].code, "TS2305");
+  assert.equal(drift[0].libraryRelated, true, "TS2305 must count without relying on the message text");
+
+  const noDefault = parseDiagnostics(
+    "candidate.ts(1,8): error TS1192: Module '/tmp/x/esm/index' has no default export.",
+    { packageName: "unrelated-package" } as never,
+  );
+  assert.equal(noDefault[0].code, "TS1192");
+  assert.equal(noDefault[0].libraryRelated, true, "TS1192 must count without relying on the path");
+});

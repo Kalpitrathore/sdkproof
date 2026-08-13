@@ -6,6 +6,7 @@ import { tscEntry } from "../src/env.ts";
 import { verify } from "../src/verify.ts";
 import { prismaSpec } from "../src/libraries/prisma.ts";
 import { apolloSpec } from "../src/libraries/apollo.ts";
+import { zustandSpec } from "../src/libraries/zustand.ts";
 import { aisdkSpec } from "../src/libraries/aisdk.ts";
 import { zodSpec } from "../src/libraries/zod.ts";
 import { tanstackQuerySpec } from "../src/libraries/tanstack-query.ts";
@@ -33,6 +34,7 @@ import type { LibrarySpec } from "../src/types.ts";
  */
 const SPECS: LibrarySpec[] = [
   apolloSpec,
+  zustandSpec,
   prismaSpec,
   aisdkSpec,
   zodSpec,

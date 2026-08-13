@@ -22,7 +22,9 @@ const API_SHAPE_CODES = new Set([
   "TS2322", // type not assignable
   "TS2559", // type has no properties in common with
   "TS2307", // cannot find module (bad import path)
-  "TS2724", // module has no exported member
+  "TS2724", // module has no exported member — did you mean X
+  "TS2305", // module has no exported member (the member moved entrypoint)
+  "TS1192", // module has no default export (the default export was removed)
   "TS2694", // namespace has no exported member
 ]);
 

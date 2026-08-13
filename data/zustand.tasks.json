@@ -1,0 +1,37 @@
+[
+  {
+    "id": "basic-store",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Create a Zustand store hook `useCounter` holding a numeric `count` with an `increment` action, and export it.",
+    "skeleton": "// Create and export a Zustand store hook useCounter with { count, increment }.\n"
+  },
+  {
+    "id": "store-with-reset",
+    "area": "core",
+    "difficulty": "easy",
+    "prompt": "Create a Zustand store hook `useCart` holding a string array `items`, with `add` and `clear` actions, and export it.",
+    "skeleton": "// Create and export a Zustand store hook useCart with { items, add, clear }.\n"
+  },
+  {
+    "id": "read-outside-react",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Create a Zustand store holding a `token` string, and export a plain function `getToken()` that reads the current token without using a React hook.",
+    "skeleton": "// Create a Zustand store with a token, and export getToken() reading it outside React.\n"
+  },
+  {
+    "id": "async-action",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Create a Zustand store hook `useUsers` with a `users` string array and an async `load()` action that sets them, and export it.",
+    "skeleton": "// Create and export a Zustand store hook useUsers with an async load() action.\n"
+  },
+  {
+    "id": "shallow-equality",
+    "area": "core",
+    "difficulty": "hard",
+    "prompt": "Create a Zustand store of user settings and export a hook that selects two fields at once using shallow equality so it does not re-render on unrelated changes.",
+    "skeleton": "// Create a Zustand settings store and export a hook selecting two fields with\n// shallow equality.\n"
+  }
+]

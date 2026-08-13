@@ -31,7 +31,8 @@
     "react": "^19.2.8",
     "react-router": "^8.3.0",
     "stripe": "^22.4.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@prisma/adapter-better-sqlite3": "^7.8.0",
