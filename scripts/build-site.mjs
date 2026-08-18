@@ -48,9 +48,9 @@ const META = {
     type: "article",
   },
   "aisdk.html": {
-    title: "Vercel AI SDK 7 is 100% ready for AI coding agents — SDKProof",
-    social: "Vercel AI SDK 7 — 100/100 AI-readiness",
-    desc: "Vercel AI SDK 7 scores 100/100 on Claude Opus 5. The v7 tool rename (inputSchema, stopWhen) is fully absorbed — it was 90/100 on Opus 4.8.",
+    title: "Vercel AI SDK 7 — ready for agents until you name a type — SDKProof",
+    social: "Vercel AI SDK 7 — 71/100 AI-readiness",
+    desc: "Vercel AI SDK 7 scores 71/100 on Claude Opus 5. Inline callbacks infer fine, but v7 removed StreamTextOnFinishCallback, TelemetrySettings and ToolCallOptions — and tsc's suggestion points at the wrong function.",
     type: "article",
   },
   "zod.html": {

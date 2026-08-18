@@ -146,32 +146,32 @@
 
   <header class="hero">
     <div class="lib">ai · v7.0.30 · @ai-sdk/openai</div>
-    <h1>The Vercel AI SDK is 100% ready for AI coding agents.</h1>
-    <p class="verdict">Claude Opus 5 writes the modern AI SDK <b>clean</b> — all 10 tasks compile, including the <b>tool wiring</b> the previous model still got wrong (<code>inputSchema</code>, <code>stopWhen: stepCountIs</code>). On Opus 4.8 this scored <b>90</b>; the newer model closed the last v4-era gap.</p>
+    <h1>The Vercel AI SDK is ready for agents — until you name a type.</h1>
+    <p class="verdict">Claude Opus 5 writes working AI SDK code — <b>all 10 original tasks still compile</b>, tool wiring included. But <b>v7 removed the exported types you need the moment you stop inferring</b>. Extract an <code>onFinish</code> handler into a named function and the model reaches for <code>StreamTextOnFinishCallback</code>, which v7 deleted. <b>Four tasks, four removed types.</b></p>
 
     <div class="scorerow">
       <div class="scorebig">
-        <span class="n">100</span><span class="d">/100</span>
+        <span class="n">71</span><span class="d">/100</span>
         <div class="l">Agent-readiness</div>
       </div>
       <div class="segs">
         <div class="segbar">
           <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div>
+          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
+          <div class="seg f"></div><div class="seg f"></div><div class="seg f"></div><div class="seg f"></div>
         </div>
         <div class="seglegend">
           <span><span class="dot p"></span><b>10</b> compile clean</span>
-          <span><span class="dot f"></span><b>0</b> fail type-check</span>
+          <span><span class="dot f"></span><b>4</b> fail type-check</span>
         </div>
       </div>
     </div>
 
     <div class="meta">
       <span><b>Model:</b> claude-opus-5</span>
-      <span><b>Tasks:</b> 10</span><span><b>Rates:</b> 100% conditional = 100% unconditional (0 refused) · 95% CI 72.2–100%</span>
+      <span><b>Tasks:</b> 14</span><span><b>Rates:</b> 71% conditional = 71% unconditional (0 refused) · 95% CI 45.4–88.3%</span>
       <span><b>Method:</b> tsc against real installed package</span>
-      <span><b>Run:</b> 2026-07-26</span>
+      <span><b>Run:</b> 2026-08-18</span>
     </div>
   </header>
 
@@ -184,61 +184,88 @@
     </a>
     <div class="bcard cur">
       <div class="bn">Vercel AI SDK 7</div>
-      <div class="bs">100</div>
-      <div class="bl">clean sweep — was 90 on Opus 4.8</div>
+      <div class="bs">71</div>
+      <div class="bl">typed callbacks removed in v7 →</div>
     </div>
   </div>
 
   <!-- WRONG -->
   <div class="sec-head">
-    <span class="eyebrow">The gap that just closed</span>
-    <h2>What Opus 4.8 got wrong — and Opus 5 fixed</h2>
-    <p>The previous model failed exactly one task: tool wiring. It reached for two v4-era patterns at once. Opus 5 now writes the v7 shape — real code, verified by the TypeScript compiler against the installed <code>ai</code> v7.</p>
+    <span class="eyebrow">The gap v7 opened</span>
+    <h2>Four types the model still reaches for</h2>
+    <p>Every failure is the same shape: the model names a type that v7 removed. None of the four carried an <code>@deprecated</code> tag in v6, so nothing in the training data ever said to stop using them &mdash; real code, verified by the TypeScript compiler against the installed <code>ai</code> v7.0.30.</p>
   </div>
 
   <article class="fcard">
-    <div class="top"><span class="ok">✓</span><span class="t">Defining &amp; calling a tool</span><span class="tsx pass">Opus 4.8: 2 errors · Opus 5: clean</span></div>
+    <div class="top"><span class="x">&#10007;</span><span class="t">Typing an extracted onFinish handler</span><span class="tsx">TS2724</span></div>
     <div class="fbody">
       <div class="col bad">
-        <div class="clabel">Opus 4.8 wrote (v4-era)</div>
-        <pre>const getWeather = tool({
-  <span class="hl-bad">parameters</span>: z.object({ city: z.string() }),
-  execute: async ({ city }) =&gt; `...`,
-})
+        <div class="clabel">Opus 5 wrote (v6)</div>
+        <pre>import type {
+  <span class="hl-bad">StreamTextOnFinishCallback</span>
+} from "ai"
 
-await generateText({
-  model, prompt,
-  tools: { getWeather },
-  <span class="hl-bad">maxSteps: 5</span>,
-})</pre>
+export const handleFinish:
+  <span class="hl-bad">StreamTextOnFinishCallback</span>&lt;never&gt; =
+  async ({ text, usage }) =&gt; {
+    log(text, usage)
+  }</pre>
       </div>
       <div class="col good">
-        <div class="clabel">Opus 5 writes (v7) ✓</div>
-        <pre>import { stepCountIs } from "ai"
+        <div class="clabel">v7 has no replacement</div>
+        <pre>// StreamTextOnFinishCallback: gone.
+// StreamTextOnAbortCallback,
+// ...OnChunkCallback,
+// ...OnErrorCallback all survive.
 
-const getWeather = tool({
-  <span class="hl-good">inputSchema</span>: z.object({ city: z.string() }),
-  execute: async ({ city }) =&gt; `...`,
-})
-
-await generateText({
-  model, prompt,
-  tools: { getWeather },
-  <span class="hl-good">stopWhen: stepCountIs(5)</span>,
-})</pre>
+// tsc's suggestion:
+//   <span class="hl-bad">StreamObjectOnFinishCallback</span>
+// that is streamObject's type,
+// <span class="hl-good">not streamText's</span>.</pre>
       </div>
     </div>
-    <div class="why"><b>The gap that closed:</b> Opus 4.8 reached for two v4-era tool patterns — <code>parameters</code> (now <code>inputSchema</code>) and <code>maxSteps</code> (now <code>stopWhen: stepCountIs(n)</code>) — and failed type-check on both. Opus 5 writes the v7 shape by default. Same tasks, newer model: the last gap is gone.</div>
+    <div class="why"><b>The compiler sends you to the wrong function.</b> <code>tsc</code>&rsquo;s did-you-mean for the missing <code>StreamTextOnFinishCallback</code> is <code>StreamObjectOnFinishCallback</code> &mdash; a different function&rsquo;s callback type. A developer following the suggestion lands on <code>streamObject</code> while writing <code>streamText</code>. <code>StreamTextOnStepFinishCallback</code> fails the same way, suggesting <code>GenerateTextOnStepFinishCallback</code>.</div>
+  </article>
+
+  <article class="fcard">
+    <div class="top"><span class="x">&#10007;</span><span class="t">Naming the telemetry &amp; tool-execution types</span><span class="tsx">TS2305</span></div>
+    <div class="fbody">
+      <div class="col bad">
+        <div class="clabel">Opus 5 wrote (v6)</div>
+        <pre>import type {
+  <span class="hl-bad">TelemetrySettings</span>,
+  <span class="hl-bad">ToolCallOptions</span>,
+} from "ai"
+
+export const telemetry:
+  <span class="hl-bad">TelemetrySettings</span> = {
+    isEnabled: true,
+  }</pre>
+      </div>
+      <div class="col good">
+        <div class="clabel">v7 renamed both &#10003;</div>
+        <pre>import type {
+  <span class="hl-good">TelemetryOptions</span>,
+  <span class="hl-good">ToolExecutionOptions</span>,
+} from "ai"
+
+export const telemetry:
+  <span class="hl-good">TelemetryOptions</span> = {
+    isEnabled: true,
+  }</pre>
+      </div>
+    </div>
+    <div class="why"><b>Two clean renames, no deprecation period.</b> <code>TelemetrySettings</code> &rarr; <code>TelemetryOptions</code> and <code>ToolCallOptions</code> &rarr; <code>ToolExecutionOptions</code>. The old names were correct in v6 and simply stopped existing in v7 &mdash; which is exactly the shape that produces drift. A name deprecated for a year or two gets absorbed long before it is deleted; a name removed without warning does not.</div>
   </article>
 
   <!-- RIGHT -->
   <div class="sec-head">
-    <span class="eyebrow">Clean sweep</span>
-    <h2>What it gets right — 10 of 10</h2>
+    <span class="eyebrow">Everything inline still works</span>
+    <h2>What it gets right — 10 of 14</h2>
   </div>
   <div class="rights">
-    <h3>Every task compiles clean.</h3>
-    <p>Text generation, streaming, structured output, embeddings, messages, the renamed <b><code>maxOutputTokens</code></b>, and now the <b>tool API</b> (<code>inputSchema</code>, <code>stopWhen</code>) all type-check against the real <code>ai</code> v7. Nothing left on the old surface.</p>
+    <h3>Every task that infers its types compiles clean.</h3>
+    <p>Text generation, streaming, structured output, embeddings, messages, the renamed <b><code>maxOutputTokens</code></b> and the <b>tool API</b> (<code>inputSchema</code>, <code>stopWhen</code>) all type-check against the real <code>ai</code> v7. <b>Write the callback inline and TypeScript infers it — the removed names never come up.</b> The four failures all start the same way: someone pulls a handler out into its own function and has to name its type.</p>
     <div class="chips">
       <span class="chip">generateText</span>
       <span class="chip">streamText</span>
@@ -257,8 +284,9 @@ await generateText({
     <h2>Readiness tracks the drift window</h2>
   </div>
   <div class="insight">
-    <p><b>The score isn't about how good the model is — it's about how recently your SDK changed.</b> The AI SDK's big renames landed in mid-2025. The previous model (Opus 4.8) had absorbed most of them but still missed the tool API: <b>90/100</b>. Opus 5, trained more recently, closed it: <b>100/100</b>. Prisma 7 shipped its breaking changes far more recently, and even Opus 5 hasn't fully caught up: <b>87/100</b>.</p>
-    <p><b>That's the whole point.</b> Right after a major, the gap is wide; as models retrain, it narrows — you just watched it narrow across a single model release. It re-opens on your next major, so it's a moving number worth watching, which is exactly what SDKProof tracks.</p>
+    <p><b>The score isn't about how good the model is — it's about how recently your SDK changed.</b> This library has now shown the full cycle. The mid-2025 tool rename was a gap Opus 4.8 fell into: <b>90/100</b>. Opus 5, trained later, had absorbed it: <b>100/100</b>. Then <b>v7 shipped in June 2026</b> and removed four exported types, and the same model scores <b>71/100</b>.</p>
+    <p><b>Nothing about the model got worse.</b> The gap closed, then a new major opened a new one — on one library, measured across a year. That's the cycle the whole scoreboard is built on, and it's why a single number is worth less than the direction it's moving.</p>
+    <p><b>What decides the size of the gap is the deprecation runway.</b> An API deprecated for a year or two is absorbed long before it's deleted; the model has read a thousand migration guides. An API that's correct in one major and gone in the next has no such trail. All four of these were removed with no <code>@deprecated</code> tag — which is why they're still being written.</p>
   </div>
 
   <!-- METHOD -->
@@ -267,8 +295,8 @@ await generateText({
     <h2>How this was measured</h2>
   </div>
   <div class="method">
-    <span class="k">10</span> realistic AI SDK tasks → generated by <span class="k">claude-opus-5</span> → each solution written into a project with the <b>real installed <code>ai</code> v7.0.30</b> (+ <code>@ai-sdk/openai</code>, <code>zod</code>) and type-checked with <span class="k">tsc --noEmit</span>.<br>
-    A task <b>passes</b> only if it compiles clean. The prompts name the functions but never the option names — so this measures what the model <em>reaches for</em>, not what it's told. Failures are the compiler's own diagnostics. Reproducible: pinned package versions, pinned model.
+    <span class="k">14</span> realistic AI SDK tasks → generated by <span class="k">claude-opus-5</span> → each solution written into a project with the <b>real installed <code>ai</code> v7.0.30</b> (+ <code>@ai-sdk/openai</code>, <code>zod</code>) and type-checked with <span class="k">tsc --noEmit</span>.<br>
+    A task <b>passes</b> only if it compiles clean. The prompts name the functions but never the type or option names — so this measures what the model <em>reaches for</em>, not what it's told. Failures are the compiler's own diagnostics. Reproducible: pinned package versions, pinned model.
   </div>
 
   <!-- CTA -->
@@ -281,7 +309,7 @@ await generateText({
 
   <footer>
     SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by Vercel.<br>
-    Measured 2026-07-26 against ai v7.0.30 (+ @ai-sdk/openai, zod) with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior.
+    Measured 2026-08-18 against ai v7.0.30 (+ @ai-sdk/openai, zod) with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior.
   </footer>
 
 </div>

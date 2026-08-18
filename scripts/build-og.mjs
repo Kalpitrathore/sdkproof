@@ -112,10 +112,10 @@ const PAGES = {
   }),
   "aisdk.png": scorecardSvg({
     name: "Vercel AI SDK 7",
-    score: 100,
+    score: 71,
     passed: 10,
-    total: 10,
-    note: "Was 90 on Opus 4.8 — the v7 tool rename is absorbed",
+    total: 14,
+    note: "v7 removed the callback types — inline still infers",
   }),
   "zod.png": scorecardSvg({
     name: "Zod 4",
