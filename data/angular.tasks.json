@@ -1,0 +1,30 @@
+[
+  {
+    "id": "create-in-view-container",
+    "area": "dynamic-components",
+    "difficulty": "easy",
+    "prompt": "Write a function `renderWidget(container, component)` that creates an instance of the given Angular component dynamically and inserts it into the supplied ViewContainerRef, returning the created component reference.",
+    "skeleton": "import type { ViewContainerRef, Type, ComponentRef } from \"@angular/core\";\n\n// Write renderWidget(container, component) that creates `component` dynamically\n// inside `container` and returns the ComponentRef. Export it.\n"
+  },
+  {
+    "id": "dynamic-modal-service",
+    "area": "dynamic-components",
+    "difficulty": "medium",
+    "prompt": "Write an injectable Angular service `ModalService` with an `open(component)` method that creates the given component dynamically at runtime and attaches it so it can be displayed as a modal. Expose a `close()` that destroys it.",
+    "skeleton": "import { Injectable } from \"@angular/core\";\nimport type { Type } from \"@angular/core\";\n\n// Write an @Injectable() ModalService with open(component) and close().\n// open() must create the component dynamically at runtime. Export the class.\n"
+  },
+  {
+    "id": "create-with-inputs",
+    "area": "dynamic-components",
+    "difficulty": "medium",
+    "prompt": "Write a function `mountWithInputs(container, component, inputs)` that dynamically creates the component inside the given ViewContainerRef, applies each key of `inputs` to the created instance, and returns the component reference.",
+    "skeleton": "import type { ViewContainerRef, Type, ComponentRef } from \"@angular/core\";\n\n// Write mountWithInputs(container, component, inputs) — create `component`\n// dynamically in `container`, apply the inputs, return the ComponentRef. Export it.\n"
+  },
+  {
+    "id": "create-detached-component",
+    "area": "dynamic-components",
+    "difficulty": "hard",
+    "prompt": "Write a function `mountToBody(component, injector, appRef)` that creates the given Angular component dynamically without a ViewContainerRef, attaches its host view to the ApplicationRef so it is change-detected, and appends its root DOM node to document.body.",
+    "skeleton": "import type { ApplicationRef, EnvironmentInjector, Type, ComponentRef } from \"@angular/core\";\n\n// Write mountToBody(component, injector, appRef) — create `component` dynamically\n// with no ViewContainerRef, attach its host view to appRef, append its root DOM\n// node to document.body, and return the ComponentRef. Export it.\n"
+  }
+]
