@@ -1,4 +1,4 @@
-import type { ArmScore, ModelScore, Refusal, Result, Verdict } from "./types.ts";
+import type { LostTask, ArmScore, ModelScore, Refusal, Result, Verdict } from "./types.ts";
 import { classify } from "./classify.ts";
 
 /** Aggregate verdicts into a per-model + overall score with ranked failures. */
@@ -9,6 +9,7 @@ export function score(
   verdicts: Verdict[],
   refusals: Refusal[] = [],
   contextArms: ArmScore[] = [],
+  lost: LostTask[] = [],
 ): Result {
   const models = [...new Set(verdicts.map((v) => v.model))].sort();
   const perModel: ModelScore[] = models.map((model) => {
@@ -42,6 +43,7 @@ export function score(
     failurePatterns: classify(verdicts),
     verdicts,
     refusals,
+    ...(lost.length ? { lost } : {}),
     ...(arms.length ? { contextArms: arms } : {}),
   };
 }

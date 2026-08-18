@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { verify, parseDiagnostics, augmentsLibrary, API_SHAPE_CODES } from "../src/verify.ts";
 import { categorize, classify } from "../src/classify.ts";
+import { score } from "../src/score.ts";
+import { renderScorecard } from "../src/report.ts";
 import { prismaSpec } from "../src/libraries/prisma.ts";
 import { tscEntry } from "../src/env.ts";
 import type { Candidate } from "../src/types.ts";
@@ -230,4 +232,39 @@ test("the residual 'other' bucket never outranks a real category", () => {
   assert.equal(patterns[0].count, 1);
   assert.equal(patterns[1].category, "other");
   assert.equal(patterns[1].count, 9, "the noise is still reported, just not first");
+});
+
+/**
+ * A task lost to a generation error is not a refusal and must not vanish.
+ *
+ * The model never said no — the request never landed. Left untracked it
+ * silently shrinks the denominator, and a partial run that loses the HARD
+ * tasks scores higher than the real one. Seen 2026-08-05 (an overloaded
+ * context arm scored high because overload took its hardest tasks away) and
+ * again 2026-08-18, when four react-table runs each lost half their tasks
+ * while the scorecard still printed "no task was refused, so both rates run
+ * over the same set of tasks".
+ */
+test("a run that lost tasks records them and the scorecard says so", () => {
+  const verdicts = [
+    { taskId: "a", model: "m", passed: true, errors: [] },
+    { taskId: "b", model: "m", passed: false, errors: [
+      { code: "TS2305", message: "no exported member", line: 1, column: 1, libraryRelated: true },
+    ] },
+  ] as never;
+  const lost = [{ taskId: "c", model: "m", reason: "529 overloaded_error" }];
+  const r = score("lib", "1.0.0", "2026-08-18T00:00:00Z", verdicts, [], [], lost);
+  assert.deepEqual(r.lost, lost, "lost tasks must survive into the result");
+  assert.equal(r.perModel[0].total, 2, "the shrunken denominator is real — the disclosure is what makes it honest");
+
+  const md = renderScorecard(r, { displayName: "Lib", packageName: "lib" } as never);
+  assert.match(md, /Incomplete run/, "the scorecard must disclose the loss");
+  assert.match(md, /\bc\b/, "and name the task that went missing");
+});
+
+test("a clean run carries no lost field and no warning", () => {
+  const verdicts = [{ taskId: "a", model: "m", passed: true, errors: [] }] as never;
+  const r = score("lib", "1.0.0", "2026-08-18T00:00:00Z", verdicts);
+  assert.equal(r.lost, undefined, "absent, not an empty array, so old results stay comparable");
+  assert.doesNotMatch(renderScorecard(r, { displayName: "Lib", packageName: "lib" } as never), /Incomplete run/);
 });

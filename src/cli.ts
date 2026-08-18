@@ -8,6 +8,7 @@ import { zodSpec } from "./libraries/zod.ts";
 import { tanstackQuerySpec } from "./libraries/tanstack-query.ts";
 import { nextjsSpec } from "./libraries/nextjs.ts";
 import { reactRouterSpec } from "./libraries/react-router.ts";
+import { reactTableSpec } from "./libraries/react-table.ts";
 import { stripeSpec } from "./libraries/stripe.ts";
 import { projectRoot, tscEntry } from "./env.ts";
 import { generate } from "./generate.ts";
@@ -15,16 +16,20 @@ import { loadArms } from "./context.ts";
 import { FatalApiError, RefusalError } from "./models/types.ts";
 
 /** Concurrent generations in flight. Keeps a long multi-arm run under the rate limit. */
-const CONCURRENCY = 5;
+// Overridable because a busy API turns concurrency into lost tasks: on
+// 2026-08-18 three react-table runs each lost half their tasks to 529s at 5
+// in flight, and a lost task is worse than a slow one — it silently shrinks
+// the denominator. Drop to 1-2 when the API is overloaded.
+const CONCURRENCY = Math.max(1, Number(process.env.SDKPROOF_CONCURRENCY ?? "5"));
 import { verify } from "./verify.ts";
 import { score } from "./score.ts";
 import { recommend } from "./recommend.ts";
 import { renderScorecard } from "./report.ts";
 import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
-import type { ArmScore, Candidate, LibrarySpec, Refusal, Task, Verdict } from "./types.ts";
+import type { ArmScore, Candidate, LibrarySpec, LostTask, Refusal, Task, Verdict } from "./types.ts";
 
-const SPECS: Record<string, LibrarySpec> = { apollo: apolloSpec, zustand: zustandSpec, prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec, "react-router": reactRouterSpec, stripe: stripeSpec };
+const SPECS: Record<string, LibrarySpec> = { apollo: apolloSpec, zustand: zustandSpec, prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec, "react-router": reactRouterSpec, "react-table": reactTableSpec, stripe: stripeSpec };
 
 /**
  * Bounded concurrency. The generation loop used to fire every task at once; on
@@ -114,6 +119,9 @@ async function main(): Promise<void> {
   // code, so nothing about the library was tested. Kept apart from generic
   // failures so the scorecard can say so out loud instead of quietly shrinking.
   const refusals: Refusal[] = [];
+  // A generation error is NOT a refusal — the model never said no, the request
+  // never landed. Tracked so a truncated run cannot present itself as a whole one.
+  const lost: LostTask[] = [];
   const bareJobs = adapters.flatMap((m) => tasks.map((t) => ({ m, t })));
   await pool(bareJobs, CONCURRENCY, async ({ m, t }) => {
     try {
@@ -125,11 +133,18 @@ async function main(): Promise<void> {
         refusals.push({ taskId: t.id, model: m.id, attempts: e.attempts });
         process.stdout.write("R");
       } else {
+        lost.push({ taskId: t.id, model: m.id, reason: String((e as Error).message).split("\n")[0].slice(0, 120) });
         console.error(`\n  generate failed [${m.id}/${t.id}]: ${(e as Error).message}`);
       }
     }
   });
   process.stdout.write("\n");
+  if (lost.length) {
+    const asked = tasks.length * adapters.length;
+    console.log(`\n⚠️  INCOMPLETE RUN — ${lost.length}/${asked} tasks never generated: ${[...new Set(lost.map((l) => l.taskId))].join(", ")}`);
+    console.log("   These are NOT refusals. The denominator shrank, so this score is over a partial set.");
+    console.log("   Do not publish it. Re-run when the API is healthy.");
+  }
   if (refusals.length) {
     console.log(
       `Refused: ${refusals.length}/${tasks.length * adapters.length} — ${[...new Set(refusals.map((r) => r.taskId))].join(", ")}`,
@@ -296,7 +311,7 @@ async function main(): Promise<void> {
     }
   }
 
-  const result = score(spec.id, await libVersion(spec.packageName), new Date().toISOString(), verdicts, refusals, armScores);
+  const result = score(spec.id, await libVersion(spec.packageName), new Date().toISOString(), verdicts, refusals, armScores, lost);
   await writeFile(
     path.join(projectRoot, "data", `${label}.result.json`),
     JSON.stringify(result, null, 2),

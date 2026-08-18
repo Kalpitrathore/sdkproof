@@ -159,6 +159,13 @@ export interface Recommendation {
   evidence: string[];
 }
 
+export interface LostTask {
+  taskId: string;
+  model: string;
+  /** first line of the underlying error, e.g. a 529 overloaded_error */
+  reason: string;
+}
+
 export interface Result {
   library: string;
   libraryVersion: string;
@@ -171,6 +178,17 @@ export interface Result {
   verdicts: Verdict[];
   /** tasks the model refused outright; excluded from every score above */
   refusals: Refusal[];
+  /**
+   * Tasks that never produced a candidate because generation errored out —
+   * API overload, timeout, transport. NOT refusals: the model never said no,
+   * the request never landed. Recorded because a lost task silently shrinks
+   * the denominator, and a partial run that drops the HARD tasks scores
+   * higher than the real one. Seen 2026-08-05 (an overloaded arm scored high
+   * because overload took its hardest tasks away) and again 2026-08-18, when
+   * four react-table runs each lost half their tasks and the scorecard still
+   * printed "no task was refused, so both rates run over the same set".
+   */
+  lost?: LostTask[];
   /** present only on a --with-context run: the same tasks scored with the library's own agent files */
   contextArms?: ArmScore[];
   /** derived changes a maintainer could make; every one carries its evidence */

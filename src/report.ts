@@ -40,7 +40,15 @@ export function renderScorecard(r: Result, spec: LibrarySpec): string {
   }
   lines.push("");
   if (!r.refusals.length) {
-    lines.push(`_No task was refused, so both rates run over the same set of tasks._`);
+    if (r.lost?.length) {
+    lines.push(
+      `> ⚠️ **Incomplete run — ${r.lost.length} task(s) never generated** (${[...new Set(r.lost.map((l) => l.taskId))].join(", ")}). ` +
+        `These are not refusals: generation errored before any code was produced, so the denominator below is smaller than the task set. ` +
+        `A partial run that loses the hardest tasks scores higher than the real one.`,
+    );
+    lines.push("");
+  }
+  lines.push(`_No task was refused, so both rates run over the same set of tasks._`);
     lines.push("");
   }
 
