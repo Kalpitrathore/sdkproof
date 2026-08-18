@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { verify, parseDiagnostics } from "../src/verify.ts";
+import { verify, parseDiagnostics, augmentsLibrary } from "../src/verify.ts";
 import { prismaSpec } from "../src/libraries/prisma.ts";
 import { tscEntry } from "../src/env.ts";
 import type { Candidate } from "../src/types.ts";
@@ -110,4 +110,69 @@ test("the two import-drift codes are classified as API shape", () => {
   );
   assert.equal(noDefault[0].code, "TS1192");
   assert.equal(noDefault[0].libraryRelated, true, "TS1192 must count without relying on the path");
+});
+
+
+/**
+ * Module augmentation re-creates a removed API, so a candidate written entirely
+ * against the OLD surface compiles clean and scores as a PASS.
+ *
+ * Found 2026-08-17 probing react-router v8, which deleted `AppLoadContext`.
+ * Five of nine candidates reached for it; only three failed. The two that
+ * passed had also written `declare module "react-router" { interface
+ * AppLoadContext {...} }` — the canonical v7 idiom, which declares the deleted
+ * interface straight back into the module, so the import beside it resolves.
+ * The one that imported it WITHOUT augmenting failed with TS2305, correctly.
+ *
+ * Same failure class as an empty candidate passing (2026-08-04) and TS2305
+ * missing from API_SHAPE_CODES (2026-08-13): a defect that makes the number
+ * look cleaner than the truth. SDKP002 sits outside API_SHAPE_CODES so it can
+ * never be counted as library drift either.
+ */
+test("verify rejects a candidate that augments the library's own module", async () => {
+  // This compiles clean against the real package — that is the whole problem.
+  const code = [
+    'import type { PrismaClient } from "@prisma/client";',
+    'declare module "@prisma/client" {',
+    "  interface RemovedThing { id: string }",
+    "}",
+    "export const solve = (c: PrismaClient) => c;",
+  ].join("\n");
+  const v = await verify({ taskId: "t", model: "m", code }, prismaSpec, { tscEntry });
+  assert.equal(v.passed, false, "a candidate that redefines the library must never pass");
+  assert.equal(v.errors[0].code, "SDKP002");
+  assert.equal(
+    v.errors[0].libraryRelated,
+    false,
+    "a harness failure must never be counted as library drift",
+  );
+});
+
+test("augmentsLibrary matches the package and its subpaths, and nothing else", () => {
+  // The exact react-router v8 shape that started this.
+  assert.ok(
+    augmentsLibrary('declare module "react-router" { interface AppLoadContext {} }', "react-router"),
+    "must catch augmentation of the package itself",
+  );
+  // Scoped names contain regex metacharacters; they must be escaped, not interpreted.
+  assert.ok(
+    augmentsLibrary('declare module "@apollo/client/react" {}', "@apollo/client"),
+    "must catch augmentation of a subpath entrypoint",
+  );
+  assert.ok(augmentsLibrary("declare module '@apollo/client' {}", "@apollo/client"), "single quotes count");
+
+  // The regression guard: a DIFFERENT module being augmented is legitimate and
+  // must not fire. Deliberately uses a name that contains the package name as a
+  // substring, so a sloppy `includes()` implementation would fail this.
+  assert.equal(
+    augmentsLibrary('declare module "react-router-extra" {}', "react-router"),
+    null,
+    "a different module whose name merely starts with the package must not fire",
+  );
+  assert.equal(
+    augmentsLibrary('declare module "express" { interface Request {} }', "react-router"),
+    null,
+    "augmenting an unrelated module is legitimate",
+  );
+  assert.equal(augmentsLibrary("export const solve = () => 1;", "react-router"), null);
 });

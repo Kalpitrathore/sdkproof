@@ -53,6 +53,34 @@ export async function verify(
   // has not answered. That is a harness failure, not model drift, and it is
   // reported with a code outside API_SHAPE_CODES so it can never be counted as
   // a library-drift finding.
+  // A candidate may not redefine the library it is being measured against.
+  // TypeScript module augmentation ADDS the declared members to the module's
+  // exports, so `declare module "react-router" { interface AppLoadContext {} }`
+  // re-creates a type v8 deleted and the accompanying import resolves — a
+  // candidate written entirely against the REMOVED API compiles clean and
+  // scores as a PASS. Found 2026-08-17 probing react-router v8: two of five
+  // candidates that reached for the deleted `AppLoadContext` passed, purely
+  // because they also wrote the augmentation. The third, which imported it
+  // without augmenting, failed with TS2305 as it should.
+  //
+  // This is the same failure class as an empty candidate passing: the harness
+  // converts "the model used the old API" into "the model got it right".
+  // SDKP002 is deliberately outside API_SHAPE_CODES so it can never be counted
+  // as library drift either.
+  const augmented = augmentsLibrary(candidate.code, spec.packageName);
+  if (augmented) {
+    return {
+      taskId: candidate.taskId,
+      model: candidate.model,
+      passed: false,
+      errors: [{ code: "SDKP002", message: augmented, line: 0, column: 0, libraryRelated: false }],
+    };
+  }
+
+  // Runs BEFORE the empty-candidate check on purpose: augmentation is the more
+  // specific diagnosis, and emptyCandidate's `declare` strip is line-oriented in
+  // intent but its [^;]* spans newlines, so a multi-line `declare module` block
+  // swallows the rest of the candidate and reports SDKP001 instead.
   const empty = emptyCandidate(candidate.code);
   if (empty) {
     return {
@@ -80,6 +108,28 @@ export async function verify(
   }
 }
 
+
+/**
+ * Detect a candidate that augments the module it is supposed to be USING.
+ * Matches the package itself and any subpath entrypoint of it, so
+ * `declare module "@apollo/client/react"` is caught as well as
+ * `declare module "@apollo/client"`.
+ *
+ * Deliberately conservative: it fires on ANY augmentation of the library's own
+ * module, not only ones that redeclare a removed symbol. Telling those apart
+ * needs type introspection, and the cost of being wrong is asymmetric — a
+ * false positive costs one task, a false negative silently inflates a
+ * published score. Measured before shipping: `declare module` appears in 0 of
+ * 35 stored candidate files, so this fires on nothing that has ever been run.
+ */
+export function augmentsLibrary(code: string, packageName: string): string | null {
+  const pkg = packageName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(`declare\\s+module\\s+["'\`]${pkg}(?:/[^"'\`]*)?["'\`]`);
+  const m = re.exec(code);
+  return m
+    ? `module augmentation: the candidate redefines "${packageName}" (${m[0].trim()}), which can re-create an API the package removed`
+    : null;
+}
 
 /**
  * Reject candidates that cannot possibly be an answer. Returns a reason string
