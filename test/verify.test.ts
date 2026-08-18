@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { verify, parseDiagnostics, augmentsLibrary } from "../src/verify.ts";
+import { verify, parseDiagnostics, augmentsLibrary, API_SHAPE_CODES } from "../src/verify.ts";
+import { categorize, classify } from "../src/classify.ts";
 import { prismaSpec } from "../src/libraries/prisma.ts";
 import { tscEntry } from "../src/env.ts";
 import type { Candidate } from "../src/types.ts";
@@ -175,4 +176,58 @@ test("augmentsLibrary matches the package and its subpaths, and nothing else", (
     "augmenting an unrelated module is legitimate",
   );
   assert.equal(augmentsLibrary("export const solve = () => 1;", "react-router"), null);
+});
+
+/**
+ * The import-drift codes must be CATEGORISED, not just counted.
+ *
+ * TS2305 and TS1192 were added to API_SHAPE_CODES on 2026-08-13 so they would
+ * count as library drift, but they were never added to CODE_CATEGORY — so they
+ * fell through to "other", which is what the scorecard prints as its top
+ * failure pattern. Apollo Client 4, the flagship finding, published
+ * "other: 4" for four TS2305s. Found 2026-08-18 re-scoring the AI SDK.
+ *
+ * TS2724 belongs with them: it is TS2305 with a did-you-mean attached, and
+ * splitting one error family across two categories is exactly the
+ * inconsistency the 08-13 fix existed to remove.
+ */
+test("every import-drift code lands in deprecated-or-removed, not other", () => {
+  for (const code of ["TS2305", "TS2724", "TS1192"]) {
+    assert.equal(
+      categorize(code),
+      "deprecated-or-removed",
+      `${code} must not fall through to "other" — it is the finding`,
+    );
+  }
+});
+
+test("no API_SHAPE_CODE falls through to other", () => {
+  // Any code trusted enough to count as library drift must also be nameable on
+  // the scorecard. These two sets drifting apart is what caused the bug above.
+  for (const code of API_SHAPE_CODES) {
+    assert.notEqual(categorize(code), "other", `${code} counts as drift but has no category`);
+  }
+});
+
+/**
+ * A single failed type import produces one TS2305 plus one TS7031 for every
+ * parameter that just lost its annotation, so the downstream noise outnumbers
+ * the cause. Ranking purely by count printed "other - 11x implicitly has an
+ * 'any' type" as the AI SDK's headline failure, with the four removed types
+ * underneath it. The residual bucket must never lead.
+ */
+test("the residual 'other' bucket never outranks a real category", () => {
+  const verdicts = [
+    { taskId: "t", model: "m", passed: false, errors: [
+      { code: "TS2305", message: "no exported member", line: 1, column: 1, libraryRelated: true },
+      ...Array.from({ length: 9 }, () => (
+        { code: "TS7031", message: "implicitly has an 'any' type", line: 1, column: 1, libraryRelated: false }
+      )),
+    ] },
+  ] as never;
+  const patterns = classify(verdicts);
+  assert.equal(patterns[0].category, "deprecated-or-removed", "the cause must lead, not the consequence");
+  assert.equal(patterns[0].count, 1);
+  assert.equal(patterns[1].category, "other");
+  assert.equal(patterns[1].count, 9, "the noise is still reported, just not first");
 });

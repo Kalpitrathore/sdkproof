@@ -16,7 +16,7 @@ _No task was refused, so both rates run over the same set of tasks._
 
 ## Top failure patterns
 
-### other — 4×
+### deprecated-or-removed — 4×
 
 ```
 Module '"@apollo/client"' has no exported member 'useQuery'.

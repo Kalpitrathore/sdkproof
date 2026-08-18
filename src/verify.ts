@@ -12,7 +12,7 @@ const DIAG_RE = /^(.+?)\((\d+),(\d+)\):\s+error\s+(TS\d+):\s+(.*)$/;
 
 // Error codes that indicate misuse of an API surface (a hallucinated/wrong/
 // removed member or signature) rather than a generic JS mistake.
-const API_SHAPE_CODES = new Set([
+export const API_SHAPE_CODES = new Set([
   "TS2339", // property does not exist on type
   "TS2551", // property does not exist — did you mean X
   "TS2353", // object literal may only specify known properties (invented field)
