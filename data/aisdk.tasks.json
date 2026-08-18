@@ -68,5 +68,33 @@
     "difficulty": "hard",
     "prompt": "Define a `getWeather` tool that takes a `city` string and returns a weather string, then call generateText with it so the model can use the tool. Return the text.",
     "skeleton": "import { generateText, tool } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\nimport { z } from \"zod\";\n\n// Define a getWeather tool (input: city string) and use it with generateText; return the text.\nexport async function run() {\n  // implement using the AI SDK\n}\n"
+  },
+  {
+    "id": "typed-telemetry-config",
+    "area": "config",
+    "difficulty": "easy",
+    "prompt": "Several calls in this app should share one telemetry configuration. Export a `telemetry` constant holding that shared configuration, annotated with the SDK's exported type for it, and an `ask(prompt)` function that passes it to generateText.",
+    "skeleton": "import { generateText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Export `telemetry` — the shared telemetry configuration, annotated with the\n// SDK's exported type for it — and ask(prompt) which passes it to generateText.\n"
+  },
+  {
+    "id": "extract-onfinish-handler",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "The onFinish handler passed to streamText has grown too large to keep inline. Extract it into a named function `handleFinish`, annotated with the SDK's exported type for that callback, and export a `summarize(prompt)` that calls streamText with it.",
+    "skeleton": "import { streamText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Extract the onFinish handler into a named `handleFinish`, annotated with the\n// SDK's exported type for that callback. Export handleFinish and summarize(prompt).\n"
+  },
+  {
+    "id": "typed-tool-execute",
+    "area": "config",
+    "difficulty": "medium",
+    "prompt": "Write a weather tool with the `tool` helper whose execute implementation lives in a separate named function `runWeather`. Annotate `runWeather`'s second parameter with the SDK's exported type for the options a tool execution receives. Export both.",
+    "skeleton": "import { tool } from \"ai\";\nimport { z } from \"zod\";\n\n// Export runWeather — the execute implementation, whose SECOND parameter is\n// annotated with the SDK's exported type for tool execution options — and\n// getWeather, the tool() built from it.\n"
+  },
+  {
+    "id": "extract-onstepfinish-handler",
+    "area": "core",
+    "difficulty": "medium",
+    "prompt": "Extract the onStepFinish handler passed to streamText into a named function `logStep`, annotated with the SDK's exported type for that callback, and export a `runAgent(prompt)` that calls streamText with it.",
+    "skeleton": "import { streamText } from \"ai\";\nimport { openai } from \"@ai-sdk/openai\";\n\n// Extract the onStepFinish handler into a named `logStep`, annotated with the\n// SDK's exported type for that callback. Export logStep and runAgent(prompt).\n"
   }
 ]
