@@ -3,16 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { tscEntry } from "../src/env.ts";
+import { ALL_SPECS } from "../src/libraries/index.ts";
 import { verify } from "../src/verify.ts";
-import { prismaSpec } from "../src/libraries/prisma.ts";
-import { apolloSpec } from "../src/libraries/apollo.ts";
-import { zustandSpec } from "../src/libraries/zustand.ts";
-import { aisdkSpec } from "../src/libraries/aisdk.ts";
-import { zodSpec } from "../src/libraries/zod.ts";
-import { tanstackQuerySpec } from "../src/libraries/tanstack-query.ts";
-import { nextjsSpec } from "../src/libraries/nextjs.ts";
-import { reactRouterSpec } from "../src/libraries/react-router.ts";
-import { stripeSpec } from "../src/libraries/stripe.ts";
 import type { LibrarySpec } from "../src/types.ts";
 
 /**
@@ -32,17 +24,10 @@ import type { LibrarySpec } from "../src/types.ts";
  * When a library ships a breaking major, this test is the first thing that
  * should fail. Update `known-good.ts` to the new API before trusting any score.
  */
-const SPECS: LibrarySpec[] = [
-  apolloSpec,
-  zustandSpec,
-  prismaSpec,
-  aisdkSpec,
-  zodSpec,
-  tanstackQuerySpec,
-  nextjsSpec,
-  reactRouterSpec,
-  stripeSpec,
-];
+// Derived from the one registry, never hand-listed. A separate list here meant
+// registering a library in cli.ts did NOT enrol it in this test — react-table
+// was scored 0/100 on 2026-08-19 while its fixture had never been validated.
+const SPECS: LibrarySpec[] = Object.values(ALL_SPECS);
 
 for (const spec of SPECS) {
   test(`${spec.id} fixture can express a passing answer`, async () => {

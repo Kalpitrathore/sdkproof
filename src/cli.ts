@@ -8,7 +8,7 @@ import { zodSpec } from "./libraries/zod.ts";
 import { tanstackQuerySpec } from "./libraries/tanstack-query.ts";
 import { nextjsSpec } from "./libraries/nextjs.ts";
 import { reactRouterSpec } from "./libraries/react-router.ts";
-import { reactTableSpec } from "./libraries/react-table.ts";
+import { ALL_SPECS } from "./libraries/index.ts";
 import { stripeSpec } from "./libraries/stripe.ts";
 import { projectRoot, tscEntry } from "./env.ts";
 import { generate } from "./generate.ts";
@@ -29,7 +29,7 @@ import { activeAdapters } from "./models/index.ts";
 import { fakeAdapters } from "./models/fake.ts";
 import type { ArmScore, Candidate, LibrarySpec, LostTask, Refusal, Task, Verdict } from "./types.ts";
 
-const SPECS: Record<string, LibrarySpec> = { apollo: apolloSpec, zustand: zustandSpec, prisma: prismaSpec, aisdk: aisdkSpec, zod: zodSpec, "tanstack-query": tanstackQuerySpec, nextjs: nextjsSpec, "react-router": reactRouterSpec, "react-table": reactTableSpec, stripe: stripeSpec };
+const SPECS = ALL_SPECS;
 
 /**
  * Bounded concurrency. The generation loop used to fire every task at once; on
