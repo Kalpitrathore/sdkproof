@@ -13,3 +13,8 @@ fixtures/*/candidate.ts
 # run outputs (tasks.json + example scorecards are committed; raw run data is not)
 data/*.candidates.json
 data/*.result.json
+
+# radar intermediates — regenerate with scripts/radar
+scripts/radar/candidates.json
+scripts/radar/stage1.json
+scripts/radar/radar-hits.json

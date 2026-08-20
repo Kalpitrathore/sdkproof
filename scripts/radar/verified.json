@@ -1,0 +1,1091 @@
+[
+  {
+    "name": "highcharts",
+    "prevMajor": 12,
+    "curMajor": 13,
+    "prev": "12.6.0",
+    "cur": "13.0.1",
+    "curFirst": "2026-06-11",
+    "ageMonths": 2.3,
+    "removed": 839,
+    "apolloShaped": 839,
+    "symbols": [
+      "DataSortingOptionsObject",
+      "LegendEventsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsAnimationOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsControlPointStyleOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsEventsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsLabelOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsLabelsControlPointsStyleOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsLabelsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsShapeOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsShapesControlPointsStyleOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsShapesOptions"
+    ],
+    "confirmed": [
+      "DataSortingOptionsObject",
+      "LegendEventsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsAnimationOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsControlPointStyleOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsEventsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsLabelOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsLabelsControlPointsStyleOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsLabelsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsShapeOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsShapesControlPointsStyleOptions",
+      "NavigationBindingsCircleAnnotationAnnotationsShapesOptions"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 839
+  },
+  {
+    "name": "@aptos-labs/ts-sdk",
+    "prevMajor": 6,
+    "curMajor": 7,
+    "prev": "6.3.1",
+    "cur": "7.3.0",
+    "curFirst": "2026-05-13",
+    "ageMonths": 3.2,
+    "removed": 399,
+    "apolloShaped": 399,
+    "symbols": [
+      "AbstractKeylessAccount",
+      "AccountUtils",
+      "EPK_HORIZON_SECS",
+      "EphemeralCertificate",
+      "EphemeralKeyPair",
+      "EphemeralPublicKey",
+      "EphemeralSignature",
+      "FederatedKeylessAccount",
+      "FederatedKeylessPublicKey",
+      "Groth16ProofAndStatement",
+      "Groth16VerificationKey",
+      "Groth16Zkp"
+    ],
+    "confirmed": [
+      "AbstractKeylessAccount",
+      "AccountUtils",
+      "EPK_HORIZON_SECS",
+      "EphemeralCertificate",
+      "EphemeralKeyPair",
+      "EphemeralPublicKey",
+      "EphemeralSignature",
+      "FederatedKeylessAccount",
+      "FederatedKeylessPublicKey",
+      "Groth16ProofAndStatement",
+      "Groth16VerificationKey",
+      "Groth16Zkp"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 399
+  },
+  {
+    "name": "@a2a-js/sdk",
+    "prevMajor": 0,
+    "curMajor": 1,
+    "prev": "0.3.14",
+    "cur": "1.0.1",
+    "curFirst": "2026-07-22",
+    "ageMonths": 0.9,
+    "removed": 158,
+    "apolloShaped": 158,
+    "symbols": [
+      "A2AError",
+      "A2ARequest",
+      "AgentCapabilities1",
+      "AgentCard1",
+      "AgentProvider1",
+      "Artifact1",
+      "AuthenticatedExtendedCardNotConfiguredError",
+      "AuthorizationCodeOAuthFlow1",
+      "CancelTaskSuccessResponse",
+      "ClientCredentialsOAuthFlow1",
+      "ContentTypeNotSupportedError",
+      "DataPart"
+    ],
+    "confirmed": [
+      "A2AError",
+      "A2ARequest",
+      "AgentCapabilities1",
+      "AgentCard1",
+      "AgentProvider1",
+      "Artifact1",
+      "AuthenticatedExtendedCardNotConfiguredError",
+      "AuthorizationCodeOAuthFlow1",
+      "CancelTaskSuccessResponse",
+      "ClientCredentialsOAuthFlow1",
+      "ContentTypeNotSupportedError",
+      "DataPart"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 158
+  },
+  {
+    "name": "@kubernetes/client-node",
+    "prevMajor": 1,
+    "curMajor": 2,
+    "prev": "1.4.0",
+    "cur": "2.0.0",
+    "curFirst": "2026-08-12",
+    "ageMonths": 0.2,
+    "removed": 50,
+    "apolloShaped": 50,
+    "symbols": [
+      "AbortError",
+      "FetchError",
+      "CertificatesV1alpha1ApiCreateNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiDeleteCollectionNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiDeleteNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiListNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiListPodCertificateRequestForAllNamespacesRequest",
+      "CertificatesV1alpha1ApiPatchNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiPatchNamespacedPodCertificateRequestStatusRequest",
+      "CertificatesV1alpha1ApiReadNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiReadNamespacedPodCertificateRequestStatusRequest",
+      "CertificatesV1alpha1ApiReplaceNamespacedPodCertificateRequestRequest"
+    ],
+    "confirmed": [
+      "AbortError",
+      "FetchError",
+      "CertificatesV1alpha1ApiCreateNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiDeleteCollectionNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiDeleteNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiListNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiListPodCertificateRequestForAllNamespacesRequest",
+      "CertificatesV1alpha1ApiPatchNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiPatchNamespacedPodCertificateRequestStatusRequest",
+      "CertificatesV1alpha1ApiReadNamespacedPodCertificateRequestRequest",
+      "CertificatesV1alpha1ApiReadNamespacedPodCertificateRequestStatusRequest",
+      "CertificatesV1alpha1ApiReplaceNamespacedPodCertificateRequestRequest"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 50
+  },
+  {
+    "name": "@lifi/sdk",
+    "prevMajor": 3,
+    "curMajor": 4,
+    "prev": "3.16.3",
+    "cur": "4.4.0",
+    "curFirst": "2026-06-03",
+    "ageMonths": 2.5,
+    "removed": 71,
+    "apolloShaped": 65,
+    "symbols": [
+      "config",
+      "PatcherMagicNumber",
+      "checkPermitSupport",
+      "EVM",
+      "getTokenAllowance",
+      "getTokenAllowanceMulticall",
+      "isBatchingSupported",
+      "getNativePermit",
+      "revokeTokenApproval",
+      "setAllowance",
+      "setTokenAllowance",
+      "isGaslessStep"
+    ],
+    "confirmed": [
+      "config",
+      "PatcherMagicNumber",
+      "checkPermitSupport",
+      "EVM",
+      "getTokenAllowance",
+      "getTokenAllowanceMulticall",
+      "isBatchingSupported",
+      "getNativePermit",
+      "revokeTokenApproval",
+      "setAllowance",
+      "setTokenAllowance",
+      "isGaslessStep"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 65
+  },
+  {
+    "name": "@maizzle/framework",
+    "prevMajor": 5,
+    "curMajor": 6,
+    "prev": "5.5.0",
+    "cur": "6.1.0",
+    "curFirst": "2026-06-09",
+    "ageMonths": 2.3,
+    "removed": 13,
+    "apolloShaped": 13,
+    "symbols": [
+      "Config",
+      "safeClassNames",
+      "markdown",
+      "preventWidows",
+      "inlineCSS",
+      "shorthandCSS",
+      "removeUnusedCSS",
+      "purgeCSS",
+      "prettify",
+      "applyBaseURL",
+      "addUrlParams",
+      "sixHEX"
+    ],
+    "confirmed": [
+      "Config",
+      "safeClassNames",
+      "markdown",
+      "preventWidows",
+      "inlineCSS",
+      "shorthandCSS",
+      "removeUnusedCSS",
+      "purgeCSS",
+      "prettify",
+      "applyBaseURL",
+      "addUrlParams",
+      "sixHEX"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 13
+  },
+  {
+    "name": "@azure/arm-appservice",
+    "prevMajor": 18,
+    "curMajor": 19,
+    "prev": "18.0.0",
+    "cur": "19.0.0",
+    "curFirst": "2026-06-09",
+    "ageMonths": 2.3,
+    "removed": 1029,
+    "apolloShaped": 1029,
+    "symbols": [
+      "getContinuationToken",
+      "setContinuationToken",
+      "PageInfo",
+      "AppServiceEnvironmentCollection",
+      "StampCapacityCollection",
+      "WebAppCollection",
+      "InboundEnvironmentEndpointCollection",
+      "WorkerPoolCollection",
+      "ResourceMetricDefinitionCollection",
+      "SkuInfoCollection",
+      "UsageCollection",
+      "OutboundEnvironmentEndpointCollection"
+    ],
+    "confirmed": [
+      "getContinuationToken",
+      "AppServiceEnvironmentCollection",
+      "StampCapacityCollection",
+      "WebAppCollection",
+      "InboundEnvironmentEndpointCollection",
+      "WorkerPoolCollection",
+      "ResourceMetricDefinitionCollection",
+      "SkuInfoCollection",
+      "UsageCollection",
+      "OutboundEnvironmentEndpointCollection"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 1029
+  },
+  {
+    "name": "mobx-react-lite",
+    "prevMajor": 4,
+    "curMajor": 5,
+    "prev": "4.1.1",
+    "cur": "5.0.0",
+    "curFirst": "2026-07-30",
+    "ageMonths": 0.6,
+    "removed": 8,
+    "apolloShaped": 7,
+    "symbols": [
+      "useLocalStore",
+      "useAsObservableSource",
+      "isObserverBatched",
+      "observerBatching",
+      "useObserver",
+      "useStaticRendering",
+      "defaultNoopBatch"
+    ],
+    "confirmed": [
+      "useLocalStore",
+      "useAsObservableSource",
+      "isObserverBatched",
+      "observerBatching",
+      "useObserver",
+      "useStaticRendering"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 7
+  },
+  {
+    "name": "typeorm",
+    "prevMajor": 0,
+    "curMajor": 1,
+    "prev": "0.3.31",
+    "cur": "1.1.0",
+    "curFirst": "2026-05-19",
+    "ageMonths": 3,
+    "removed": 445,
+    "apolloShaped": 415,
+    "symbols": [
+      "RepositoryUpdateOptions",
+      "LegacyOracleNamingStrategy",
+      "EntityTarget",
+      "ObjectType",
+      "ObjectLiteral",
+      "MixedList",
+      "DeepPartial",
+      "Relation",
+      "CustomRepositoryNotFoundError",
+      "CustomRepositoryCannotInheritRepositoryError",
+      "CustomRepositoryDoesNotHaveEntityError",
+      "ColumnOptions"
+    ],
+    "confirmed": [
+      "RepositoryUpdateOptions",
+      "LegacyOracleNamingStrategy",
+      "CustomRepositoryNotFoundError",
+      "CustomRepositoryCannotInheritRepositoryError",
+      "CustomRepositoryDoesNotHaveEntityError"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 415
+  },
+  {
+    "name": "@expressots/core",
+    "prevMajor": 3,
+    "curMajor": 4,
+    "prev": "3.0.0",
+    "cur": "4.2.1",
+    "curFirst": "2026-07-17",
+    "ageMonths": 1.1,
+    "removed": 7,
+    "apolloShaped": 7,
+    "symbols": [
+      "AppFactory",
+      "isWebServerConstructor",
+      "EnvValidatorProvider",
+      "InMemoryDataProvider",
+      "InMemoryDataTable",
+      "BindingScopeEnum",
+      "LazyServiceIdentifer"
+    ],
+    "confirmed": [
+      "AppFactory",
+      "InMemoryDataProvider",
+      "InMemoryDataTable",
+      "BindingScopeEnum",
+      "LazyServiceIdentifer"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 7
+  },
+  {
+    "name": "@angular/core",
+    "prevMajor": 21,
+    "curMajor": 22,
+    "prev": "21.2.20",
+    "cur": "22.1.2",
+    "curFirst": "2026-06-03",
+    "ageMonths": 2.5,
+    "removed": 10,
+    "apolloShaped": 6,
+    "symbols": [
+      "InputFlags",
+      "QueryFlags",
+      "isBoundToModule",
+      "NavigationTypeString",
+      "ProjectionSlots",
+      "TConstantsOrFactory"
+    ],
+    "confirmed": [
+      "InputFlags",
+      "QueryFlags",
+      "ProjectionSlots",
+      "TConstantsOrFactory"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 6
+  },
+  {
+    "name": "@types/facebook-nodejs-business-sdk",
+    "prevMajor": 23,
+    "curMajor": 24,
+    "prev": "23.0.0",
+    "cur": "24.0.0",
+    "curFirst": "2026-05-11",
+    "ageMonths": 3.3,
+    "removed": 4,
+    "apolloShaped": 4,
+    "symbols": [
+      "AudioRelease",
+      "AvatarProfilePicture",
+      "FBLiteToNTTransitions",
+      "FavoriteCatalog"
+    ],
+    "confirmed": [
+      "AudioRelease",
+      "AvatarProfilePicture",
+      "FBLiteToNTTransitions",
+      "FavoriteCatalog"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 4
+  },
+  {
+    "name": "@turnkey/sdk-types",
+    "prevMajor": 0,
+    "curMajor": 1,
+    "prev": "0.14.0",
+    "cur": "1.5.1",
+    "curFirst": "2026-05-05",
+    "ageMonths": 3.5,
+    "removed": 4,
+    "apolloShaped": 4,
+    "symbols": [
+      "v1CreateApiOnlyUsersRequest",
+      "TCreateApiOnlyUsersResponse",
+      "TCreateApiOnlyUsersBody",
+      "TCreateApiOnlyUsersInput"
+    ],
+    "confirmed": [
+      "v1CreateApiOnlyUsersRequest",
+      "TCreateApiOnlyUsersResponse",
+      "TCreateApiOnlyUsersBody",
+      "TCreateApiOnlyUsersInput"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 4
+  },
+  {
+    "name": "@github/copilot-sdk",
+    "prevMajor": 0,
+    "curMajor": 1,
+    "prev": "0.3.0",
+    "cur": "1.0.11",
+    "curFirst": "2026-06-02",
+    "ageMonths": 2.6,
+    "removed": 5,
+    "apolloShaped": 5,
+    "symbols": [
+      "SYSTEM_PROMPT_SECTIONS",
+      "ConnectionState",
+      "InputOptions",
+      "SystemPromptSection",
+      "NO_RESULT_PERMISSION_V2_ERROR"
+    ],
+    "confirmed": [
+      "SYSTEM_PROMPT_SECTIONS",
+      "ConnectionState",
+      "InputOptions",
+      "SystemPromptSection"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 5
+  },
+  {
+    "name": "tslog",
+    "prevMajor": 4,
+    "curMajor": 5,
+    "prev": "4.11.0",
+    "cur": "5.1.0",
+    "curFirst": "2026-07-14",
+    "ageMonths": 1.2,
+    "removed": 3,
+    "apolloShaped": 3,
+    "symbols": [
+      "createLoggerEnvironment",
+      "loggerEnvironment",
+      "DefaultLogLevels"
+    ],
+    "confirmed": [
+      "createLoggerEnvironment",
+      "loggerEnvironment",
+      "DefaultLogLevels"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 3
+  },
+  {
+    "name": "@bloomreach/spa-sdk",
+    "prevMajor": 27,
+    "curMajor": 28,
+    "prev": "27.3.1",
+    "cur": "28.1.0",
+    "curFirst": "2026-06-19",
+    "ageMonths": 2,
+    "removed": 3,
+    "apolloShaped": 3,
+    "symbols": [
+      "Content",
+      "Menu10",
+      "isContent"
+    ],
+    "confirmed": [
+      "Content",
+      "Menu10",
+      "isContent"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 3
+  },
+  {
+    "name": "@dynamic-labs-wallet/forward-mpc-client",
+    "prevMajor": 0,
+    "curMajor": 1,
+    "prev": "0.12.0",
+    "cur": "1.0.2",
+    "curFirst": "2026-06-25",
+    "ageMonths": 1.8,
+    "removed": 3,
+    "apolloShaped": 3,
+    "symbols": [
+      "ClientEvents",
+      "ForwardMPCClient",
+      "ForwardMPCClientOptions"
+    ],
+    "confirmed": [
+      "ClientEvents",
+      "ForwardMPCClient",
+      "ForwardMPCClientOptions"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 3
+  },
+  {
+    "name": "@cere-ddc-sdk/file-storage",
+    "prevMajor": 2,
+    "curMajor": 3,
+    "prev": "2.16.1",
+    "cur": "3.0.1",
+    "curFirst": "2026-07-30",
+    "ageMonths": 0.7,
+    "removed": 3,
+    "apolloShaped": 3,
+    "symbols": [
+      "TESTNET",
+      "DEVNET",
+      "MAINNET"
+    ],
+    "confirmed": [
+      "TESTNET",
+      "DEVNET",
+      "MAINNET"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 3
+  },
+  {
+    "name": "@sanity/client",
+    "prevMajor": 7,
+    "curMajor": 8,
+    "prev": "7.26.2",
+    "cur": "8.1.0",
+    "curFirst": "2026-08-12",
+    "ageMonths": 0.2,
+    "removed": 3,
+    "apolloShaped": 3,
+    "symbols": [
+      "ProgressEvent",
+      "HttpRequestEvent",
+      "ResponseEvent"
+    ],
+    "confirmed": [
+      "HttpRequestEvent",
+      "ResponseEvent"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 3
+  },
+  {
+    "name": "@botpress/client",
+    "prevMajor": 1,
+    "curMajor": 2,
+    "prev": "1.49.0",
+    "cur": "2.3.0",
+    "curFirst": "2026-07-23",
+    "ageMonths": 0.9,
+    "removed": 2,
+    "apolloShaped": 2,
+    "symbols": [
+      "axios",
+      "axiosRetry"
+    ],
+    "confirmed": [
+      "axios",
+      "axiosRetry"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 2
+  },
+  {
+    "name": "@tblabs/storage",
+    "prevMajor": 2,
+    "curMajor": 5,
+    "prev": "2.1.0",
+    "cur": "5.15.3",
+    "curFirst": "2026-05-19",
+    "ageMonths": 3,
+    "removed": 2,
+    "apolloShaped": 2,
+    "symbols": [
+      "OperationRepeater",
+      "Dataset"
+    ],
+    "confirmed": [
+      "OperationRepeater",
+      "Dataset"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 2
+  },
+  {
+    "name": "@casl/react",
+    "prevMajor": 6,
+    "curMajor": 7,
+    "prev": "6.0.0",
+    "cur": "7.0.1",
+    "curFirst": "2026-05-21",
+    "ageMonths": 3,
+    "removed": 2,
+    "apolloShaped": 2,
+    "symbols": [
+      "BoundCanProps",
+      "createContextualCan"
+    ],
+    "confirmed": [
+      "BoundCanProps",
+      "createContextualCan"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 2
+  },
+  {
+    "name": "react-router",
+    "prevMajor": 7,
+    "curMajor": 8,
+    "prev": "7.18.2",
+    "cur": "8.3.0",
+    "curFirst": "2026-06-17",
+    "ageMonths": 2.1,
+    "removed": 109,
+    "apolloShaped": 109,
+    "symbols": [
+      "AppLoadContext",
+      "$",
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J"
+    ],
+    "confirmed": [
+      "AppLoadContext"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 109
+  },
+  {
+    "name": "@fireblocks/ts-sdk",
+    "prevMajor": 26,
+    "curMajor": 27,
+    "prev": "26.0.0",
+    "cur": "27.0.0",
+    "curFirst": "2026-08-18",
+    "ageMonths": 0,
+    "removed": 1,
+    "apolloShaped": 1,
+    "symbols": [
+      "TravelRuleValidateLegalPersonNameIdentifierLegalPersonNameIdentifierTypeEnum"
+    ],
+    "confirmed": [
+      "TravelRuleValidateLegalPersonNameIdentifierLegalPersonNameIdentifierTypeEnum"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 1
+  },
+  {
+    "name": "@tanstack/react-table",
+    "prevMajor": 8,
+    "curMajor": 9,
+    "prev": "8.21.3",
+    "cur": "9.1.2",
+    "curFirst": "2026-08-04",
+    "ageMonths": 0.5,
+    "removed": 1,
+    "apolloShaped": 1,
+    "symbols": [
+      "useReactTable"
+    ],
+    "confirmed": [
+      "useReactTable"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 1
+  },
+  {
+    "name": "@bungres/orm",
+    "prevMajor": 0,
+    "curMajor": 1,
+    "prev": "0.6.0",
+    "cur": "1.3.2",
+    "curFirst": "2026-07-20",
+    "ageMonths": 1,
+    "removed": 1,
+    "apolloShaped": 1,
+    "symbols": [
+      "table"
+    ],
+    "confirmed": [
+      "table"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 1
+  },
+  {
+    "name": "kopytko-linter",
+    "prevMajor": 1,
+    "curMajor": 2,
+    "prev": "1.7.3",
+    "cur": "2.0.0",
+    "curFirst": "2026-08-01",
+    "ageMonths": 0.6,
+    "removed": 1,
+    "apolloShaped": 1,
+    "symbols": [
+      "stripStringLiterals"
+    ],
+    "confirmed": [
+      "stripStringLiterals"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 1
+  },
+  {
+    "name": "html-validate",
+    "prevMajor": 10,
+    "curMajor": 11,
+    "prev": "10.17.0",
+    "cur": "11.8.0",
+    "curFirst": "2026-05-11",
+    "ageMonths": 3.3,
+    "removed": 1,
+    "apolloShaped": 1,
+    "symbols": [
+      "Validator"
+    ],
+    "confirmed": [
+      "Validator"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 1
+  },
+  {
+    "name": "react-day-picker",
+    "prevMajor": 9,
+    "curMajor": 10,
+    "prev": "9.14.0",
+    "cur": "10.0.1",
+    "curFirst": "2026-05-08",
+    "ageMonths": 3.4,
+    "removed": 44,
+    "apolloShaped": 1,
+    "symbols": [
+      "V9DeprecatedProps"
+    ],
+    "confirmed": [
+      "V9DeprecatedProps"
+    ],
+    "verdict": "CONFIRMED",
+    "reported": 1
+  },
+  {
+    "name": "kubo-rpc-client",
+    "prevMajor": 6,
+    "curMajor": 7,
+    "prev": "6.1.0",
+    "cur": "7.1.0",
+    "curFirst": "2026-05-13",
+    "ageMonths": 3.2,
+    "removed": 145,
+    "apolloShaped": 145,
+    "symbols": [
+      "globSource",
+      "GlobSourceOptions",
+      "GlobSourceResult",
+      "createBitswap",
+      "BitswapStats",
+      "BitswapAPI",
+      "createBlock",
+      "BlockPutOptions",
+      "BlockRmOptions",
+      "BlockRmResult",
+      "BlockStatResult",
+      "BlockAPI"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 145
+  },
+  {
+    "name": "eventsource",
+    "prevMajor": 4,
+    "curMajor": 5,
+    "prev": "4.1.1",
+    "cur": "5.1.0",
+    "curFirst": "2026-08-10",
+    "ageMonths": 0.3,
+    "removed": 11,
+    "apolloShaped": 11,
+    "symbols": [
+      "EventListenerOptions",
+      "EventSourceInit",
+      "AddEventListenerOptions",
+      "EventListener",
+      "EventListenerObject",
+      "EventListenerOrEventListenerObject",
+      "EventSourceEventMap",
+      "EventSourceFetchInit",
+      "FetchLike",
+      "FetchLikeResponse",
+      "ReaderLike"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 11
+  },
+  {
+    "name": "@browserbasehq/stagehand",
+    "prevMajor": 3,
+    "curMajor": 4,
+    "prev": "3.7.1",
+    "cur": "4.0.1",
+    "curFirst": "2026-08-10",
+    "ageMonths": 0.3,
+    "removed": 263,
+    "apolloShaped": 263,
+    "symbols": [
+      "default",
+      "V3",
+      "AnnotatedScreenshotText",
+      "LLMClient",
+      "AgentProvider",
+      "modelToAgentProviderMap",
+      "AgentTools",
+      "AgentToolTypesMap",
+      "AgentUITools",
+      "AgentToolCall",
+      "AgentToolResult",
+      "validateZodSchema"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 263
+  },
+  {
+    "name": "mobx-react",
+    "prevMajor": 9,
+    "curMajor": 10,
+    "prev": "9.2.2",
+    "cur": "10.0.0",
+    "curFirst": "2026-07-30",
+    "ageMonths": 0.6,
+    "removed": 12,
+    "apolloShaped": 11,
+    "symbols": [
+      "useObserver",
+      "useAsObservableSource",
+      "useLocalStore",
+      "useStaticRendering",
+      "observerBatching",
+      "MobXProviderContext",
+      "Provider",
+      "ProviderProps",
+      "inject",
+      "PropTypes",
+      "IWrappedComponent"
+    ],
+    "confirmed": [],
+    "verdict": "unverifiable",
+    "reported": 11
+  },
+  {
+    "name": "@angular/compiler-cli",
+    "prevMajor": 21,
+    "curMajor": 22,
+    "prev": "21.2.20",
+    "cur": "22.1.2",
+    "curFirst": "2026-06-03",
+    "ageMonths": 2.5,
+    "removed": 11,
+    "apolloShaped": 11,
+    "symbols": [
+      "TcbReferenceMetadata",
+      "TcbReferenceKey",
+      "TcbTypeParameter",
+      "TcbInputMapping",
+      "TcbPipeMetadata",
+      "TcbDirectiveMetadata",
+      "TcbComponentMetadata",
+      "TcbTypeCheckBlockMetadata",
+      "TypeCheckId",
+      "TypeCtorMetadata",
+      "TypeCheckingConfig"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 11
+  },
+  {
+    "name": "@conventional-changelog/git-client",
+    "prevMajor": 2,
+    "curMajor": 3,
+    "prev": "2.7.0",
+    "cur": "3.1.2",
+    "curFirst": "2026-06-26",
+    "ageMonths": 1.8,
+    "removed": 9,
+    "apolloShaped": 9,
+    "symbols": [
+      "GitLogParams",
+      "GitLogTagsParams",
+      "GetCommitsParams",
+      "GitCommitParams",
+      "GitTagParams",
+      "GitPushParams",
+      "GitFetchParams",
+      "GetSemverTagsParams",
+      "Arg"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 9
+  },
+  {
+    "name": "@wabot-dev/framework",
+    "prevMajor": 0,
+    "curMajor": 1,
+    "prev": "0.9.80",
+    "cur": "1.0.10",
+    "curFirst": "2026-07-15",
+    "ageMonths": 1.2,
+    "removed": 11,
+    "apolloShaped": 10,
+    "symbols": [
+      "InMemoryChatMemory",
+      "InMemoryChatRepository",
+      "InMemoryCronJobRepository",
+      "InMemoryJobRepository",
+      "PgApiKeyRepository",
+      "PgChatMemory",
+      "PgChatRepository",
+      "PgCronJobRepository",
+      "PgJobRepository",
+      "PgJwtRefreshTokenRepository"
+    ],
+    "confirmed": [],
+    "verdict": "unverifiable",
+    "reported": 10
+  },
+  {
+    "name": "react-native-plaid-link-sdk",
+    "prevMajor": 12,
+    "curMajor": 13,
+    "prev": "12.8.5",
+    "cur": "13.0.4",
+    "curFirst": "2026-06-26",
+    "ageMonths": 1.8,
+    "removed": 11,
+    "apolloShaped": 11,
+    "symbols": [
+      "create",
+      "open",
+      "destroy",
+      "dismissLink",
+      "usePlaidEmitter",
+      "submit",
+      "EmbeddedLinkView",
+      "LinkLogLevel",
+      "PlaidLinkProps",
+      "LinkOpenProps",
+      "PlaidLinkComponentProps"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 11
+  },
+  {
+    "name": "typescript-transform-paths",
+    "prevMajor": 3,
+    "curMajor": 4,
+    "prev": "3.5.6",
+    "cur": "4.0.0",
+    "curFirst": "2026-05-17",
+    "ageMonths": 3.1,
+    "removed": 3,
+    "apolloShaped": 3,
+    "symbols": [
+      "register",
+      "nxTransformerPlugin",
+      "mergeTransformers"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 3
+  },
+  {
+    "name": "@quasar/app-vite",
+    "prevMajor": 2,
+    "curMajor": 3,
+    "prev": "2.6.2",
+    "cur": "3.7.0",
+    "curFirst": "2026-07-06",
+    "ageMonths": 1.5,
+    "removed": 3,
+    "apolloShaped": 3,
+    "symbols": [
+      "RenderError",
+      "RenderErrorParams",
+      "SsrDriverTypes"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 3
+  },
+  {
+    "name": "@pinia-orm/nuxt",
+    "prevMajor": 1,
+    "curMajor": 2,
+    "prev": "1.10.2",
+    "cur": "2.0.0",
+    "curFirst": "2026-07-20",
+    "ageMonths": 1,
+    "removed": 1,
+    "apolloShaped": 1,
+    "symbols": [
+      "default"
+    ],
+    "confirmed": [],
+    "verdict": "false-positive",
+    "reported": 1
+  },
+  {
+    "name": "@atlaskit/media-client-react",
+    "prevMajor": 5,
+    "curMajor": 6,
+    "prev": "5.2.0",
+    "cur": "6.1.1",
+    "curFirst": "2026-06-16",
+    "ageMonths": 2.1,
+    "removed": 1,
+    "apolloShaped": 1,
+    "symbols": [
+      "useMediaParsedSettings"
+    ],
+    "confirmed": [],
+    "verdict": "unverifiable",
+    "reported": 1
+  }
+]
