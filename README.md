@@ -3,8 +3,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Kalpitrathore/sdkproof/stargazers"><img src="https://img.shields.io/github/stars/Kalpitrathore/sdkproof?style=social" alt="GitHub stars"></a>
-  &nbsp;
   <a href="https://sdkproof.dev"><img src="https://img.shields.io/badge/live-sdkproof.dev-0e9aa7" alt="Live site"></a>
   &nbsp;
   <img src="https://img.shields.io/github/license/Kalpitrathore/sdkproof?color=888" alt="license">
@@ -12,167 +10,209 @@
 
 # SDKProof
 
-**Live:** https://sdkproof.dev
+AI coding assistants write library code from memory. When a library ships a big
+release that renames or removes things, the assistant keeps writing the old
+version — the code looks right & doesn't compile.
 
-**How ready is your SDK for AI coding agents?** When a library ships a breaking
-major, AI assistants keep writing the *old* API — it looks right, but it doesn't
-compile against the new version. SDKProof measures exactly how much: it has a
-model solve real tasks, then **type-checks the generated code against your real
-installed package** (`tsc --noEmit`). Pass = compiles clean. No LLM judge — the
-compiler decides.
+SDKProof measures how often that happens. It gives a model a set of small
+realistic coding jobs, then compiles every answer against the real installed
+package using `tsc`, the TypeScript compiler.
 
-## The board so far
+Pass = it compiles. No AI judges another AI, the compiler decides.
 
-| SDK | Package | claude-opus-5 | The gap |
-|-----|---------|:---:|---------|
-| **Prisma 7** | `@prisma/client` | **87 / 100** | still writes v6 client setup — omits v7's required driver `adapter`, uses the removed `datasourceUrl` |
-| **Next.js 16** | `next` | **92 / 100** | misses Next 16's new 2-arg `revalidateTag()` — but nails the Next 15 async APIs |
-| **React Router 8** | `react-router` | **93 / 100** | drops the deleted `json()` and `defer()` unprompted, but `meta()` still takes the removed `data` arg — now `loaderData` |
-| **Stripe 22** | `stripe` | **100 / 100** | clean on every task that ran — but the model refused 5 of 15 outright, so this covers 10 |
-| **Vercel AI SDK 7** | `ai` | **100 / 100** | clean sweep — now wires tools the v7 way (`inputSchema`, `stopWhen`). Was 90 on Opus 4.8 |
-| **Zod 4** | `zod` | **100 / 100** | clean sweep — the new 2-arg `z.record()` and unified `error`. Was 90 on Opus 4.8 |
-| **TanStack Query 5** | `@tanstack/react-query` | **100 / 100** | fully absorbed — every v4→v5 trap navigated |
+Live board: <https://sdkproof.dev>
 
-**The pattern:** it isn't how *recently* the SDK changed, it's how much warning
-the ecosystem had. TanStack Query v5 (2023) is fully absorbed (100), and the 2025
-majors (Zod, the Vercel AI SDK) are too — Opus 5 closed the gaps Opus 4.8 still
-had (90 → 100). React Router 8 is the newest major here and still scores 93,
-because v8 mostly finished removals v7 had already deprecated — years of "stop
-using this" signal to learn from. The misses cluster on changes that landed with
-no deprecation runway: Prisma 7's now-required driver `adapter` (87), Next 16's
-2-arg `revalidateTag()` (92), React Router's `meta()` rename. The gap re-opens on
-every major and shifts on every model release, so it's worth *monitoring*, not
-auditing once.
+## What this looks like in real code
 
-> **⭐ Star the repo** to get each new scorecard — or [**request one**](https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml): name any TypeScript package and it'll go on the board.
+TanStack Table v9 renamed its main hook `useReactTable` to `useTable`, and
+renamed the whole row-model family, so `getCoreRowModel` became
+`createCoreRowModel`.
 
-## For maintainers — put your score in your README
+Here's the v8 way to build a basic table. It's still what the model reaches
+for:
 
-Every scored library gets a badge. One line of markdown, and it links back to the
-full scorecard so anyone can check the number instead of taking it on faith:
+```ts
+import { useReactTable, getCoreRowModel, createColumnHelper } from "@tanstack/react-table";
 
-[![SDKProof: 100/100](https://sdkproof.dev/badge/zod.svg)](https://sdkproof.dev/zod.html?ref=badge)
+type User = { id: string; name: string };
 
-```markdown
-[![SDKProof: 100/100](https://sdkproof.dev/badge/zod.svg)](https://sdkproof.dev/zod.html?ref=badge)
+const helper = createColumnHelper<User>();
+const columns = [helper.accessor("id", {}), helper.accessor("name", {})];
+
+export function buildUserTable(data: User[]) {
+  return useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() });
+}
 ```
 
-**All six badges, plus a shields.io endpoint:** <https://sdkproof.dev/badge.html>
+Compiled against the real installed v9.1.2, the TypeScript compiler says:
 
-Two things worth knowing before you embed it. **The score can go down** — it's
-re-measured when a new model ships or your library ships a breaking major, and
-the badge follows the run. And **it measures the model, not your library**: a low
-score usually means your newest major is too recent for the training data, which
-isn't a defect in your code.
-
-Scores are also published as JSON at <https://sdkproof.dev/scores.json>.
-
-## Beyond the score: does your documentation actually reach the model?
-
-A score tells a maintainer how well models know their API — which they cannot
-change. The more useful question is whether the docs they *ship* close the gap.
-
-```bash
-npm start -- run --lib prisma --with-context --trials 3
+```
+error TS2724: '"@tanstack/react-table"' has no exported member named 'useReactTable'. Did you mean 'ReactTable'?
+error TS2724: '"@tanstack/react-table"' has no exported member named 'getCoreRowModel'. Did you mean 'createCoreRowModel'?
+error TS2558: Expected 2 type arguments, but got 1.
 ```
 
-Scores the same tasks twice: bare, and with the library's own agent files in
-context. The delta is the part a maintainer can act on.
+The v9 version that does compile is a different shape. Features are passed in a
+map now, and the column helper takes two type arguments:
 
-**What that turned up, measured across three libraries** ([full method and
-numbers](https://sdkproof.dev/agent-docs.html)):
+```ts
+import { useTable, createColumnHelper, rowSortingFeature } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
-- A **short sentence** quoted from a library's own docs fixes the failure it
-  names — **9–10 times out of 10**.
-- The **same sentence inside that library's own documentation** fixes nothing.
-  React Router's sits at line 182 of `framework-mode.md`; there it works 0/10.
-- **It is not length.** 25 KB of *unrelated* documentation leaves the fix
-  working (8/10). 7.3 KB of the library's *own routing docs* destroys it (0/10).
-  What crowds out a correction is the amount of same-domain material around it.
+const features = { rowSortingFeature };
+type Features = typeof features;
 
-Each scorecard then derives its own fix list from those measurements — see
-["What would move this number"](https://sdkproof.dev/prisma7.html). Rules, not a
-model: an item without a measurement behind it is never emitted.
+const helper = createColumnHelper<Features, User>();
+const columns: ColumnDef<Features, User, any>[] = [
+  helper.accessor("id", { header: "ID" }),
+  helper.accessor("name", { header: "Name" }),
+];
 
-**Also surveyed:** what nine TypeScript libraries actually publish for coding
-agents. Same filename, sizes from 2 KB to 5.7 MB, and no agreement on whether
-`llms.txt` is documentation or a list of links to it.
-→ [sdkproof.dev/agent-docs.html](https://sdkproof.dev/agent-docs.html)
+export function buildUserTable(data: User[]) {
+  return useTable<Features, User>({ features, columns, data });
+}
+```
 
-## How it works
+Nothing about the first one looks broken. You find out when you build.
 
-1. **Generate** — a model solves ~10–15 realistic tasks. Prompts name the functions, never the option names — so it measures what the model *reaches for*.
-2. **Type-check** — each solution is written into a fixture with the real installed package and run through `tsc --noEmit`.
-3. **Score** — pass = clean compile; failures are the compiler's own diagnostics, classified into failure patterns.
+## How the measurement works
 
-## Quick start
+1) **Tasks.** Each library gets 10–15 tasks. A task is a small realistic coding
+   job, like "build a table over a list of users & return it". The prompt names
+   the function to write, never the option names, so it measures what the model
+   reaches for on its own.
+2) **Compile.** Each answer is written into a fixture — a small real project
+   with that library actually installed — and run through `tsc --noEmit`, which
+   builds the file & reports errors without writing any output.
+3) **Score.** Pass = the file compiles clean. Any compiler error is a fail. The
+   score is passes / tasks on a 0–100 scale, higher is better. 100 means every
+   answer compiled.
 
-Requires **Node 20+** and a package manager.
+Failures are not graded by another model. They are the compiler's own error
+messages, grouped into patterns.
+
+## The board
+
+Every run below is one model, claude-opus-5, on the package version named in the
+last column.
+
+| Library | Package | Score | Compiled | Version | What it gets wrong |
+|---|---|:---:|:---:|---|---|
+| **TanStack React Table 9** | `@tanstack/react-table` | **0 / 100** | 0 of 12 | 9.1.2 | writes the v8 hook `useReactTable` & the old `getCoreRowModel` family, so not one of the 12 tasks compiled |
+| **Vercel AI SDK 7** | `ai` | **71 / 100** | 10 of 14 | 7.0.30 | inline callbacks still infer fine; it breaks when a task annotates the callback types, e.g. `TelemetrySettings` is no longer exported |
+| **Prisma 7** | `@prisma/client` | **87 / 100** | 13 of 15 | 7.8.0 | still sets the client up the v6 way — skips v7's now-required driver `adapter`, uses the removed `datasourceUrl` |
+| **Next.js 16** | `next` | **92 / 100** | 12 of 13 | 16.2.11 | calls `revalidateTag()` with one argument, Next 16 wants two |
+| **React Router 8** | `react-router` | **93 / 100** | 14 of 15 | 8.3.0 | `meta()` still reads the removed `data` argument, it's `loaderData` now |
+| **Stripe 22** | `stripe` | **100 / 100** | 10 of 10 | 22.4.0 | nothing on the tasks that ran — but the model refused 5 of 15, so this covers 10 |
+| **TanStack Query 5** | `@tanstack/react-query` | **100 / 100** | 13 of 13 | 5.101.4 | nothing, every v4 → v5 change handled |
+| **Zod 4** | `zod` | **100 / 100** | 10 of 10 | 4.4.3 | nothing, writes v4 throughout |
+
+A refusal is not a pass & not a fail. The model wrote no code, so nothing about
+the library was tested, and those tasks are dropped from the denominator. That's
+why Stripe's 100 is out of 10 and not 15.
+
+Full scorecards with the raw compiler errors are in `scorecards/` & on the live site.
+
+## Recency is not what predicts the score
+
+The obvious guess is that the newest big release scores worst. It doesn't work
+that way.
+
+What matters is whether the removed thing was still the **recommended** way
+until recently. If a library deprecates something, leaves it in for a year and
+tells everyone to stop using it, the model has read a thousand migration guides
+by the time it's deleted, so it writes the new way.
+
+If a library renames or moves something with no warning, the model still writes
+the old name. As far as its training data is concerned, the old name is the
+answer, and there is nothing in there saying otherwise.
+
+React Router 8 removed plenty & scores 93, because v8 mostly finished removals
+that v7 had already deprecated. TanStack Table 9 renamed the main hook outright
+and scores 0.
+
+## How to read a score
+
+**It measures the model, not the library.** A 0 is not a defect in the library's
+code, it means this model doesn't know that version yet. A maintainer can't fix
+their score by changing their API.
+
+A score is also one model at one moment. New model ships, the number moves up;
+the library ships a big release, it moves down. So the board gets re-run rather
+than published once.
+
+Two reasons to care, depending on who you are. If you write code with an AI
+assistant, this is why it keeps handing you code that won't build, and which
+libraries it happens on. If you maintain a library, this is the version of your
+API your users' assistants are writing today.
+
+What the score does **not** tell you: whether the library is any good, or
+whether the generated code actually does the right thing once it runs.
+
+## What this method can't tell you
+
+Said up front, before anyone asks:
+
+- **One model.** Everything on the board is claude-opus-5. Another model gives
+  another board.
+- **One shot.** Each task is asked once. No retries, no follow-up, no pasting
+  the compiler error back in. A real person would fix most of these on the
+  second try.
+- **No docs.** The model gets the task and nothing else — no README, no
+  `llms.txt`, no web search. That's deliberate, but it makes this a floor, not a
+  ceiling.
+- **Small numbers.** 10–15 tasks per library. The 95% intervals are wide
+  (TanStack Table's 0% is really 0–24%). Read these as directional, not exact.
+- **Type-check only.** Passing means it compiles, not that it runs or that it's
+  correct. A well-typed wrong answer passes.
+- **The tasks are hand-written**, and they aim at the parts of the API that
+  changed. A different task set gives a different number.
+
+## Run it yourself
+
+There is no npm package, no `npx`. Clone the repo. Needs Node 20+.
 
 ```bash
+git clone https://github.com/Kalpitrathore/sdkproof
+cd sdkproof
 npm install
-npm run setup            # generates the Prisma fixture client (only needed for Prisma)
-npm test                 # unit tests (verify / classify / score / extract)
-
-# Try the pipeline offline — no API key needed (two synthetic models):
-npm start -- run --lib prisma --fake
+npm test                              # unit tests
+npm start -- run --lib zod --fake     # whole pipeline offline, no API key
 ```
 
-### Real scorecards
-
-Put your key(s) in a local `.env` (gitignored):
+A real run needs an Anthropic key (a few cents per run):
 
 ```bash
-cp .env.example .env     # then add ANTHROPIC_API_KEY
+cp .env.example .env                  # then add ANTHROPIC_API_KEY
+npm start -- run --lib zod
 ```
 
-Get an Anthropic key at <https://console.anthropic.com> (a run costs a few cents).
-OpenAI is optional — set `OPENAI_API_KEY` (+ `SDKPROOF_OPENAI_MODEL`) to also score GPT.
+Library ids: `zod`, `aisdk`, `prisma`, `nextjs`, `react-router`, `react-table`,
+`tanstack-query`, `stripe`. Prisma needs `npm run setup` first, which generates
+the client for its fixture.
 
-```bash
-npm start -- run --lib prisma     # or: aisdk, zod, tanstack-query, nextjs, react-router, stripe
-npm start -- run --lib tanstack-query
-npm start -- run --lib nextjs
-```
+Results land in `scorecards/<lib>.md` & `data/<lib>.result.json`. Flags:
+`--fake` (offline), `--limit N`, `--tasks <file>`, `--trials N`, and
+`--with-context`, which re-runs the same tasks with the library's own agent docs
+loaded so you can see if the docs close the gap. Set `OPENAI_API_KEY` to score a
+GPT model alongside.
 
-Outputs land in `scorecards/<lib>.md` and `data/<lib>.result.json`.
-Flags: `--fake` (offline), `--limit N`, `--tasks <file>` (custom task set).
+## Add a library
 
-## Add your own SDK
+1) `npm i <package>`, then create `fixtures/<lib>/tsconfig.json`.
+2) Write `fixtures/<lib>/known-good.ts`: code you have confirmed compiles on the
+   new version. If the fixture is wrong everything scores 0 for the wrong
+   reason, so `npm test` compiles it for you.
+3) Add a `LibrarySpec` in `src/libraries/<lib>.ts` & register it in
+   `src/libraries/index.ts`.
+4) Write `data/<lib>.tasks.json`, some ordinary tasks and some aimed at what the
+   new version changed. Then `npm start -- run --lib <lib>`.
 
-1. `npm i <package>` and create `fixtures/<lib>/tsconfig.json` (see `fixtures/aisdk` for a plain package, `fixtures/prisma` for one needing codegen).
-2. Add a `LibrarySpec` in `src/libraries/<lib>.ts` (the `docsHint` should name the functions but **not** the drift-prone option names).
-3. Write `data/<lib>.tasks.json` — a mix of core tasks (should pass) and version-specific tasks (the drift).
-4. Register it in `SPECS` in `src/cli.ts`, then `npm start -- run --lib <lib>`.
-
-## Layout
-
-```
-src/
-  types.ts            shared types
-  libraries/          LibrarySpec per SDK (prisma, aisdk, zod, tanstack-query, nextjs, react-router, stripe)
-  context.ts          loads a library's own agent docs for --with-context
-  recommend.ts        measurements -> a maintainer's fix list
-  prompt.ts           generation prompt + code extraction
-  generate.ts         (task × model) -> candidate
-  verify.ts           type-check a candidate against the fixture   [load-bearing]
-  classify.ts         tsc errors -> ranked failure patterns
-  score.ts            verdicts -> Result
-  report.ts           Result -> scorecard.md
-  models/             anthropic / openai / fake adapters
-  cli.ts              `sdkproof run --lib <id>`
-fixtures/<lib>/       tsconfig + any generated client
-data/                 <lib>.tasks.json (committed) + run outputs (gitignored)
-scorecards/           per-SDK scorecards (.md + shareable .html)
-test/                 unit tests
-```
-
-## Method notes
-
-Type-check only — it measures whether the generated code uses the real, current
-API surface, **not** whether it runs. Scores are directional; the clone/version
-landscape moves, so re-verify before acting on any single result.
+The pipeline itself is `src/generate.ts` (task to code), `src/verify.ts` (code
+to compiler, the load-bearing bit), `src/classify.ts` (errors to patterns) and
+`src/report.ts` (result to scorecard).
 
 ---
 
-_Independent analysis. Scorecards are not affiliated with or endorsed by the libraries scored._
+_Independent analysis. Scorecards are not affiliated with or endorsed by the
+libraries scored._

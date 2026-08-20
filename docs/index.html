@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="How well do AI coding agents write your SDK's current API? Type-checked scorecards on Claude Opus 5 — the compiler decides, not an LLM judge.">
-<title>SDKProof — How ready is your SDK for AI coding agents?</title>
+<title>SDKProof — why AI coding assistants write library code that won't compile</title>
 <link rel="canonical" href="https://sdkproof.dev/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -39,265 +39,651 @@
 </head>
 <body>
 <style>
+  /* ---------- tokens: light is the base, dark is a redefinition ---------- */
   :root {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --warn: #9a6700; --fail: #cf222e;
-    --track: #e2e8ee; --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
+    color-scheme: light;
+    --bg: #f7f8f7;
+    --bg-line: rgba(14,18,22,.055);
+    --panel: #ffffff;
+    --panel-2: #f1f3f2;
+    --ink: #0e1216;
+    --ink-soft: #4a545e;
+    --ink-faint: #78838e;
+    --line: #e2e7e5;
+    --line-2: #d1d8d5;
+    --accent: #0a7f74;
+    --accent-soft: #e4f2f0;
+    --on-accent: #ffffff;
+    --pass: #16794a;
+    --warn: #9a6a00;
+    --fail: #c62f3b;
+    --code-bg: #fbfcfb;
+    --tok-com: #79848f;
+    --tok-kw: #8b34c9;
+    --tok-str: #0b6484;
+    --tok-fn: #a4560a;
+    --tok-typ: #0a7f74;
+    --hi-bad: rgba(198,47,59,.13);
+    --hi-good: rgba(22,121,74,.13);
+    --shadow: 0 1px 2px rgba(14,18,22,.05), 0 14px 34px rgba(14,18,22,.07);
     --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-      --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --warn: #d29922; --fail: #f85149;
-      --track: #222c37; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0a0d11;
+      --bg-line: rgba(255,255,255,.045);
+      --panel: #0f141a;
+      --panel-2: #141a22;
+      --ink: #e9eff4;
+      --ink-soft: #a0aeba;
+      --ink-faint: #6e7c89;
+      --line: #1d2530;
+      --line-2: #2b3542;
+      --accent: #3fd8b8;
+      --accent-soft: #0d2b27;
+      --on-accent: #04211d;
+      --pass: #3ecf7f;
+      --warn: #e0a83a;
+      --fail: #f2656f;
+      --code-bg: #0c1117;
+      --tok-com: #6e7c89;
+      --tok-kw: #c48cf5;
+      --tok-str: #7cc7f0;
+      --tok-fn: #f0b866;
+      --tok-typ: #4fd6bd;
+      --hi-bad: rgba(242,101,111,.17);
+      --hi-good: rgba(62,207,127,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
     }
   }
-  :root[data-theme="light"] {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --warn: #9a6700; --fail: #cf222e;
-    --track: #e2e8ee; --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
-  }
   :root[data-theme="dark"] {
-    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-    --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --warn: #d29922; --fail: #f85149;
-    --track: #222c37; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+    color-scheme: dark;
+    --bg: #0a0d11;
+    --bg-line: rgba(255,255,255,.045);
+    --panel: #0f141a;
+    --panel-2: #141a22;
+    --ink: #e9eff4;
+    --ink-soft: #a0aeba;
+    --ink-faint: #6e7c89;
+    --line: #1d2530;
+    --line-2: #2b3542;
+    --accent: #3fd8b8;
+    --accent-soft: #0d2b27;
+    --on-accent: #04211d;
+    --pass: #3ecf7f;
+    --warn: #e0a83a;
+    --fail: #f2656f;
+    --code-bg: #0c1117;
+    --tok-com: #6e7c89;
+    --tok-kw: #c48cf5;
+    --tok-str: #7cc7f0;
+    --tok-fn: #f0b866;
+    --tok-typ: #4fd6bd;
+    --hi-bad: rgba(242,101,111,.17);
+    --hi-good: rgba(62,207,127,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
   }
+
+  /* ---------- base ---------- */
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 90px; }
-  h1, h2, h3 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
-  code { font-family: var(--font-mono); }
-  a { color: var(--brand); }
-  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--bg-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-line) 1px, transparent 1px);
+    background-size: 72px 72px, 72px 72px;
+    background-position: -1px -1px, -1px -1px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.62;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 96px; }
+  h1, h2, h3 { margin: 0; letter-spacing: -.022em; line-height: 1.1; text-wrap: balance; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  code, pre, .num { font-family: var(--font-mono); }
+  code { font-size: .9em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
-  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
-  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); }
-  .logo b { color: var(--brand); }
-  .mast .gh { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-decoration: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 11px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--ink-faint); display: block;
+  }
+  .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
-  .hero { padding: 40px 0 30px; border-bottom: 1px solid var(--line-strong); margin-bottom: 34px; }
-  .hero h1 { font-size: clamp(30px, 6vw, 52px); font-weight: 800; }
-  .hero .sub { color: var(--ink-soft); font-size: 18px; margin: 16px 0 0; max-width: 60ch; }
-  .hero .sub b { color: var(--ink); }
-  .hero .judge { font-family: var(--font-mono); font-size: 13px; color: var(--brand); margin-top: 18px; }
+  /* ---------- masthead ---------- */
+  .mast { display: flex; align-items: center; gap: 12px; padding: 24px 0 0; }
+  .logo { font-weight: 700; font-size: 16px; letter-spacing: -.03em; color: var(--ink); }
+  .logo b { color: var(--accent); font-weight: 700; }
+  .mast .gh {
+    margin-left: auto; font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 14px;
+  }
+  .mast .gh:hover { border-color: var(--accent); color: var(--accent); }
 
-  .board { display: grid; grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); gap: 14px; margin: 4px 0 6px; }
-  @media (max-width: 700px) { .board { grid-template-columns: 1fr; } }
-  .card { background: var(--panel); border: 1px solid var(--line-strong); border-radius: 15px; padding: 20px; box-shadow: var(--shadow); text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: border-color .12s; }
-  .card:hover { border-color: var(--brand); }
-  .card .name { font-weight: 750; font-size: 18px; }
-  .card .pkg { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 2px; }
-  .card .score { font-family: var(--font-mono); font-size: 46px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; margin: 16px 0 4px; }
-  .card .score .d { font-size: 18px; color: var(--ink-faint); font-weight: 700; }
-  .card .bar { height: 6px; border-radius: 999px; background: var(--track); overflow: hidden; }
-  .card .bar .fill { height: 100%; border-radius: 999px; }
-  .card .gap { font-size: 13.5px; color: var(--ink-soft); margin-top: 12px; flex: 1; }
-  .card .gap b { color: var(--ink); }
-  .card .view { font-family: var(--font-mono); font-size: 12px; color: var(--brand); margin-top: 14px; font-weight: 650; }
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 52px; }
+  .hero h1 {
+    font-size: clamp(38px, 8.4vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: .98;
+    margin: 20px 0 0;
+  }
+  .hero h1 .dim { color: var(--ink-faint); display: block; }
+  .lede { max-width: 62ch; margin-top: 30px; }
+  .lede p { color: var(--ink-soft); font-size: clamp(16px, 2.1vw, 19px); margin-bottom: 16px; }
+  .lede p:last-child { margin-bottom: 0; }
+  .lede b { color: var(--ink); font-weight: 650; }
+  .verdict-line {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 26px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 7px 16px 7px 12px;
+  }
+  .verdict-line svg { flex: none; }
 
-  .sec-head { margin: 50px 0 18px; }
-  .sec-head h2 { font-size: clamp(20px, 3.4vw, 27px); font-weight: 780; margin-top: 8px; }
-  .sec-head p { color: var(--ink-soft); font-size: 15px; margin: 8px 0 0; max-width: 66ch; }
+  /* ---------- stat strip ---------- */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2);
+  }
+  .stats div { padding: 22px 20px 20px; border-left: 1px solid var(--line); }
+  .stats div:first-child { border-left: 0; padding-left: 0; }
+  .stats .n {
+    font-family: var(--font-mono); font-size: clamp(28px, 4.6vw, 42px); font-weight: 700;
+    letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; display: block;
+  }
+  .stats .k { font-size: 12.5px; color: var(--ink-faint); margin-top: 10px; display: block; line-height: 1.35; }
+  .stats .bad .n { color: var(--fail); }
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stats div { padding: 18px 14px; }
+    .stats div:nth-child(3) { border-left: 0; padding-left: 0; }
+    .stats div:nth-child(3), .stats div:nth-child(4) { border-top: 1px solid var(--line); }
+  }
 
-  .insight { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--brand); border-radius: 13px; padding: 22px 24px; }
-  .insight p { margin: 0 0 12px; color: var(--ink-soft); font-size: 15.5px; } .insight p:last-child { margin-bottom: 0; }
-  .insight b { color: var(--ink); }
+  /* ---------- section heads ---------- */
+  .sec { margin-top: 86px; }
+  .sec > .head { max-width: 66ch; margin-bottom: 26px; }
+  .sec h2 { font-size: clamp(25px, 4.2vw, 38px); font-weight: 780; margin: 12px 0 0; }
+  .sec .head p { color: var(--ink-soft); font-size: 16.5px; margin-top: 14px; }
+  .sec .head p b { color: var(--ink); font-weight: 650; }
+  .sec .head p + p { margin-top: 12px; }
 
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  @media (max-width: 700px) { .steps { grid-template-columns: 1fr; } }
-  .step { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 19px; }
-  .step .n { font-family: var(--font-mono); font-size: 12px; color: var(--brand); font-weight: 700; }
-  .step h3 { font-size: 15px; font-weight: 700; margin: 8px 0 6px; }
-  .step p { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
-  .step code { font-size: 12px; }
+  /* ---------- code comparison ---------- */
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .cmp { grid-template-columns: 1fr; } }
+  .pane {
+    margin: 0; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .pane figcaption {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  }
+  .pane .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .pane.bad .dot { background: var(--fail); }
+  .pane.good .dot { background: var(--pass); }
+  .pane .pl { font-size: 13.5px; font-weight: 650; color: var(--ink); }
+  .pane .pv { margin-left: auto; font-size: 11.5px; color: var(--ink-faint); }
+  .pane .scroll { overflow-x: auto; background: var(--code-bg); }
+  .pane pre {
+    margin: 0; padding: 18px 18px 20px; font-size: 12.5px; line-height: 1.72;
+    color: var(--ink); tab-size: 2;
+  }
+  .pane .out {
+    border-top: 1px solid var(--line); padding: 13px 16px; font-family: var(--font-mono);
+    font-size: 11.5px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .pane.bad .out { color: var(--fail); background: var(--hi-bad); }
+  .pane.good .out { color: var(--pass); background: var(--hi-good); }
+  .c-com { color: var(--tok-com); }
+  .c-kw  { color: var(--tok-kw); }
+  .c-str { color: var(--tok-str); }
+  .c-fn  { color: var(--tok-fn); }
+  .c-typ { color: var(--tok-typ); }
+  .bad-t  { background: var(--hi-bad); border-bottom: 1.5px solid var(--fail); border-radius: 2px; padding: 0 2px; }
+  .good-t { background: var(--hi-good); border-bottom: 1.5px solid var(--pass); border-radius: 2px; padding: 0 2px; }
+  .cap { font-size: 13px; color: var(--ink-faint); margin-top: 16px; max-width: 70ch; }
 
+  /* ---------- board ---------- */
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); gap: 16px; }
+  .card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 20px; box-shadow: var(--shadow); transition: border-color .13s, transform .13s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .card .name { font-size: 17px; font-weight: 720; letter-spacing: -.02em; }
+  .card .score {
+    font-family: var(--font-mono); font-size: 34px; font-weight: 700; letter-spacing: -.04em;
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .card .score s { text-decoration: none; font-size: 14px; color: var(--ink-faint); }
+  .card .pkg { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+  .s-fail { color: var(--fail); }
+  .s-warn { color: var(--warn); }
+  .s-ok   { color: var(--ink); }
+  .s-pass { color: var(--pass); }
+  .ticks { display: flex; gap: 3px; margin: 16px 0 8px; }
+  .ticks i { flex: 1 1 0; height: 9px; border-radius: 2px; background: var(--pass); }
+  .ticks i.x { background: var(--fail); }
+  .ratio { font-size: 12.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .ratio b { color: var(--ink-soft); font-weight: 650; }
+  .card .why { font-size: 13.5px; color: var(--ink-soft); margin-top: 13px; flex: 1; }
+  .card .why b { color: var(--ink); font-weight: 650; }
+  .card .go { font-size: 12.5px; font-weight: 650; color: var(--accent); margin-top: 16px; }
+
+  /* ---------- ask row ---------- */
+  .ask {
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    margin-top: 18px; padding: 18px 22px; background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 14px;
+  }
+  .ask p { color: var(--ink-soft); font-size: 14.5px; max-width: 58ch; }
+  .ask p b { color: var(--ink); font-weight: 650; }
+  .btn {
+    display: inline-block; font-size: 14px; font-weight: 650; text-decoration: none;
+    background: var(--accent); color: var(--on-accent); padding: 11px 20px; border-radius: 9px;
+    white-space: nowrap;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); padding: 9.5px 18.5px; }
+  .btn:hover { filter: brightness(1.06); }
+
+  /* ---------- steps ---------- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .step svg { display: block; width: 100%; max-width: 116px; height: auto; color: var(--accent); margin-bottom: 18px; }
+  .step .n { font-size: 11px; font-weight: 700; letter-spacing: .17em; color: var(--ink-faint); }
+  .step h3 { font-size: 17px; font-weight: 700; margin: 8px 0 8px; }
+  .step p { font-size: 14px; color: var(--ink-soft); }
+
+  /* ---------- drift figure ---------- */
+  .figwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); padding: 20px 18px 12px; }
+  .figwrap svg { display: block; width: 100%; min-width: 520px; max-width: 800px; height: auto; margin: 0 auto; }
+  .meaning { max-width: 66ch; margin-bottom: 26px; }
+  .meaning p { color: var(--ink-soft); font-size: 16.5px; margin-bottom: 14px; }
+  .meaning p:last-child { margin-bottom: 0; }
+  .meaning p b { color: var(--ink); font-weight: 650; }
+  .fig-ax { font-size: 13px; fill: var(--ink-soft); }
+  .fig-lab { font-size: 11.5px; letter-spacing: 1.4px; fill: var(--ink-faint); }
+  .fig-note { font-size: 13.5px; font-weight: 600; fill: var(--ink); }
+  .fig-note2 { font-size: 13px; fill: var(--ink-soft); }
+
+  /* ---------- limits ---------- */
+  .limits { border-top: 1px solid var(--line-2); }
+  .limits div { display: grid; grid-template-columns: 168px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .limits dt { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .limits dd { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+  .limits dd code { color: var(--ink); }
+  @media (max-width: 640px) { .limits div { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ---------- finding ---------- */
+  .finding {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap; text-decoration: none;
+    margin-top: 24px; padding: 20px 22px; background: var(--panel);
+    border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0;
+  }
+  .finding:hover { border-color: var(--accent); }
+  .finding .fl { font-size: 10.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .finding .ft { flex: 1; min-width: 250px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .finding .fa { font-size: 13px; font-weight: 650; color: var(--accent); white-space: nowrap; }
+
+  /* ---------- next ---------- */
   .next { display: flex; flex-wrap: wrap; gap: 10px; }
-  .npill { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; }
-  .npill b { color: var(--ink); }
+  .npill { font-size: 13px; color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 15px; }
+  .npill b { color: var(--ink); font-weight: 650; }
 
-  /* The board's own ask. Every CTA on this page used to live below the fold —
-     Clarity put average scroll at 49.6%, and in twelve days the request template
-     was never once used. This one sits where people actually stop. */
-  .ask { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
-         margin: 18px 0 6px; padding: 15px 20px; background: var(--panel);
-         border: 1px solid var(--line-strong); border-radius: 13px; }
-  .ask p { margin: 0; color: var(--ink-soft); font-size: 14.5px; max-width: 60ch; }
-  .ask p b { color: var(--ink); }
-  .ask .row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .ask .btn { display: inline-block; font-family: var(--font-mono); font-size: 13px; font-weight: 650;
-              background: var(--brand); color: var(--brand-ink); padding: 10px 18px; border-radius: 9px;
-              text-decoration: none; white-space: nowrap; }
-  .ask .plain { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-faint);
-                text-decoration: none; white-space: nowrap; }
-  .ask .plain:hover { color: var(--brand); }
-  .finding { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 26px 0 0; padding: 15px 20px;
-             background: var(--panel-2); border: 1px solid var(--line-strong); border-left: 3px solid var(--brand);
-             border-radius: 0 12px 12px 0; text-decoration: none; }
-  .finding .fl { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
-                 color: var(--brand); font-weight: 700; white-space: nowrap; }
-  .finding .ft { color: var(--ink); font-size: 14.5px; font-weight: 600; flex: 1; min-width: 260px; }
-  .finding .fa { font-family: var(--font-mono); font-size: 12.5px; color: var(--brand); white-space: nowrap; }
-  .finding:hover { border-color: var(--brand); }
-  .cta { text-align: center; margin-top: 50px; padding: 32px 24px; background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--line-strong); border-radius: 16px; }
-  .cta h2 { font-size: clamp(21px, 3.6vw, 27px); font-weight: 800; }
-  .cta p { color: var(--ink-soft); font-size: 15px; margin: 12px auto 20px; max-width: 54ch; }
-  .cta .btn { display: inline-block; font-family: var(--font-mono); font-size: 14px; font-weight: 650; background: var(--brand); color: var(--brand-ink); padding: 12px 24px; border-radius: 9px; text-decoration: none; }
-  .cta .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .cta .btn.ghost { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); padding: 10.5px 22px; }
-  .cta .note { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 16px; }
+  /* ---------- closing ---------- */
+  .close {
+    margin-top: 80px; padding: 44px 32px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px;
+  }
+  .close h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
+  .close p { color: var(--ink-soft); font-size: 16px; margin: 14px auto 24px; max-width: 52ch; }
+  .close .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .close .note { font-size: 12.5px; color: var(--ink-faint); margin-top: 20px; }
 
-  footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
-  footer .fine { margin: 0; }
+  /* ---------- footer ---------- */
+  footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
+  footer .fine { margin: 0; max-width: 78ch; }
+  footer a { color: var(--ink-soft); }
 
-  /* Inter — the face both Peerlist and DevHunt set their own product names in.
-     Self-hosted latin subset; used only for the two brand names below. */
+  /* Inter — the face Peerlist and DevHunt set their own product names in.
+     Self-hosted latin subset, used only for the two brand names below. */
   @font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url(inter-600-latin.woff2) format("woff2"); }
-
-  /* Launch links — same ghost-button treatment as the CTA, sized for the footer. */
-  .launched { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
-  .launched a { font-family: var(--font-mono); font-size: 12.5px; font-weight: 650; color: var(--brand); border: 1px solid var(--brand); border-radius: 9px; padding: 9px 16px; text-decoration: none; transition: background .12s, color .12s; }
+  .launched { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+  .launched a { font-size: 12.5px; font-weight: 650; color: var(--accent); border: 1px solid var(--accent); border-radius: 9px; padding: 9px 16px; text-decoration: none; }
+  .launched a:hover { background: var(--accent); color: var(--on-accent); }
   .launched .brand { font-family: "Inter", var(--font-body); font-size: 13.5px; font-weight: 600; letter-spacing: -.01em; }
   .launched .sep { margin: 0 .34em; font-weight: 400; opacity: .6; }
-  .launched a:hover { background: var(--brand); color: var(--brand-ink); }
-  .launched a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
 </style>
 
 <div class="wrap">
+
   <div class="mast">
     <a href="index.html" aria-label="SDKProof home" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span></a>
-    <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">GitHub ↗</a>
+    <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">Source on GitHub</a>
   </div>
 
   <header class="hero">
-    <h1>How ready is your SDK for AI coding agents?</h1>
-    <p class="sub">When a library ships a breaking major, AI assistants keep writing the <b>old</b> API — it looks right, but it doesn't compile against the new version. SDKProof measures exactly how much: it has a model solve real tasks, then <b>type-checks the code against your real installed package.</b></p>
-    <div class="judge">// no LLM judge — the compiler decides. pass = compiles clean.</div>
+    <span class="eyebrow">AI-readiness, measured by a compiler</span>
+    <h1>The code looks right.<span class="dim">It doesn't compile.</span></h1>
   </header>
 
-  <div class="sec-head">
-    <span class="eyebrow">The board</span>
-    <h2>Scorecards</h2>
-    <p>Each score is <code>claude-opus-5</code> across ~10–15 realistic tasks, type-checked against the current package.</p>
+  <div class="lede">
+    <p>AI coding assistants write library code from memory. When a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it fails to build.</p>
+    <p><b>SDKProof measures how often that happens.</b> It gives a model real coding jobs, then compiles every answer against the real installed package with <code>tsc</code>, the TypeScript compiler. A task passes only if it compiles.</p>
+    <p class="verdict-line">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+      No AI judges another AI. The compiler decides.
+    </p>
   </div>
 
-  <div class="board">
-    <a class="card" href="prisma7.html">
-      <div class="name">Prisma 7</div>
-      <div class="pkg">@prisma/client</div>
-      <div class="score">87<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:87%;background:var(--warn)"></div></div>
-      <div class="gap">Nails the query API and the new <b>$extends</b> — only slips on <b>client construction</b>: v7's required driver <b>adapter</b> and the removed <b>datasourceUrl</b>.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="react-router.html">
-      <div class="name">React Router 8</div>
-      <div class="pkg">react-router</div>
-      <div class="score">93<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:93%;background:var(--pass)"></div></div>
-      <div class="gap">Drops the deleted <b>json()</b> and <b>defer()</b> unprompted and reads middleware <b>context.get()</b> the v8 way — but <b>meta()</b> still takes the removed <b>data</b> arg, now <b>loaderData</b>.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="nextjs.html">
-      <div class="name">Next.js 16</div>
-      <div class="pkg">next</div>
-      <div class="score">92<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:92%;background:var(--pass)"></div></div>
-      <div class="gap">Knows the Next 15 async APIs cold — only misses <b>Next 16's</b> new 2-arg <b>revalidateTag()</b>.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="aisdk.html">
-      <div class="name">Vercel AI SDK 7</div>
-      <div class="pkg">ai</div>
-      <div class="score">100<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
-      <div class="gap">Clean sweep on Opus 5 — now wires tools the v7 way (<b>inputSchema</b>, <b>stopWhen</b>). Was 90 on Opus 4.8.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="zod.html">
-      <div class="name">Zod 4</div>
-      <div class="pkg">zod</div>
-      <div class="score">100<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
-      <div class="gap">Clean sweep on Opus 5 — the new 2-arg <b>z.record()</b> and the unified <b>error</b> option. Was 90 on Opus 4.8.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="stripe.html">
-      <div class="name">Stripe 22</div>
-      <div class="pkg">stripe</div>
-      <div class="score">100<span class="d">/100</span></div>
-      <!-- Bar tracks the printed score, so it stays at 100. The split lives in the
-           text below rather than as a 67%-filled bar under a "100/100" label,
-           which reads as a rendering bug rather than as two rates. -->
-      <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
-      <div class="gap"><b>100% of the answers, 67% of the tasks.</b> Clean on every task that ran, including the pinned <b>apiVersion</b> literal and <b>Stripe.Decimal</b> — but the model <b>refused 5 of 15</b>, so the score covers 10.</div>
-      <div class="view">View scorecard →</div>
-    </a>
-    <a class="card" href="tanstack-query.html">
-      <div class="name">TanStack Query 5</div>
-      <div class="pkg">@tanstack/react-query</div>
-      <div class="score">100<span class="d">/100</span></div>
-      <div class="bar"><div class="fill" style="width:100%;background:var(--pass)"></div></div>
-      <div class="gap">Fully absorbed — nails every v4→v5 trap: <b>gcTime</b>, <b>placeholderData</b>, <b>'pending'</b>, <b>initialPageParam</b>.</div>
-      <div class="view">View scorecard →</div>
-    </a>
+  <div class="stats" style="margin-top:52px">
+    <div><span class="n">8</span><span class="k">libraries scored</span></div>
+    <div><span class="n">102</span><span class="k">answers put through the compiler</span></div>
+    <div class="bad"><span class="n">20</span><span class="k">of them did not compile</span></div>
+    <div><span class="n">0</span><span class="k">judged by another AI</span></div>
   </div>
 
-  <div class="ask">
-    <p><b>Want your library on this board?</b> Name any TypeScript package &amp; I'll type-check how well AI writes its current API. React Router 8 is here because someone asked.</p>
-    <div class="row">
-      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
-      <a class="plain" href="https://github.com/Kalpitrathore/sdkproof">★ Star for new ones</a>
+  <!-- ================= the example ================= -->
+  <section class="sec" id="drift">
+    <div class="head">
+      <span class="eyebrow">What it looks like</span>
+      <h2>TanStack Table v9 renamed the hook. The model kept writing v8.</h2>
+      <p>v9 dropped <code>useReactTable</code> and <code>createTable</code> from the main entry point, and replaced the <code>getCoreRowModel()</code> family with a <code>features</code> map you pass in yourself. Every type now takes that feature set as its first type argument.</p>
+      <p>I gave Claude Opus 5 twelve ordinary table jobs: build a table, sort it, paginate it. <b>All twelve failed to compile.</b> It wrote the v8 API every time, so that's 0 out of 100.</p>
     </div>
-  </div>
 
-  <a class="finding" href="agent-docs.html">
-    <span class="fl">New measurement</span>
-    <span class="ft">A library's own docs bury its own correction — one sentence fixes what 25&nbsp;KB of their documentation doesn't</span>
-    <span class="fa">Read the numbers →</span>
-  </a>
+    <div class="cmp">
+      <figure class="pane bad">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What the model wrote</span>
+          <code class="pv">@tanstack/react-table 9.1.2</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import</span> {
+  <span class="bad-t">createTable</span>,
+  <span class="bad-t">getCoreRowModel</span>,
+  <span class="c-kw">type</span> <span class="c-typ">ColumnDef</span>,
+  <span class="c-kw">type</span> <span class="c-typ">Table</span>,
+} <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table"</span>;
 
-  <div class="sec-head">
-    <span class="eyebrow">What the scores mean</span>
-    <h2>Readiness tracks the drift window</h2>
-  </div>
-  <div class="insight">
-    <p><b>The score isn't about how smart the model is — it's about how recently your SDK changed.</b> TanStack Query v5 (2023) is fully absorbed — a perfect 100. The 2025 majors (Zod, the Vercel AI SDK) are now fully absorbed too, at 100 — Opus 5 closed the gaps Opus 4.8 still had. The freshest releases are where the agent still writes the old API: Next.js 16 misses only its brand-new 2-arg <b>revalidateTag()</b> (92), while Prisma 7's driver-adapter overhaul keeps it at 87.</p>
-    <p>Right after a major the gap is wide; as models retrain it narrows — then re-opens on your next major and shifts on every model release. It's a <b>moving number</b>, which is why it's worth monitoring, not auditing once.</p>
-  </div>
+<span class="c-kw">export function</span> <span class="c-fn">buildUserTable</span>(data: <span class="c-typ">User</span>[]): <span class="c-typ">Table</span>&lt;<span class="c-typ">User</span>&gt; {
+  <span class="c-kw">const</span> columns: <span class="c-typ">ColumnDef</span>&lt;<span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;[] = [
+    { id: <span class="c-str">"id"</span>,   accessorKey: <span class="c-str">"id"</span>,   header: <span class="c-str">"ID"</span> },
+    { id: <span class="c-str">"name"</span>, accessorKey: <span class="c-str">"name"</span>, header: <span class="c-str">"Name"</span> },
+  ];
 
-  <div class="sec-head">
-    <span class="eyebrow">How it works</span>
-    <h2>Three steps, one honest signal</h2>
-  </div>
-  <div class="steps">
-    <div class="step"><div class="n">01</div><h3>Generate</h3><p>A model solves ~10–15 realistic tasks for the library. Prompts name the functions, never the option names.</p></div>
-    <div class="step"><div class="n">02</div><h3>Type-check</h3><p>Each solution is dropped into a project with the <b>real installed package</b> and run through <code>tsc --noEmit</code>.</p></div>
-    <div class="step"><div class="n">03</div><h3>Score</h3><p>Pass = compiles clean. Failures are the compiler's own diagnostics — hallucinated members, wrong args, removed options.</p></div>
-  </div>
+  <span class="c-kw">return</span> <span class="bad-t">createTable</span>&lt;<span class="c-typ">User</span>&gt;({
+    data,
+    columns,
+    <span class="bad-t">getCoreRowModel</span>: <span class="bad-t">getCoreRowModel</span>&lt;<span class="c-typ">User</span>&gt;(),
+    state: {},
+    onStateChange: () =&gt; {},
+    renderFallbackValue: <span class="c-kw">null</span>,
+  });
+}</code></pre></div>
+        <p class="out">error TS2724: '"@tanstack/react-table"' has no exported member named 'createTable'. Did you mean 'ReactTable'?
+error TS2558: Expected 2 type arguments, but got 1.</p>
+      </figure>
 
-  <div class="sec-head">
-    <span class="eyebrow">On the board next</span>
-    <h2>Scoring soon</h2>
-  </div>
-  <div class="next">
-    <span class="npill"><b>tRPC v11</b> — breaking changes across the client API</span>
-    <span class="npill"><b>Clerk v6</b> — <code>auth()</code> now async</span>
-    <span class="npill"><b>Drizzle ORM</b> — fast-moving schema &amp; query API</span>
-  </div>
+      <figure class="pane good">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What v9 actually compiles</span>
+          <code class="pv">@tanstack/react-table 9.1.2</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import type</span> { <span class="c-typ">ColumnDef</span> } <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table"</span>;
+<span class="c-kw">import</span> {
+  <span class="good-t">useTable</span>,
+  <span class="c-fn">createColumnHelper</span>,
+  <span class="good-t">rowSortingFeature</span>,
+} <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table"</span>;
 
-  <div class="cta">
-    <h2>Score my SDK</h2>
-    <p>Name any TypeScript package &amp; I'll type-check how well AI writes its current API — or run it yourself, it's open source.</p>
+<span class="c-kw">const</span> <span class="good-t">features</span> = { rowSortingFeature };
+<span class="c-kw">type</span> <span class="c-typ">Features</span> = <span class="c-kw">typeof</span> features;
+
+<span class="c-kw">const</span> helper = <span class="c-fn">createColumnHelper</span>&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>&gt;();
+<span class="c-kw">const</span> columns: <span class="c-typ">ColumnDef</span>&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;[] = [
+  helper.<span class="c-fn">accessor</span>(<span class="c-str">"id"</span>, { header: <span class="c-str">"ID"</span> }),
+  helper.<span class="c-fn">accessor</span>(<span class="c-str">"name"</span>, { header: <span class="c-str">"Name"</span> }),
+];
+
+<span class="c-kw">export function</span> <span class="c-fn">buildUserTable</span>(data: <span class="c-typ">User</span>[]) {
+  <span class="c-kw">return</span> <span class="good-t">useTable</span>&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>&gt;({ features, columns, data });
+}</code></pre></div>
+        <p class="out">tsc --noEmit — 0 errors</p>
+      </figure>
+    </div>
+    <p class="cap">Left is the model's real answer, shortened. Right is the reference that does compile, kept in the repo. Both went through the compiler against the same installed copy of <code>@tanstack/react-table</code> 9.1.2.</p>
+  </section>
+
+  <!-- ================= the board ================= -->
+  <section class="sec" id="board">
+    <div class="head">
+      <span class="eyebrow">The board</span>
+      <h2>Eight libraries, scored the same way</h2>
+      <p>Every score is <code>claude-opus-5</code> on 10–15 small coding tasks. The number is how many answers compiled out of how many it wrote, so 100 means every one did. Each tick below is one task.</p>
+    </div>
+
+    <div class="board">
+      <a class="card" href="#drift">
+        <div class="top"><span class="name">TanStack Table 9</span><span class="score s-fail">0<s>/100</s></span></div>
+        <div class="pkg">@tanstack/react-table 9.1.2</div>
+        <div class="ticks"><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></div>
+        <div class="ratio"><b>0 of 12</b> compiled</div>
+        <p class="why">v9 renamed the main hook &amp; swapped the <b>getCoreRowModel()</b> family for a <b>features</b> map. The model wrote v8 every single time.</p>
+        <span class="go">↑ See the code</span>
+      </a>
+
+      <a class="card" href="aisdk.html">
+        <div class="top"><span class="name">Vercel AI SDK 7</span><span class="score s-warn">71<s>/100</s></span></div>
+        <div class="pkg">ai 7.0.30</div>
+        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></div>
+        <div class="ratio"><b>10 of 14</b> compiled</div>
+        <p class="why">Inline callbacks still infer fine. It only breaks when you give a callback an <b>explicit type</b> — v7 removed the type names it reaches for.</p>
+        <span class="go">View scorecard →</span>
+      </a>
+
+      <a class="card" href="prisma7.html">
+        <div class="top"><span class="name">Prisma 7</span><span class="score s-warn">87<s>/100</s></span></div>
+        <div class="pkg">@prisma/client 7.8.0</div>
+        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i class="x"></i></div>
+        <div class="ratio"><b>13 of 15</b> compiled</div>
+        <p class="why">Queries &amp; <b>$extends</b> are clean. It still writes the v6 client setup and leaves out the driver <b>adapter</b> that v7 now requires.</p>
+        <span class="go">View scorecard →</span>
+      </a>
+
+      <a class="card" href="nextjs.html">
+        <div class="top"><span class="name">Next.js 16</span><span class="score s-ok">92<s>/100</s></span></div>
+        <div class="pkg">next 16.2.11</div>
+        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i></div>
+        <div class="ratio"><b>12 of 13</b> compiled</div>
+        <p class="why">Async cookies &amp; headers are absorbed. The one miss is Next 16's new 2-argument <b>revalidateTag()</b>.</p>
+        <span class="go">View scorecard →</span>
+      </a>
+
+      <a class="card" href="react-router.html">
+        <div class="top"><span class="name">React Router 8</span><span class="score s-ok">93<s>/100</s></span></div>
+        <div class="pkg">react-router 8.3.0</div>
+        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i></div>
+        <div class="ratio"><b>14 of 15</b> compiled</div>
+        <p class="why">Drops the deleted <b>json()</b> &amp; <b>defer()</b> on its own. But <b>meta()</b> still takes the removed <b>data</b> argument. It's <b>loaderData</b> now.</p>
+        <span class="go">View scorecard →</span>
+      </a>
+
+      <a class="card" href="stripe.html">
+        <div class="top"><span class="name">Stripe 22</span><span class="score s-pass">100<s>/100</s></span></div>
+        <div class="pkg">stripe 22.4.0</div>
+        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ratio"><b>10 of 10</b> compiled</div>
+        <p class="why">Clean on everything it wrote, including the pinned <b>apiVersion</b>. It refused 5 of the 15 tasks outright, so this score covers 10.</p>
+        <span class="go">View scorecard →</span>
+      </a>
+
+      <a class="card" href="tanstack-query.html">
+        <div class="top"><span class="name">TanStack Query 5</span><span class="score s-pass">100<s>/100</s></span></div>
+        <div class="pkg">@tanstack/react-query 5.101.4</div>
+        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ratio"><b>13 of 13</b> compiled</div>
+        <p class="why">Fully absorbed. Every v4→v5 rename written unprompted: <b>gcTime</b>, <b>placeholderData</b>, <b>'pending'</b>.</p>
+        <span class="go">View scorecard →</span>
+      </a>
+
+      <a class="card" href="zod.html">
+        <div class="top"><span class="name">Zod 4</span><span class="score s-pass">100<s>/100</s></span></div>
+        <div class="pkg">zod 4.4.3</div>
+        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ratio"><b>10 of 10</b> compiled</div>
+        <p class="why">Fully absorbed. The unified <b>error</b> option &amp; the 2-argument <b>z.record()</b>, both unprompted.</p>
+        <span class="go">View scorecard →</span>
+      </a>
+    </div>
+
+    <div class="ask">
+      <p><b>Want your library on this board?</b> Name any TypeScript package &amp; I'll have a model write code for it, then compile every answer against the real thing. React Router 8 is here because someone asked.</p>
+      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+    </div>
+  </section>
+
+  <!-- ================= how it works ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">How it works</span>
+      <h2>Three steps. The compiler has the last word.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <svg viewBox="0 0 116 62" fill="none" aria-hidden="true">
+          <rect x="2" y="23" width="16" height="16" rx="3" fill="currentColor"/>
+          <path d="M22 31h12" stroke="currentColor" stroke-width="1.6" opacity=".55"/>
+          <path d="M34 31c10 0 6-24 16-24h10" stroke="currentColor" stroke-width="1.6" opacity=".55"/>
+          <path d="M34 31h26" stroke="currentColor" stroke-width="1.6" opacity=".55"/>
+          <path d="M34 31c10 0 6 24 16 24h10" stroke="currentColor" stroke-width="1.6" opacity=".55"/>
+          <rect x="62" y="1" width="13" height="13" rx="3" stroke="currentColor" stroke-width="1.6" opacity=".8"/>
+          <rect x="62" y="24.5" width="13" height="13" rx="3" stroke="currentColor" stroke-width="1.6" opacity=".8"/>
+          <rect x="62" y="48" width="13" height="13" rx="3" stroke="currentColor" stroke-width="1.6" opacity=".8"/>
+          <path d="M85 7.5h29M85 31h22M85 54.5h26" stroke="currentColor" stroke-width="1.6" opacity=".25"/>
+        </svg>
+        <span class="n">STEP 01</span>
+        <h3>Ask</h3>
+        <p>A model gets 10–15 small realistic jobs for one library. The prompt names the function to write, never the option names. One shot, no docs, no retries.</p>
+      </div>
+      <div class="step">
+        <svg viewBox="0 0 116 62" fill="none" aria-hidden="true">
+          <path d="M2 11h42M2 31h42M2 51h42" stroke="currentColor" stroke-width="1.6" opacity=".32"/>
+          <rect x="49" y="1" width="7" height="60" rx="2" fill="currentColor"/>
+          <path d="M61 11h53M61 31h53" stroke="currentColor" stroke-width="1.6" opacity=".85"/>
+          <path d="M61 51h13" stroke="currentColor" stroke-width="1.6" opacity=".3"/>
+          <path d="M80 46l10 10M90 46l-10 10" stroke="currentColor" stroke-width="1.9"/>
+        </svg>
+        <span class="n">STEP 02</span>
+        <h3>Compile</h3>
+        <p>Each answer drops into a small project with the <b>real package installed</b>, then goes through <code>tsc --noEmit</code>. Same package your users install.</p>
+      </div>
+      <div class="step">
+        <svg viewBox="0 0 116 62" fill="none" aria-hidden="true">
+          <rect x="4" y="34" width="16" height="24" rx="2" fill="currentColor" opacity=".28"/>
+          <rect x="29" y="22" width="16" height="36" rx="2" fill="currentColor" opacity=".48"/>
+          <rect x="54" y="12" width="16" height="46" rx="2" fill="currentColor" opacity=".7"/>
+          <rect x="79" y="2" width="16" height="56" rx="2" fill="currentColor"/>
+          <path d="M0 60.5h116" stroke="currentColor" stroke-width="1.6" opacity=".35"/>
+        </svg>
+        <span class="n">STEP 03</span>
+        <h3>Count</h3>
+        <p>Pass = it compiles. Nothing else counts. The failures are the compiler's own errors: exports that are gone, wrong arguments, options that got removed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= what the score means ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What the score means</span>
+      <h2>It measures the model, not your library</h2>
+    </div>
+    <div class="meaning">
+        <p><b>A low score doesn't mean the library is bad.</b> It means the model's memory of it is out of date. TanStack Query v5 landed in 2023 and scores 100 — the model has seen years of it. Table v9 is fresh and scores 0.</p>
+        <p>So the number moves. The gap is widest right after a big release, narrows as models retrain, then opens again on your next one. It also shifts every time a new model ships.</p>
+        <p>Which is why this is worth watching rather than auditing once.</p>
+    </div>
+    <div class="figwrap">
+        <svg viewBox="0 0 680 214" role="img" aria-label="Schematic: the gap between what a library ships and what the model knows spikes at each major release, then narrows as models retrain.">
+          <path d="M60 172H148V56C205 56 245 150 330 158C370 162 396 163 428 163V60C486 60 545 120 648 130V172Z" fill="var(--accent)" opacity=".11"/>
+          <path d="M60 172H148V56C205 56 245 150 330 158C370 162 396 163 428 163V60C486 60 545 120 648 130" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M44 172H656" stroke="var(--line-2)" stroke-width="1.5"/>
+          <path d="M148 40V178M428 40V178" stroke="var(--ink-faint)" stroke-width="1.2" stroke-dasharray="4 4" opacity=".7"/>
+          <text class="fig-lab" x="60" y="30">HOW MUCH THE MODEL GETS WRONG</text>
+          <text class="fig-ax" x="148" y="196" text-anchor="middle">major release</text>
+          <text class="fig-ax" x="428" y="196" text-anchor="middle">next major</text>
+          <text class="fig-note" x="166" y="100">still writing the old API</text>
+          <text class="fig-note2" x="286" y="130">the gap closes</text>
+        </svg>
+      <p class="cap" style="margin-top:8px">Schematic. It shows the shape, not measured data.</p>
+    </div>
+  </section>
+
+  <!-- ================= limits ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Limits</span>
+      <h2>What this does not tell you</h2>
+      <p>The numbers are small &amp; the setup is narrow on purpose. Here is where it stops.</p>
+    </div>
+    <dl class="limits">
+      <div><dt>One model</dt><dd>Everything on this page is <code>claude-opus-5</code>. Another model will score differently.</dd></div>
+      <div><dt>One shot, no docs</dt><dd>The model gets the task &amp; nothing else. Hand it the release notes and most of these misses go away.</dd></div>
+      <div><dt>Small numbers</dt><dd>10–15 tasks per library. A 92 and a 93 are the same thing. Treat the gap between 0 and 100 as the signal, not the gap between 92 and 93.</dd></div>
+      <div><dt>Compiles is not correct</dt><dd><code>tsc</code>, the TypeScript compiler, checks that the API exists &amp; the types line up. It never runs the code, so nothing here says the code does the right thing.</dd></div>
+      <div><dt>Refusals</dt><dd>Stripe 22 is the one case where the model would not answer. It refused 5 of 15 tasks, so its 100 covers the 10 it did write.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ================= findings + queue ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Other measurements</span>
+      <h2>Related findings</h2>
+    </div>
+    <a class="finding" href="agent-docs.html">
+      <span class="fl">Agent docs</span>
+      <span class="ft">One sentence from a library's own docs fixes the failure 10 times out of 10. The same sentence buried in their full docs pack fixes nothing.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+    <a class="finding" href="skills-delta.html" style="margin-top:14px">
+      <span class="fl">Agent skills</span>
+      <span class="ft">Three libraries ship files meant for AI agents. Scored with &amp; without them, across six arms, not one difference clears zero.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+
+    <div class="head" style="margin-top:56px">
+      <span class="eyebrow">In the queue</span>
+      <h2>Scoring next</h2>
+    </div>
+    <div class="next">
+      <span class="npill"><b>tRPC v11</b> — breaking changes across the client API</span>
+      <span class="npill"><b>Clerk v6</b> — <code>auth()</code> is async now</span>
+      <span class="npill"><b>Drizzle ORM</b> — fast-moving schema &amp; query API</span>
+    </div>
+  </section>
+
+  <div class="close">
+    <h2>Score my library</h2>
+    <p>Name any TypeScript package &amp; I'll run it. Or do it yourself — it's all open source.</p>
     <div class="btns">
       <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
-      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">★ Star on GitHub</a>
+      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">Read the code</a>
     </div>
-    <div class="note">★ star to get each new scorecard · the compiler is the judge</div>
+    <p class="note">There's no npm package. Clone the repo, point it at a library, run it. The compiler is the judge.</p>
   </div>
 
   <footer>
@@ -305,7 +691,7 @@
       <a href="https://peerlist.io/kalpitrathore/project/sdkproof" target="_blank" rel="noreferrer">Live on <span class="brand">Peerlist<span class="sep">|</span>Launchpad</span></a>
       <a href="https://devhunt.org/tool/sdkproof" target="_blank" rel="noreferrer">Live on <span class="brand">DevHunt</span></a>
     </div>
-    <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Scorecards measured with claude-opus-5, type-check only (API-surface correctness, not runtime). Not affiliated with the libraries scored.</p>
+    <p class="fine">SDKProof — independent measurement of how AI coding agents write real SDKs. Every score on this page is <code>claude-opus-5</code>, type-check only: it checks the API surface, not what the code does when it runs. Not affiliated with any library scored.</p>
     <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="skills-delta.html">Do agent docs work?</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
   </footer>
 </div>

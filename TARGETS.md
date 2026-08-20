@@ -24,9 +24,9 @@
 
 ---
 
-## Tier 1 — commercial vendors, fresh, real API
+## Tier 1 — vendor-maintained SDKs, fresh, hand-written API
 
-**The SDK is a product surface here, so agent-compatibility has a commercial owner.** Every send so far went to an engineer, who your plan says is explicitly not a budget holder.
+SDKs maintained by a company rather than by individual volunteers. Listed separately because a documented release process makes an undeprecated removal more notable.
 
 | package | vendor | majors | shipped | age | confirmed | symbols |
 |---|---|---|---|---|---|---|
@@ -45,7 +45,7 @@
 | `@sanity/client` | Sanity — headless CMS | 7→8 | 2026-08-12 | 0.2mo | **2** | `HttpRequestEvent`, `ResponseEvent` |
 | `@fireblocks/ts-sdk` | Fireblocks — digital assets | 26→27 | 2026-08-18 | 0mo | **1** | `TravelRuleValidateLegalPersonNameIdentifierLegalPersonNameIdentifierTypeEnum` |
 
-## Tier 2 — OSS libraries, credibility not revenue
+## Tier 2 — community-maintained libraries
 
 | package | majors | shipped | age | confirmed | symbols |
 |---|---|---|---|---|---|
