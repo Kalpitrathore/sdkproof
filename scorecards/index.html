@@ -105,7 +105,7 @@
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 96px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 72px; }
   h1, h2, h3 { margin: 0; letter-spacing: -.022em; line-height: 1.1; text-wrap: balance; }
   p { margin: 0; }
   a { color: var(--accent); }
@@ -127,7 +127,7 @@
   .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
   /* ---------- masthead ---------- */
-  .mast { display: flex; align-items: center; gap: 12px; padding: 24px 0 0; }
+  .mast { display: flex; align-items: center; gap: 12px; padding: 18px 0 0; }
   .logo { font-weight: 700; font-size: 16px; letter-spacing: -.03em; color: var(--ink); }
   .logo b { color: var(--accent); font-weight: 700; }
   .mast .gh {
@@ -137,49 +137,45 @@
   .mast .gh:hover { border-color: var(--accent); color: var(--accent); }
 
   /* ---------- hero ---------- */
-  .hero { padding: 72px 0 52px; }
+  /* Compact on purpose: the first screen belongs to the compiler panel below,
+     not to the headline. */
+  .hero { padding: 20px 0 0; }
   .hero h1 {
-    font-size: clamp(38px, 8.4vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: .98;
-    margin: 20px 0 0;
+    font-size: clamp(28px, 4.6vw, 46px); font-weight: 800; letter-spacing: -.035em; line-height: 1.04;
+    margin: 11px 0 0;
   }
   .hero h1 .dim { color: var(--ink-faint); display: block; }
-  .lede { max-width: 62ch; margin-top: 30px; }
-  .lede p { color: var(--ink-soft); font-size: clamp(16px, 2.1vw, 19px); margin-bottom: 16px; }
+  .lede { max-width: 74ch; margin-top: 13px; }
+  .lede p { color: var(--ink-soft); font-size: clamp(15px, 1.7vw, 16.5px); margin-bottom: 8px; }
   .lede p:last-child { margin-bottom: 0; }
   .lede b { color: var(--ink); font-weight: 650; }
-  .verdict-line {
-    display: inline-flex; align-items: center; gap: 10px; margin-top: 26px;
-    font-size: 14px; font-weight: 600; color: var(--ink);
-    background: var(--accent-soft); border: 1px solid var(--accent);
-    border-radius: 999px; padding: 7px 16px 7px 12px;
-  }
-  .verdict-line svg { flex: none; }
 
   /* ---------- stat strip ---------- */
   .stats {
     display: grid; grid-template-columns: repeat(4, 1fr);
     border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2);
+    margin-top: 18px;
   }
-  .stats div { padding: 22px 20px 20px; border-left: 1px solid var(--line); }
+  .stats div { padding: 11px 16px 10px; border-left: 1px solid var(--line); }
   .stats div:first-child { border-left: 0; padding-left: 0; }
   .stats .n {
-    font-family: var(--font-mono); font-size: clamp(28px, 4.6vw, 42px); font-weight: 700;
+    font-family: var(--font-mono); font-size: clamp(21px, 2.6vw, 27px); font-weight: 700;
     letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; display: block;
   }
-  .stats .k { font-size: 12.5px; color: var(--ink-faint); margin-top: 10px; display: block; line-height: 1.35; }
+  .stats .k { font-size: 12px; color: var(--ink-faint); margin-top: 6px; display: block; line-height: 1.35; }
   .stats .bad .n { color: var(--fail); }
   @media (max-width: 720px) {
     .stats { grid-template-columns: 1fr 1fr; }
-    .stats div { padding: 18px 14px; }
+    .stats div { padding: 12px 14px; }
     .stats div:nth-child(3) { border-left: 0; padding-left: 0; }
     .stats div:nth-child(3), .stats div:nth-child(4) { border-top: 1px solid var(--line); }
   }
 
   /* ---------- section heads ---------- */
-  .sec { margin-top: 86px; }
-  .sec > .head { max-width: 66ch; margin-bottom: 26px; }
-  .sec h2 { font-size: clamp(25px, 4.2vw, 38px); font-weight: 780; margin: 12px 0 0; }
-  .sec .head p { color: var(--ink-soft); font-size: 16.5px; margin-top: 14px; }
+  .sec { margin-top: 56px; }
+  .sec > .head { max-width: 66ch; margin-bottom: 20px; }
+  .sec h2 { font-size: clamp(23px, 3.4vw, 32px); font-weight: 780; margin: 10px 0 0; }
+  .sec .head p { color: var(--ink-soft); font-size: 16px; margin-top: 12px; }
   .sec .head p b { color: var(--ink); font-weight: 650; }
   .sec .head p + p { margin-top: 12px; }
 
@@ -316,7 +312,7 @@
 
   /* ---------- closing ---------- */
   .close {
-    margin-top: 80px; padding: 44px 32px; text-align: center;
+    margin-top: 56px; padding: 38px 32px; text-align: center;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px;
   }
   .close h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
@@ -325,7 +321,7 @@
   .close .note { font-size: 12.5px; color: var(--ink-faint); margin-top: 20px; }
 
   /* ---------- footer ---------- */
-  footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
+  footer { margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
   footer .fine { margin: 0; max-width: 78ch; }
   footer a { color: var(--ink-soft); }
 
@@ -437,6 +433,116 @@
   }
   .ex-empty b { color: var(--ink); font-weight: 650; }
 
+  /* ---------- live compiler panel (first screen) ---------- */
+  /* One real answer from the run, and the real compiler output that rejected it.
+     The markup below ships one example already filled in, so the panel is whole
+     with no JavaScript and with no runs.json. The script swaps in the rest. */
+  .lc {
+    margin-top: 18px; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .lc-bar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 9px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+  }
+  .lc-dots { display: flex; gap: 5px; flex: none; }
+  .lc-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line-2); }
+  .lc-bar .ttl { font-size: 12.5px; font-weight: 650; color: var(--ink-soft); }
+  .lc-bar .pkg {
+    margin-left: auto; font-family: var(--font-mono); font-size: 11.5px;
+    color: var(--ink-faint); overflow-wrap: anywhere;
+  }
+
+  .lc-chips { display: flex; flex-wrap: wrap; gap: 7px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .lc-chip {
+    font-family: inherit; font-size: 12.5px; font-weight: 650; line-height: 1.2;
+    display: inline-flex; align-items: baseline; gap: 7px; cursor: pointer;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 6px 12px;
+  }
+  .lc-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .lc-chip .n { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .lc-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .lc-chip[aria-pressed="true"] .n { color: var(--on-accent); opacity: .82; }
+
+  .lc-body { display: grid; grid-template-columns: 1.12fr 1fr; align-items: start; }
+  .lc-half { min-width: 0; padding: 12px 14px 0; }
+  .lc-half + .lc-half { border-left: 1px solid var(--line); }
+  @media (max-width: 900px) {
+    .lc-body { grid-template-columns: 1fr; }
+    .lc-half + .lc-half { border-left: 0; border-top: 1px solid var(--line); padding-top: 12px; }
+  }
+  .lc-lab {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--ink-faint); display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline;
+  }
+  .lc-lab code { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0; text-transform: none; color: var(--ink-soft); }
+  .lc-ask { font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); margin-top: 6px; min-height: 61px; }
+  .lc-ask code { color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere; }
+
+  .lc-scroll {
+    margin: 11px -14px 0; height: 252px; overflow: auto;
+    background: var(--code-bg); border-top: 1px solid var(--line);
+  }
+  @media (max-width: 900px) { .lc-scroll { height: 208px; } }
+  .lc-scroll .ln { display: flex; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.62; }
+  .lc-scroll .no {
+    flex: none; width: 40px; padding-right: 11px; text-align: right; color: var(--tok-com);
+    background: var(--code-bg); position: sticky; left: 0; -webkit-user-select: none; user-select: none;
+  }
+  .lc-scroll .cd { white-space: pre; padding-right: 16px; color: var(--ink); }
+  .lc-scroll .ln.bad { background: var(--hi-bad); }
+  .lc-scroll .ln.bad .no { background: var(--hi-bad); color: var(--fail); font-weight: 700; }
+  .lc-more { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); padding: 9px 14px 12px 51px; }
+
+  .lc-term {
+    margin-top: 7px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px;
+    padding: 11px 12px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.62;
+  }
+  .lc-term p { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .lc-term .cmd { color: var(--ink-soft); }
+  .lc-term .cmd b { color: var(--accent); font-weight: 700; }
+  .lc-term .diag { color: var(--fail); margin-top: 8px; }
+  .lc-term .diag .f { color: var(--ink-faint); }
+  .lc-term .diag .c { font-weight: 700; }
+  .lc-term .vd { margin-top: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--fail); }
+  .lc-caret { display: inline-block; width: 7px; height: 12px; margin-left: 5px; vertical-align: -1px; background: var(--accent); }
+  .lc-why { font-size: 13px; line-height: 1.5; color: var(--ink-soft); margin-top: 10px; }
+  .lc-why b { color: var(--ink); font-weight: 650; }
+  .lc-why code { color: var(--ink); overflow-wrap: anywhere; }
+  .lc-meta {
+    margin: 11px 0 14px; font-family: var(--font-mono); font-size: 11px;
+    line-height: 1.5; color: var(--ink-faint); overflow-wrap: anywhere;
+  }
+
+  .lc-foot {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px;
+    padding: 10px 14px; border-top: 1px solid var(--line); background: var(--panel-2);
+  }
+  .lc-nav { display: inline-flex; align-items: center; gap: 8px; }
+  .lc-btn {
+    font-family: inherit; font-size: 12.5px; font-weight: 650; cursor: pointer;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 8px; padding: 6px 12px;
+  }
+  .lc-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lc-pos { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .lc-note { font-size: 12px; line-height: 1.5; color: var(--ink-faint); margin-bottom: 14px; max-width: 62ch; }
+  .lc-jump { margin-left: auto; font-size: 12.5px; font-weight: 650; color: var(--accent); text-decoration: none; }
+  .lc-jump:hover { text-decoration: underline; }
+
+  /* The output appears line by line, the way it does in a terminal. Motion only —
+     the whole text is in the DOM before the animation starts, so a screen reader
+     and anyone with reduced motion gets all of it at once. */
+  @media (prefers-reduced-motion: no-preference) {
+    .lc-term.run > * { animation: lcIn .26s ease both; }
+    .lc-term.run > :nth-child(2) { animation-delay: .2s; }
+    .lc-term.run > :nth-child(3) { animation-delay: .46s; }
+    @keyframes lcIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+    .lc-caret { animation: lcBlink 1.05s steps(1, end) infinite; }
+    @keyframes lcBlink { 50% { opacity: 0; } }
+  }
+
   /* Inter — the face Peerlist and DevHunt set their own product names in.
      Self-hosted latin subset, used only for the two brand names below. */
   @font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url(inter-600-latin.woff2) format("woff2"); }
@@ -457,23 +563,73 @@
   <header class="hero">
     <span class="eyebrow">AI-readiness, measured by a compiler</span>
     <h1>The code looks right.<span class="dim">It doesn't compile.</span></h1>
+    <div class="lede">
+      <p>AI coding assistants write library code from memory, so when a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it doesn't compile.</p>
+      <p><b>SDKProof measures how often that happens.</b> Every answer here went through <code>tsc</code>, the TypeScript compiler, against the real installed package, and a task passes only if it compiles.</p>
+    </div>
   </header>
 
-  <div class="lede">
-    <p>AI coding assistants write library code from memory. When a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it fails to build.</p>
-    <p><b>SDKProof measures how often that happens.</b> It gives a model real coding jobs, then compiles every answer against the real installed package with <code>tsc</code>, the TypeScript compiler. A task passes only if it compiles.</p>
-    <p class="verdict-line">
-      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
-      No AI judges another AI. The compiler decides.
-    </p>
-  </div>
-
-  <div class="stats" style="margin-top:52px">
-    <div><span class="n">8</span><span class="k">libraries scored</span></div>
-    <div><span class="n">102</span><span class="k">answers put through the compiler</span></div>
-    <div class="bad"><span class="n">20</span><span class="k">of them did not compile</span></div>
+  <div class="stats">
+    <div><span class="n" id="st-libs">8</span><span class="k">libraries scored</span></div>
+    <div><span class="n" id="st-tasks">102</span><span class="k">answers put through the compiler</span></div>
+    <div class="bad"><span class="n" id="st-bad">20</span><span class="k">of them did not compile</span></div>
     <div><span class="n">0</span><span class="k">judged by another AI</span></div>
   </div>
+
+  <!-- ================= live compiler panel ================= -->
+  <!-- One real failing answer is written into the markup below, so this panel is
+       complete with no JavaScript and no runs.json. The script swaps in the
+       other four and wires up the chips and the previous/next buttons. -->
+  <section class="lc" id="lc" aria-label="Real answers put through the TypeScript compiler">
+    <div class="lc-bar">
+      <span class="lc-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="ttl">One answer, one compile</span>
+      <code class="pkg" id="lc-pkg">@tanstack/react-table 9.1.2</code>
+    </div>
+
+    <div class="lc-chips" id="lc-chips" role="group" aria-label="Pick a library" hidden></div>
+
+    <div class="lc-body">
+      <div class="lc-half">
+        <p class="lc-lab">What was asked <code id="lc-task">basic-table</code></p>
+        <p class="lc-ask" id="lc-ask">Write <code>buildUserTable(data)</code> that creates a TanStack React Table instance over a list of users with id and name columns, and returns the instance.</p>
+        <div class="lc-scroll" id="lc-code" tabindex="0" role="group" aria-label="The answer the model wrote">
+        <div class="ln"><span class="no" aria-hidden="true">1</span><span class="cd"><span class="c-kw">import</span> {</span></div>
+        <div class="ln bad"><span class="no" aria-hidden="true">2</span><span class="cd">  <span class="bad-t">createTable</span>,</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">3</span><span class="cd">  getCoreRowModel,</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">4</span><span class="cd">  <span class="c-kw">type</span> <span class="c-typ">ColumnDef</span>,</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">5</span><span class="cd">  <span class="c-kw">type</span> <span class="c-typ">Table</span>,</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">6</span><span class="cd">  <span class="c-kw">type</span> <span class="c-typ">TableState</span>,</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">7</span><span class="cd">  <span class="c-kw">type</span> <span class="c-typ">Updater</span>,</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">8</span><span class="cd">} <span class="c-kw">from</span> <span class="c-str">&quot;@tanstack/react-table&quot;</span>;</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">9</span><span class="cd"></span></div>
+        <div class="ln"><span class="no" aria-hidden="true">10</span><span class="cd"><span class="c-kw">export</span> <span class="c-kw">type</span> <span class="c-typ">User</span> = { id: <span class="c-typ">string</span>; name: <span class="c-typ">string</span> };</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">11</span><span class="cd"></span></div>
+        <div class="ln"><span class="no" aria-hidden="true">12</span><span class="cd"><span class="c-com">// Write buildUserTable(data: User[]) returning a TanStack React Table instance</span></span></div>
+        <div class="ln"><span class="no" aria-hidden="true">13</span><span class="cd"><span class="c-com">// with id and name columns. Export it.</span></span></div>
+        <div class="ln"><span class="no" aria-hidden="true">14</span><span class="cd"></span></div>
+        <div class="ln"><span class="no" aria-hidden="true">15</span><span class="cd"><span class="c-kw">export</span> <span class="c-kw">function</span> <span class="c-fn">buildUserTable</span>(data: <span class="c-typ">User</span>[]): <span class="c-typ">Table</span>&lt;<span class="c-typ">User</span>&gt; {</span></div>
+        <div class="ln"><span class="no" aria-hidden="true">16</span><span class="cd">  <span class="c-kw">const</span> columns: <span class="c-typ">ColumnDef</span>&lt;<span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;[] = [</span></div>
+        <p class="lc-more">… 39 more lines.</p>
+        </div>
+      </div>
+      <div class="lc-half">
+        <p class="lc-lab">What the compiler said</p>
+        <div class="lc-term run" id="lc-term" aria-live="polite">
+          <p class="cmd"><b>$</b> tsc -p fixtures/react-table/tsconfig.json --pretty false</p>
+          <p class="diag"><span class="f">fixtures/react-table/candidate.ts(2,3):</span> <span class="c">error TS2724:</span> '"@tanstack/react-table"' has no exported member named 'createTable'. Did you mean 'ReactTable'?</p>
+          <p class="vd"><span aria-hidden="true">&#10007;</span> did not compile<span class="lc-caret" aria-hidden="true"></span></p>
+        </div>
+        <p class="lc-why" id="lc-why">Table v9 has no <code>createTable</code> on its main entry point. The model wrote the v8 API, and <b>0 of 12</b> answers compiled.</p>
+        <p class="lc-meta" id="lc-meta">claude-opus-5 &middot; one shot, no docs &middot; run 18 Aug 2026</p>
+        <p class="lc-note">Five of the <span id="lc-nbad">20</span> answers that did not compile, one from each library that has them. Pass means the answer compiled against the real installed package &mdash; nothing else counts.</p>
+      </div>
+    </div>
+
+    <div class="lc-foot" id="lc-foot" hidden>
+      <div class="lc-nav" id="lc-nav"></div>
+    </div>
+  </section>
 
   <!-- ================= the example ================= -->
   <section class="sec" id="drift">
@@ -805,7 +961,7 @@ error TS2558: Expected 2 type arguments, but got 1.</p>
 
   var section = document.getElementById("evidence");
   var host = document.getElementById("ex");
-  if (!section || !host || typeof window.fetch !== "function") return;
+  var canFetch = typeof window.fetch === "function" && typeof window.Promise === "function";
 
   var tabsEl = document.getElementById("ex-tabs");
   var panelEl = document.getElementById("ex-panel");
@@ -1091,6 +1247,415 @@ error TS2558: Expected 2 type arguments, but got 1.</p>
     });
   }
 
+  /* ================= the compiler panel at the top ================= */
+  /* Five real answers that did not compile, one from each library that has one.
+     All of it is from the recorded run: what the model was asked, the code it
+     wrote, and the compiler's own diagnostic with the line and column it
+     pointed at. runs.json refreshes the task text, the error and the counts
+     once it lands; without it these stay, which is what the markup ships. */
+
+  var EX = [
+    {
+      lib: "react-table",
+      model: "claude-opus-5",
+      ran: "2026-08-18",
+      short: "TanStack Table 9",
+      pkg: "@tanstack/react-table",
+      ver: "9.1.2",
+      task: "basic-table",
+      asked: "Write `buildUserTable(data)` that creates a TanStack React Table instance over a list of users with id and name columns, and returns the instance.",
+      compiled: 0,
+      total: 12,
+      file: "fixtures/react-table/candidate.ts",
+      cfg: "fixtures/react-table/tsconfig.json",
+      line: 2,
+      col: 3,
+      code: "TS2724",
+      msg: "'\"@tanstack/react-table\"' has no exported member named 'createTable'. Did you mean 'ReactTable'?",
+      why: "Table v9 has no `createTable` on its main entry point. The model wrote the v8 API, and ",
+      more: 39,
+      src: [
+        "import {",
+        "  createTable,",
+        "  getCoreRowModel,",
+        "  type ColumnDef,",
+        "  type Table,",
+        "  type TableState,",
+        "  type Updater,",
+        "} from \"@tanstack/react-table\";",
+        "",
+        "export type User = { id: string; name: string };",
+        "",
+        "// Write buildUserTable(data: User[]) returning a TanStack React Table instance",
+        "// with id and name columns. Export it.",
+        "",
+        "export function buildUserTable(data: User[]): Table<User> {",
+        "  const columns: ColumnDef<User, any>[] = [",
+      ],
+    },
+    {
+      lib: "aisdk",
+      model: "claude-opus-5",
+      ran: "2026-08-18",
+      short: "Vercel AI SDK 7",
+      pkg: "ai",
+      ver: "7.0.30",
+      task: "extract-onfinish-handler",
+      asked: "The onFinish handler passed to streamText has grown too large to keep inline. Extract it into a named function `handleFinish`, annotated with the SDK's exported type for that callback, and export a `summarize(prompt)` that calls streamText with it.",
+      compiled: 10,
+      total: 14,
+      file: "fixtures/aisdk/candidate.ts",
+      cfg: "fixtures/aisdk/tsconfig.json",
+      line: 2,
+      col: 15,
+      code: "TS2724",
+      msg: "'\"ai\"' has no exported member named 'StreamTextOnFinishCallback'. Did you mean 'StreamObjectOnFinishCallback'?",
+      why: "v7 removed the exported type `StreamTextOnFinishCallback`. Inline callbacks still infer fine; naming the type is what breaks. ",
+      more: 31,
+      src: [
+        "import { streamText } from \"ai\";",
+        "import type { StreamTextOnFinishCallback, ToolSet } from \"ai\";",
+        "import { openai } from \"@ai-sdk/openai\";",
+        "",
+        "// Extract the onFinish handler into a named `handleFinish`, annotated with the",
+        "// SDK's exported type for that callback. Export handleFinish and summarize(prompt).",
+        "",
+        "/**",
+        " * The onFinish callback for `streamText`, annotated with the SDK's exported",
+        " * callback type. The type is generic over the tool set used by the call; this",
+        " * handler is tool-agnostic, so an empty tool set is used.",
+        " */",
+        "export const handleFinish: StreamTextOnFinishCallback<ToolSet> = async ({",
+      ],
+    },
+    {
+      lib: "prisma7",
+      model: "claude-opus-5",
+      ran: "2026-08-06",
+      short: "Prisma 7",
+      pkg: "@prisma/client",
+      ver: "7.8.0",
+      task: "construct-with-url",
+      asked: "Create a PrismaClient that connects using the DATABASE_URL environment variable, then export an async function `run()` that returns all users.",
+      compiled: 13,
+      total: 15,
+      file: "fixtures/prisma/candidate.ts",
+      cfg: "fixtures/prisma/tsconfig.json",
+      line: 6,
+      col: 3,
+      code: "TS2353",
+      msg: "Object literal may only specify known properties, and 'datasourceUrl' does not exist in type 'Subset<PrismaClientOptions, PrismaClientOptions>'.",
+      why: "`datasourceUrl` was a real option in Prisma 5 and 6, and v7 removed it. The connection comes from a driver adapter now. ",
+      more: 0,
+      src: [
+        "import { PrismaClient } from \"@prisma/client\";",
+        "",
+        "// Create a PrismaClient configured to use process.env.DATABASE_URL, then export an async run() returning all users.",
+        "",
+        "const prisma = new PrismaClient({",
+        "  datasourceUrl: process.env.DATABASE_URL ?? \"\",",
+        "});",
+        "",
+        "export async function run() {",
+        "  return prisma.user.findMany();",
+        "}",
+        "",
+        "export { prisma };",
+      ],
+    },
+    {
+      lib: "nextjs",
+      model: "claude-opus-5",
+      ran: "2026-07-26",
+      short: "Next.js 16",
+      pkg: "next",
+      ver: "16.2.11",
+      task: "revalidate-tag",
+      asked: "Export an async function `refreshUsers()` that revalidates everything tagged `users`, using Next's tag-based cache revalidation helper.",
+      compiled: 12,
+      total: 13,
+      file: "fixtures/nextjs/candidate.ts",
+      cfg: "fixtures/nextjs/tsconfig.json",
+      line: 5,
+      col: 3,
+      code: "TS2554",
+      msg: "Expected 2 arguments, but got 1.",
+      why: "Next 16 gave `revalidateTag()` a second argument, the cache profile. The model wrote the one-argument call that was right through Next 15. ",
+      more: 0,
+      src: [
+        "import { revalidateTag } from \"next/cache\";",
+        "",
+        "// Export async `refreshUsers()`: revalidate the 'users' cache tag.",
+        "export async function refreshUsers() {",
+        "  revalidateTag(\"users\");",
+        "}",
+      ],
+    },
+    {
+      lib: "react-router",
+      model: "claude-opus-5",
+      ran: "2026-08-06",
+      short: "React Router 8",
+      pkg: "react-router",
+      ver: "8.3.0",
+      task: "meta-from-loader",
+      asked: "Given the exported `loader`, complete the `meta` function so the page title is the loaded user's name, falling back to \"User\" when there is none. Keep the `MetaFunction` type annotation exactly as given — do not declare your own argument type.",
+      compiled: 14,
+      total: 15,
+      file: "fixtures/react-router/candidate.ts",
+      cfg: "fixtures/react-router/tsconfig.json",
+      line: 9,
+      col: 21,
+      code: "TS2339",
+      msg: "Property 'data' does not exist on type 'MetaArgs<() => Promise<{ user: { id: string; name: string; } | null; }>, Record<string, unknown>>'.",
+      why: "v8 renamed the `data` argument on `meta()` to `loaderData`. The model still writes `data`. ",
+      more: 0,
+      src: [
+        "import type { MetaFunction } from \"react-router\";",
+        "",
+        "export async function loader() {",
+        "  return { user: { id: \"1\", name: \"Ada\" } as { id: string; name: string } | null };",
+        "}",
+        "",
+        "// Fill in the body. The type annotation below is part of the task; keep it as-is.",
+        "export const meta: MetaFunction<typeof loader> = (args) => {",
+        "  const name = args.data?.user?.name;",
+        "  return [{ title: name ?? \"User\" }];",
+        "};",
+      ],
+    },
+  ];
+
+  var LC_KW = /^(import|export|from|const|let|var|function|return|async|await|type|interface|class|extends|implements|new|typeof|keyof|as|satisfies|declare|enum|default|if|else|for|while|do|switch|case|break|continue|of|in|this|super|try|catch|finally|throw|yield|null|undefined|true|false)$/;
+  var LC_TYP = /^(string|number|boolean|any|unknown|never|void|object|symbol|bigint|readonly)$/;
+
+  /* A small TypeScript colouriser: comments, strings, keywords, type names and
+     call sites, one line at a time. */
+  function lcTok(line) {
+    var t = line.replace(/^\s+/, "");
+    if (t.charAt(0) === "*" || t.slice(0, 2) === "//" || t.slice(0, 2) === "/*") {
+      return '<span class="c-com">' + esc(line) + "</span>";
+    }
+    var re = /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\/\/.*$)|([A-Za-z_$][A-Za-z0-9_$]*)(\s*\()?/g;
+    var out = "", last = 0, m;
+    while ((m = re.exec(line))) {
+      out += esc(line.slice(last, m.index));
+      if (m[1]) {
+        out += '<span class="c-str">' + esc(m[1]) + "</span>";
+      } else if (m[2]) {
+        out += '<span class="c-com">' + esc(m[2]) + "</span>";
+      } else {
+        var w = m[3];
+        var call = m[4] || "";
+        var cls = LC_KW.test(w) ? "c-kw"
+          : (LC_TYP.test(w) || /^[A-Z]/.test(w)) ? "c-typ"
+          : call ? "c-fn" : "";
+        out += (cls ? '<span class="' + cls + '">' + esc(w) + "</span>" : esc(w)) + esc(call);
+      }
+      last = m.index + m[0].length;
+    }
+    return out + esc(line.slice(last));
+  }
+
+  /* tsc names a line and a column. Mark the identifier sitting at that column. */
+  function lcCodeLine(ex, line, n) {
+    if (n !== ex.line) return lcTok(line);
+    var rest = line.slice(ex.col - 1);
+    var m = /^[A-Za-z_$][A-Za-z0-9_$]*/.exec(rest);
+    if (!m) return lcTok(line);
+    return lcTok(line.slice(0, ex.col - 1)) +
+      '<span class="bad-t">' + lcTok(m[0]) + "</span>" +
+      lcTok(rest.slice(m[0].length));
+  }
+
+  function lcCodeHTML(ex) {
+    var h = "";
+    ex.src.forEach(function (line, k) {
+      var n = k + 1;
+      h += '<div class="ln' + (n === ex.line ? " bad" : "") +
+        '"><span class="no" aria-hidden="true">' + n + '</span><span class="cd">' +
+        lcCodeLine(ex, line, n) + "</span></div>";
+    });
+    if (ex.more > 0) h += '<p class="lc-more">… ' + ex.more + " more lines.</p>";
+    return h;
+  }
+
+  function lcTermHTML(ex) {
+    return '<p class="cmd"><b>$</b> tsc -p ' + esc(ex.cfg) + " --pretty false</p>" +
+      '<p class="diag"><span class="f">' + esc(ex.file) + "(" + esc(ex.line) + "," + esc(ex.col) +
+      '):</span> <span class="c">error ' + esc(ex.code) + ":</span> " + esc(ex.msg) + "</p>" +
+      '<p class="vd"><span aria-hidden="true">✗</span> did not compile' +
+      '<span class="lc-caret" aria-hidden="true"></span></p>';
+  }
+
+  function lcChipHTML(ex) {
+    return "<span>" + esc(ex.short) + '</span><span class="n" aria-hidden="true">' +
+      ex.compiled + "/" + ex.total + "</span>";
+  }
+
+  function lcChipLabel(ex) {
+    return ex.short + ", " + ex.compiled + " of " + ex.total + " answers compiled";
+  }
+
+  function setNum(id, v) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = String(v);
+  }
+
+  function liveCompiler(runsPromise) {
+    var pkgEl = document.getElementById("lc-pkg");
+    var taskEl = document.getElementById("lc-task");
+    var askEl = document.getElementById("lc-ask");
+    var codeEl = document.getElementById("lc-code");
+    var termEl = document.getElementById("lc-term");
+    var whyEl = document.getElementById("lc-why");
+    var metaEl = document.getElementById("lc-meta");
+    var chipsEl = document.getElementById("lc-chips");
+    var navEl = document.getElementById("lc-nav");
+    if (!pkgEl || !taskEl || !askEl || !codeEl || !termEl || !whyEl || !chipsEl || !navEl) return;
+
+    var at = 0;
+    var chips = [];
+    var posEl = null;
+
+    function stamp() {
+      var ex = EX[at];
+      return [ex.asked, ex.code, ex.msg, ex.compiled, ex.total, ex.pkg, ex.ver, ex.model, ex.ran].join("|");
+    }
+
+    function paint(replay) {
+      var ex = EX[at];
+      pkgEl.textContent = ex.pkg + " " + ex.ver;
+      taskEl.textContent = ex.task;
+      askEl.innerHTML = askHTML(ex.asked);
+      codeEl.innerHTML = lcCodeHTML(ex);
+      codeEl.scrollTop = 0;
+      codeEl.setAttribute("aria-label",
+        "The answer the model wrote for " + ex.short + ", task " + ex.task);
+      /* The whole diagnostic goes in at once, so a screen reader gets all of it
+         and reduced motion shows all of it. The reveal below is decoration. */
+      termEl.innerHTML = lcTermHTML(ex);
+      whyEl.innerHTML = askHTML(ex.why) + "<b>" + ex.compiled + " of " + ex.total +
+        "</b> answers compiled.";
+      if (metaEl) {
+        metaEl.textContent = ex.model + " \u00b7 one shot, no docs \u00b7 run " + day(ex.ran);
+      }
+      chips.forEach(function (b, k) { b.setAttribute("aria-pressed", k === at ? "true" : "false"); });
+      if (posEl) posEl.textContent = (at + 1) + " / " + EX.length;
+      if (replay) {
+        termEl.className = "lc-term";
+        void termEl.offsetWidth;
+        termEl.className = "lc-term run";
+      }
+    }
+
+    function go(k) {
+      at = (k + EX.length) % EX.length;
+      paint(true);
+    }
+
+    EX.forEach(function (ex, k) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "lc-chip";
+      b.setAttribute("aria-pressed", k === at ? "true" : "false");
+      b.setAttribute("aria-label", lcChipLabel(ex));
+      b.innerHTML = lcChipHTML(ex);
+      b.addEventListener("click", function () { go(k); });
+      chips.push(b);
+      chipsEl.appendChild(b);
+    });
+    chipsEl.hidden = false;
+
+    var prev = document.createElement("button");
+    prev.type = "button";
+    prev.className = "lc-btn";
+    prev.innerHTML = "← Previous";
+    prev.setAttribute("aria-label", "Previous failing answer");
+    prev.addEventListener("click", function () { go(at - 1); });
+
+    posEl = document.createElement("span");
+    posEl.className = "lc-pos";
+    posEl.setAttribute("aria-hidden", "true");
+
+    var next = document.createElement("button");
+    next.type = "button";
+    next.className = "lc-btn";
+    next.innerHTML = "Next →";
+    next.setAttribute("aria-label", "Next failing answer");
+    next.addEventListener("click", function () { go(at + 1); });
+
+    navEl.appendChild(prev);
+    navEl.appendChild(posEl);
+    navEl.appendChild(next);
+    /* The bar carries nothing but these controls, so it stays out of the markup
+       until they exist. */
+    var footEl = document.getElementById("lc-foot");
+    if (footEl) footEl.hidden = false;
+
+    paint(false);
+
+    if (!runsPromise) return;
+    runsPromise.then(function (data) {
+      if (!data || !Array.isArray(data.libraries)) return;
+      var before = stamp();
+      var by = {};
+      var tasks = 0, bad = 0, n = 0;
+
+      data.libraries.forEach(function (l) {
+        if (!l || !l.id || !Array.isArray(l.tasks) || !l.tasks.length) return;
+        by[l.id] = l;
+        n += 1;
+        tasks += typeof l.total === "number" ? l.total : l.tasks.length;
+        l.tasks.forEach(function (t) { if (!t.passed) bad += 1; });
+      });
+      if (!n) return;
+
+      setNum("st-libs", n);
+      setNum("st-tasks", tasks);
+      setNum("st-bad", bad);
+      setNum("lc-nbad", bad);
+
+      EX.forEach(function (ex, k) {
+        var l = by[ex.lib];
+        if (!l) return;
+        if (l.pkg) ex.pkg = l.pkg;
+        if (l.version) ex.ver = l.version;
+        if (typeof l.compiled === "number") ex.compiled = l.compiled;
+        if (typeof l.total === "number") ex.total = l.total;
+        if (l.model) ex.model = l.model;
+        if (l.ranAt) ex.ran = l.ranAt;
+        var t = l.tasks.filter(function (x) { return x && x.task === ex.task; })[0];
+        if (t) {
+          if (t.asked) ex.asked = t.asked;
+          if (t.code) ex.code = t.code;
+          if (t.message) ex.msg = t.message;
+        }
+        if (chips[k]) {
+          chips[k].innerHTML = lcChipHTML(ex);
+          chips[k].setAttribute("aria-label", lcChipLabel(ex));
+        }
+      });
+
+      /* The evidence explorer further down only exists when this data loads, so
+         the way into it is added here rather than sitting in the markup as a
+         link to a section that may never appear. */
+      if (document.getElementById("evidence") && !document.getElementById("lc-jump")) {
+        var jump = document.createElement("a");
+        jump.id = "lc-jump";
+        jump.className = "lc-jump";
+        jump.href = "#evidence";
+        jump.textContent = "All " + tasks + " tasks, library by library \u2193";
+        navEl.parentNode.appendChild(jump);
+      }
+
+      /* Only redraw if the run says something the markup did not. Otherwise the
+         live region would announce the same text again for no reason. */
+      if (stamp() !== before) paint(false);
+    }).catch(function () { /* the panel keeps what the markup shipped with */ });
+  }
+
+
   /* ---------------- boot -------------------------------------------------- */
 
   function boot(data) {
@@ -1127,9 +1692,20 @@ error TS2558: Expected 2 type arguments, but got 1.</p>
     });
   }
 
-  grab("/runs.json")
-    .catch(function () { return grab("runs.json"); })
-    .then(boot)
-    .catch(function () { section.hidden = true; });
+  /* One fetch, shared. The compiler panel at the top of the page and the
+     evidence explorer down here read the same runs.json. */
+  var runs = canFetch
+    ? grab("/runs.json").catch(function () { return grab("runs.json"); })
+    : null;
+
+  /* The panel is already filled in from the markup, so it renders whether or not
+     this resolves. */
+  try { liveCompiler(runs); } catch (err) { /* the static panel stays as it is */ }
+
+  if (section && host && runs) {
+    runs.then(boot).catch(function () { section.hidden = true; });
+  } else if (section) {
+    section.hidden = true;
+  }
 })();
 </script>
