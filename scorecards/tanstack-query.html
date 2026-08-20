@@ -1,304 +1,584 @@
-<title>SDKProof — TanStack Query AI-Readiness Scorecard</title>
+<title>SDKProof — TanStack Query v5 scorecard</title>
 <style>
+  /* ---------- tokens: light is the base, dark is a redefinition ---------- */
   :root {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --fail: #cf222e;
-    --pass-bg: #dafbe1; --fail-bg: #ffebe9; --track: #e2e8ee;
-    --code-bg: #f5f7fa; --code-ink: #1b2430;
-    --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
+    color-scheme: light;
+    --bg: #f7f8f7;
+    --bg-line: rgba(14,18,22,.055);
+    --panel: #ffffff;
+    --panel-2: #f1f3f2;
+    --ink: #0e1216;
+    --ink-soft: #4a545e;
+    --ink-faint: #78838e;
+    --line: #e2e7e5;
+    --line-2: #d1d8d5;
+    --accent: #0a7f74;
+    --accent-soft: #e4f2f0;
+    --on-accent: #ffffff;
+    --pass: #16794a;
+    --warn: #9a6a00;
+    --fail: #c62f3b;
+    --code-bg: #fbfcfb;
+    --tok-com: #79848f;
+    --tok-kw: #8b34c9;
+    --tok-str: #0b6484;
+    --tok-fn: #a4560a;
+    --tok-typ: #0a7f74;
+    --hi-bad: rgba(198,47,59,.13);
+    --hi-good: rgba(22,121,74,.13);
+    --shadow: 0 1px 2px rgba(14,18,22,.05), 0 14px 34px rgba(14,18,22,.07);
     --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-      --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --fail: #f85149;
-      --pass-bg: #12261a; --fail-bg: #2a1416; --track: #222c37;
-      --code-bg: #0d1319; --code-ink: #d7e2ee;
-      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0a0d11;
+      --bg-line: rgba(255,255,255,.045);
+      --panel: #0f141a;
+      --panel-2: #141a22;
+      --ink: #e9eff4;
+      --ink-soft: #a0aeba;
+      --ink-faint: #6e7c89;
+      --line: #1d2530;
+      --line-2: #2b3542;
+      --accent: #3fd8b8;
+      --accent-soft: #0d2b27;
+      --on-accent: #04211d;
+      --pass: #3ecf7f;
+      --warn: #e0a83a;
+      --fail: #f2656f;
+      --code-bg: #0c1117;
+      --tok-com: #6e7c89;
+      --tok-kw: #c48cf5;
+      --tok-str: #7cc7f0;
+      --tok-fn: #f0b866;
+      --tok-typ: #4fd6bd;
+      --hi-bad: rgba(242,101,111,.17);
+      --hi-good: rgba(62,207,127,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
     }
   }
-  :root[data-theme="light"] {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --fail: #cf222e;
-    --pass-bg: #dafbe1; --fail-bg: #ffebe9; --track: #e2e8ee;
-    --code-bg: #f5f7fa; --code-ink: #1b2430;
-    --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
-  }
   :root[data-theme="dark"] {
-    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-    --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --fail: #f85149;
-    --pass-bg: #12261a; --fail-bg: #2a1416; --track: #222c37;
-    --code-bg: #0d1319; --code-ink: #d7e2ee;
-    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+    color-scheme: dark;
+    --bg: #0a0d11;
+    --bg-line: rgba(255,255,255,.045);
+    --panel: #0f141a;
+    --panel-2: #141a22;
+    --ink: #e9eff4;
+    --ink-soft: #a0aeba;
+    --ink-faint: #6e7c89;
+    --line: #1d2530;
+    --line-2: #2b3542;
+    --accent: #3fd8b8;
+    --accent-soft: #0d2b27;
+    --on-accent: #04211d;
+    --pass: #3ecf7f;
+    --warn: #e0a83a;
+    --fail: #f2656f;
+    --code-bg: #0c1117;
+    --tok-com: #6e7c89;
+    --tok-kw: #c48cf5;
+    --tok-str: #7cc7f0;
+    --tok-fn: #f0b866;
+    --tok-typ: #4fd6bd;
+    --hi-bad: rgba(242,101,111,.17);
+    --hi-good: rgba(62,207,127,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
   }
 
+  /* ---------- base ---------- */
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 88px; }
-  h1, h2, h3 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
-  code, pre { font-family: var(--font-mono); }
-  a { color: var(--brand); }
-  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--bg-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-line) 1px, transparent 1px);
+    background-size: 72px 72px, 72px 72px;
+    background-position: -1px -1px, -1px -1px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.62;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 96px; }
+  h1, h2, h3 { margin: 0; letter-spacing: -.022em; line-height: 1.1; text-wrap: balance; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  code, pre, .num { font-family: var(--font-mono); }
+  code { font-size: .9em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
-  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
-  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); text-decoration: none; }
-  .logo b { color: var(--brand); }
-  .mast .tag { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px 9px; margin-left: auto; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--ink-faint); display: block;
+  }
+  .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
-  .hero { border-bottom: 1px solid var(--line-strong); padding: 30px 0 30px; margin-bottom: 34px; }
-  .hero .lib { font-family: var(--font-mono); font-size: 13px; color: var(--brand); font-weight: 600; }
-  .hero h1 { font-size: clamp(27px, 5vw, 44px); font-weight: 800; margin: 10px 0 0; }
-  .hero .verdict { color: var(--ink-soft); font-size: 17px; margin: 14px 0 0; max-width: 62ch; }
-  .hero .verdict b { color: var(--ink); }
+  /* ---------- masthead ---------- */
+  .mast { display: flex; align-items: center; gap: 12px; padding: 24px 0 0; }
+  .logo { font-weight: 700; font-size: 16px; letter-spacing: -.03em; color: var(--ink); }
+  .logo b { color: var(--accent); font-weight: 700; }
+  .mast .navs { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .mast .gh {
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 14px;
+  }
+  .mast .gh:hover { border-color: var(--accent); color: var(--accent); }
 
-  .scorerow { display: flex; align-items: flex-end; gap: 24px; margin-top: 26px; flex-wrap: wrap; }
-  .scorebig { font-family: var(--font-mono); line-height: .9; }
-  .scorebig .n { font-size: 68px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--pass); }
-  .scorebig .d { font-size: 22px; font-weight: 700; color: var(--ink-faint); }
-  .scorebig .l { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; }
-  .segs { flex: 1; min-width: 240px; }
-  .segbar { display: flex; gap: 3px; }
-  .seg { height: 30px; flex: 1; border-radius: 3px; }
-  .seg.p { background: var(--pass); }
-  .seg.f { background: var(--fail); }
-  .seglegend { display: flex; gap: 16px; margin-top: 10px; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); }
-  .seglegend b { color: var(--ink); }
-  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; vertical-align: baseline; margin-right: 5px; }
-  .dot.p { background: var(--pass); } .dot.f { background: var(--fail); }
+  /* ---------- hero ---------- */
+  .hero { padding: 58px 0 0; }
+  .hero h1 {
+    font-size: clamp(32px, 6.4vw, 62px); font-weight: 800; letter-spacing: -.04em; line-height: 1.0;
+    margin: 18px 0 0;
+  }
+  .hero h1 .dim { color: var(--ink-faint); }
+  .hero .pkg {
+    display: inline-block; margin-top: 14px; font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 5px 13px;
+  }
+  .lede { max-width: 64ch; margin-top: 28px; }
+  .lede p { color: var(--ink-soft); font-size: clamp(16px, 2.1vw, 18.5px); margin-bottom: 15px; }
+  .lede p:last-child { margin-bottom: 0; }
+  .lede b { color: var(--ink); font-weight: 650; }
+  .verdict-line {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 7px 16px 7px 12px;
+  }
+  .verdict-line svg { flex: none; }
 
-  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 24px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
-  .meta b { color: var(--ink-soft); font-weight: 600; }
+  /* ---------- score panel ---------- */
+  .scorebox {
+    display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center;
+    margin-top: 44px; padding: 26px 28px; background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 16px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 720px) { .scorebox { grid-template-columns: 1fr; gap: 24px; padding: 22px 20px; } }
+  .scorebox .big {
+    font-family: var(--font-mono); font-size: clamp(50px, 9vw, 74px); font-weight: 700;
+    letter-spacing: -.05em; line-height: .9; font-variant-numeric: tabular-nums; display: block;
+  }
+  .scorebox .big s { text-decoration: none; font-size: 21px; color: var(--ink-faint); letter-spacing: -.02em; }
+  .scorebox .lbl {
+    display: block; margin-top: 13px; font-size: 11px; font-weight: 700; letter-spacing: .17em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  .s-fail { color: var(--fail); }
+  .s-warn { color: var(--warn); }
+  .s-ok   { color: var(--ink); }
+  .s-pass { color: var(--pass); }
+  .ticks { display: flex; gap: 4px; }
+  .ticks i { flex: 1 1 0; height: 26px; border-radius: 3px; background: var(--pass); }
+  .ticks i.x { background: var(--fail); }
+  .ticks i.r { background: var(--line-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 13px; font-size: 12.5px; color: var(--ink-faint); }
+  .legend b { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .legend .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+  .sw.p { background: var(--pass); }
+  .sw.f { background: var(--fail); }
+  .sw.r { background: var(--line-2); }
 
-  .board { display: flex; gap: 12px; margin: 0 0 34px; flex-wrap: wrap; }
-  .bcard { flex: 1; min-width: 150px; background: var(--panel); border: 1px solid var(--line); border-radius: 11px; padding: 14px 16px; box-shadow: var(--shadow); text-decoration: none; color: inherit; display: block; }
-  .bcard.cur { border-color: var(--brand); }
-  .bcard .bn { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
-  .bcard .bs { font-family: var(--font-mono); font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 4px; }
-  .bcard .bl { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+  .facts span {
+    font-size: 12.5px; color: var(--ink-soft); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+  }
+  .facts b { color: var(--ink); font-weight: 650; }
 
-  .sec-head { margin: 46px 0 18px; }
-  .sec-head h2 { font-size: clamp(19px, 3.2vw, 25px); font-weight: 760; margin-top: 8px; }
-  .sec-head p { color: var(--ink-soft); font-size: 14.5px; margin: 8px 0 0; max-width: 64ch; }
+  /* ---------- section heads ---------- */
+  .sec { margin-top: 82px; }
+  .sec > .head { max-width: 66ch; margin-bottom: 24px; }
+  .sec h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 780; margin: 12px 0 0; }
+  .sec .head p { color: var(--ink-soft); font-size: 16.5px; margin-top: 14px; }
+  .sec .head p b { color: var(--ink); font-weight: 650; }
+  .sec .head p + p { margin-top: 12px; }
 
-  .fcard { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow); overflow: hidden; }
-  .fcard .top { display: flex; align-items: center; gap: 10px; padding: 15px 18px; border-bottom: 1px solid var(--line); }
-  .fcard .top .c { color: var(--pass); font-weight: 800; font-family: var(--font-mono); }
-  .fcard .top .t { font-weight: 700; font-size: 15.5px; }
-  .fcard .top .tsx { margin-left: auto; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--pass); background: var(--pass-bg); border-radius: 5px; padding: 3px 8px; white-space: nowrap; }
-  .fbody { display: grid; grid-template-columns: 1fr 1fr; }
-  @media (max-width: 640px) { .fbody { grid-template-columns: 1fr; } }
-  .col { padding: 16px 18px; }
-  .col + .col { border-left: 1px solid var(--line); }
-  @media (max-width: 640px) { .col + .col { border-left: none; border-top: 1px solid var(--line); } }
-  .col .clabel { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; font-weight: 650; margin-bottom: 9px; }
-  .col.bad .clabel { color: var(--fail); }
-  .col.good .clabel { color: var(--pass); }
-  pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 13px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; color: var(--code-ink); }
-  .hl-bad { color: var(--fail); font-weight: 700; }
-  .hl-good { color: var(--pass); font-weight: 700; }
-  .cm { color: var(--ink-faint); }
-  .fcard .why { padding: 16px 18px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--ink-soft); }
-  .fcard .why b { color: var(--ink); }
+  /* ---------- code comparison ---------- */
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .cmp { grid-template-columns: 1fr; } }
+  .cmp + .cmp { margin-top: 22px; }
+  .pane {
+    margin: 0; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .pane figcaption {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  }
+  .pane .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .pane.bad .dot { background: var(--fail); }
+  .pane.good .dot { background: var(--pass); }
+  .pane .pl { font-size: 13.5px; font-weight: 650; color: var(--ink); }
+  .pane .pv { margin-left: auto; font-size: 11.5px; color: var(--ink-faint); }
+  .pane .scroll { overflow-x: auto; background: var(--code-bg); }
+  .pane pre {
+    margin: 0; padding: 18px 18px 20px; font-size: 12.5px; line-height: 1.72;
+    color: var(--ink); tab-size: 2;
+  }
+  .pane .out {
+    border-top: 1px solid var(--line); padding: 13px 16px; font-family: var(--font-mono);
+    font-size: 11.5px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .pane.bad .out { color: var(--fail); background: var(--hi-bad); }
+  .pane.good .out { color: var(--pass); background: var(--hi-good); }
+  .c-com { color: var(--tok-com); }
+  .c-kw  { color: var(--tok-kw); }
+  .c-str { color: var(--tok-str); }
+  .c-fn  { color: var(--tok-fn); }
+  .c-typ { color: var(--tok-typ); }
+  .bad-t  { background: var(--hi-bad); border-bottom: 1.5px solid var(--fail); border-radius: 2px; padding: 0 2px; }
+  .good-t { background: var(--hi-good); border-bottom: 1.5px solid var(--pass); border-radius: 2px; padding: 0 2px; }
+  .cap { font-size: 13px; color: var(--ink-faint); margin-top: 16px; max-width: 70ch; }
+  .cap b { color: var(--ink-soft); font-weight: 650; }
 
-  .rights { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--pass); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); }
-  .rights h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-  .rights p { margin: 0 0 12px; color: var(--ink-soft); font-size: 14px; }
-  .rights p b { color: var(--ink); }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); background: var(--pass-bg); border-radius: 6px; padding: 4px 9px; }
-  .chip::before { content: "✓ "; color: var(--pass); font-weight: 700; }
-  .chip.star { outline: 1px solid var(--pass); }
+  /* ---------- panels of prose ---------- */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 24px 26px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 640px) { .panel { padding: 20px 18px; } }
+  .panel h3 { font-size: 17.5px; font-weight: 720; margin: 26px 0 9px; }
+  .panel h3:first-child { margin-top: 0; }
+  .panel p { color: var(--ink-soft); font-size: 15px; margin-bottom: 13px; max-width: 74ch; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel b { color: var(--ink); font-weight: 650; }
+  .panel .lead-in { color: var(--ink); }
 
-  .insight { background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 22px 24px; }
-  .insight h2 { font-size: 20px; font-weight: 760; margin-bottom: 10px; }
-  .insight p { margin: 0 0 12px; color: var(--ink-soft); font-size: 15px; }
-  .insight p:last-child { margin-bottom: 0; }
-  .insight b { color: var(--ink); }
+  /* ---------- chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
+  }
+  .chip::before { content: "\2713"; color: var(--pass); font-weight: 700; margin-right: 6px; }
+  .chip.key { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
 
-  .method { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; line-height: 1.7; }
-  .method b { color: var(--ink); }
-  .method .k { color: var(--brand); }
+  /* ---------- tables ---------- */
+  .tblwrap {
+    overflow-x: auto; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; box-shadow: var(--shadow);
+  }
+  table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 540px; }
+  table.t th {
+    text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-faint); padding: 15px 18px;
+    border-bottom: 1px solid var(--line-2); white-space: nowrap;
+  }
+  table.t td { padding: 13px 18px; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
+  table.t tr:last-child td { border-bottom: 0; }
+  table.t td.l { color: var(--ink); font-weight: 650; }
+  table.t td.n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.t td.good { color: var(--pass); font-weight: 700; }
+  table.t td.bad { color: var(--fail); font-weight: 700; }
+  table.t td.dim { color: var(--ink-faint); }
+  table.t th.r, table.t td.r { text-align: right; }
 
-  .cta { text-align: center; margin-top: 46px; padding: 30px 24px; background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--line-strong); border-radius: 16px; }
-  .cta h2 { font-size: clamp(20px, 3.4vw, 26px); font-weight: 780; }
-  .cta p { color: var(--ink-soft); font-size: 15px; margin: 12px auto 20px; max-width: 52ch; }
-  .cta .btn { display: inline-block; font-family: var(--font-mono); font-size: 14px; font-weight: 650; background: var(--brand); color: var(--brand-ink); padding: 11px 22px; border-radius: 9px; text-decoration: none; }
-  .cta .note { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 14px; }
+  /* ---------- limits ---------- */
+  .limits { border-top: 1px solid var(--line-2); }
+  .limits div { display: grid; grid-template-columns: 178px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .limits dt { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .limits dd { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+  .limits dd code { color: var(--ink); }
+  @media (max-width: 640px) { .limits div { grid-template-columns: 1fr; gap: 6px; } }
 
-  footer { margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
+  /* ---------- callout ---------- */
+  .callout {
+    background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--accent);
+    border-radius: 0 14px 14px 0; padding: 20px 22px; margin-top: 20px;
+  }
+  .callout p { color: var(--ink-soft); font-size: 15px; margin-bottom: 12px; max-width: 74ch; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- board of other scores ---------- */
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 18px; box-shadow: var(--shadow); transition: border-color .13s, transform .13s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .card .name { font-size: 15.5px; font-weight: 720; letter-spacing: -.02em; }
+  .card .score {
+    font-family: var(--font-mono); font-size: 27px; font-weight: 700; letter-spacing: -.04em;
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .card .score s { text-decoration: none; font-size: 12px; color: var(--ink-faint); }
+  .card .ratio { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .card .why { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
+  .card.cur { border-color: var(--accent); }
+  .card.cur .why { color: var(--ink); }
+
+  /* ---------- finding links ---------- */
+  .finding {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap; text-decoration: none;
+    margin-top: 14px; padding: 20px 22px; background: var(--panel);
+    border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0;
+  }
+  .finding:hover { border-color: var(--accent); }
+  .finding .fl { font-size: 10.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .finding .ft { flex: 1; min-width: 250px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .finding .fa { font-size: 13px; font-weight: 650; color: var(--accent); white-space: nowrap; }
+
+  /* ---------- closing ---------- */
+  .btn {
+    display: inline-block; font-size: 14px; font-weight: 650; text-decoration: none;
+    background: var(--accent); color: var(--on-accent); padding: 11px 20px; border-radius: 9px;
+    white-space: nowrap;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); padding: 9.5px 18.5px; }
+  .btn:hover { filter: brightness(1.06); }
+  .close {
+    margin-top: 80px; padding: 44px 32px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px;
+  }
+  .close h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
+  .close p { color: var(--ink-soft); font-size: 16px; margin: 14px auto 24px; max-width: 54ch; }
+  .close .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .close .note { font-size: 12.5px; color: var(--ink-faint); margin-top: 20px; }
+
+  /* ---------- footer ---------- */
+  footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
+  footer .fine { margin: 0; max-width: 78ch; }
+  footer a { color: var(--ink-soft); }
 </style>
 
 <div class="wrap">
 
   <div class="mast">
     <span class="logo">SDK<b>Proof</b></span>
-    <span class="tag">AI-Readiness Scorecard</span>
+    <span class="navs">
+      <a class="gh" href="index.html">All eight scores</a>
+      <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">Source on GitHub</a>
+    </span>
   </div>
 
   <header class="hero">
-    <div class="lib">@tanstack/react-query · v5.101.4</div>
-    <h1>TanStack Query is 100% ready for AI coding agents.</h1>
-    <p class="verdict">Claude Opus 5 has <b>fully caught up</b> to TanStack Query v5 — all 13 tasks compile clean, including every v4→v5 trap: object-only <code>useQuery</code>, <code>gcTime</code>, <code>placeholderData: keepPreviousData</code>, the renamed <code>'pending'</code> status, and <code>useInfiniteQuery</code>'s now-required <code>initialPageParam</code>. There's nothing to fix.</p>
-
-    <div class="scorerow">
-      <div class="scorebig">
-        <span class="n">100</span><span class="d">/100</span>
-        <div class="l">Agent-readiness</div>
-      </div>
-      <div class="segs">
-        <div class="segbar">
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-        </div>
-        <div class="seglegend">
-          <span><span class="dot p"></span><b>13</b> compile clean</span>
-          <span><span class="dot f"></span><b>0</b> fail type-check</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="meta">
-      <span><b>Model:</b> claude-opus-5</span>
-      <span><b>Tasks:</b> 13</span><span><b>Rates:</b> 100% conditional = 100% unconditional (0 refused) · 95% CI 77.2–100%</span>
-      <span><b>Method:</b> tsc against real installed package</span>
-      <span><b>Run:</b> 2026-07-26</span>
-    </div>
+    <span class="eyebrow">Scorecard · TanStack Query 5</span>
+    <h1>Five renames to trip on.<br><span class="dim">It tripped on none.</span></h1>
+    <span class="pkg">@tanstack/react-query 5.101.4 · claude-opus-5</span>
   </header>
 
-  <!-- SCOREBOARD -->
-  <div class="board">
-    <a class="bcard" href="prisma7.html">
-      <div class="bn">Prisma 7</div>
-      <div class="bs">87</div>
-      <div class="bl">client setup on v6 →</div>
-    </a>
-    <a class="bcard" href="aisdk.html">
-      <div class="bn">Vercel AI SDK 7</div>
-      <div class="bs">100</div>
-      <div class="bl">clean sweep →</div>
-    </a>
-    <a class="bcard" href="zod.html">
-      <div class="bn">Zod 4</div>
-      <div class="bs">100</div>
-      <div class="bl">clean sweep →</div>
-    </a>
-    <div class="bcard cur">
-      <div class="bn">TanStack Query 5</div>
-      <div class="bs">100</div>
-      <div class="bl">fully absorbed</div>
+  <div class="lede">
+    <p>AI coding assistants write library code from memory. When a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it doesn't build.</p>
+    <p><b>SDKProof measures how often that happens.</b> It gives a model real coding jobs for one library, then compiles every answer against the real installed package with <code>tsc</code>, the TypeScript compiler. A task passes only if it compiles &mdash; no AI judges another AI.</p>
+    <p>This page is TanStack Query, the data-fetching library for React. Thirteen ordinary jobs — fetch a record, cache it, page through a list — one shot each, no docs, no retries.</p>
+    <p><b>All thirteen compiled.</b> v5 renamed a lot of things a model could still be writing from its v4 memory. It wrote none of them.</p>
+    <p class="verdict-line">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+      This measures the model, not TanStack Query.
+    </p>
+  </div>
+
+  <div class="scorebox">
+    <div>
+      <span class="big s-pass">100<s>/100</s></span>
+      <span class="lbl">13 of 13 compiled</span>
     </div>
-  </div>
-
-  <!-- TRAPS AVOIDED -->
-  <div class="sec-head">
-    <span class="eyebrow">The interesting part</span>
-    <h2>Every v4→v5 trap — navigated</h2>
-    <p>v5 removed or renamed a lot. A model trained mostly on v4 fails all of these. Here's what Opus 5 actually wrote, verified against the installed v5.</p>
-  </div>
-
-  <article class="fcard">
-    <div class="top"><span class="c">✓</span><span class="t">The five v4 traps in TanStack Query v5</span><span class="tsx">0 errors</span></div>
-    <div class="fbody">
-      <div class="col bad">
-        <div class="clabel">A v4-trained model writes</div>
-<pre><span class="cm">// positional signature</span>
-useQuery(<span class="hl-bad">['todo', id]</span>, fetchTodo)
-
-<span class="cm">// QueryClient cache option</span>
-{ <span class="hl-bad">cacheTime</span>: 5 * 60_000 }
-
-<span class="cm">// keep prior page's data</span>
-{ <span class="hl-bad">keepPreviousData: true</span> }
-
-<span class="cm">// pending status</span>
-q.status === <span class="hl-bad">'loading'</span>
-
-<span class="cm">// infinite query</span>
-useInfiniteQuery({ queryKey, queryFn,
-  getNextPageParam })  <span class="cm">// no init</span></pre>
+    <div>
+      <div class="ticks">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
       </div>
-      <div class="col good">
-        <div class="clabel">Opus 5 wrote (v5) ✓</div>
-<pre><span class="cm">// object-only</span>
-useQuery({ <span class="hl-good">queryKey: ['todo', id]</span>,
-  queryFn: fetchTodo })
-
-<span class="cm">// renamed</span>
-{ <span class="hl-good">gcTime</span>: 5 * 60_000 }
-
-<span class="cm">// new helper</span>
-{ <span class="hl-good">placeholderData: keepPreviousData</span> }
-
-<span class="cm">// renamed</span>
-q.status === <span class="hl-good">'pending'</span>
-
-<span class="cm">// initialPageParam now required</span>
-useInfiniteQuery({ queryKey, queryFn,
-  <span class="hl-good">initialPageParam: 0</span>, getNextPageParam })</pre>
+      <div class="legend">
+        <span><span class="sw p"></span><b>13</b> compiled</span>
+        <span><span class="sw f"></span><b>0</b> did not compile</span>
+        <span><span class="sw r"></span><b>0</b> refused</span>
       </div>
     </div>
-    <div class="why"><b>Each left-hand line was valid v4 and errors against v5</b> (<code>TS2769</code>, <code>TS2353</code>, <code>TS2367</code>). The model wrote the v5 form for all five — it even imported <code>keepPreviousData</code> to feed <code>placeholderData</code>. The drift window has fully closed for this library.</div>
-  </article>
-
-  <!-- RIGHT -->
-  <div class="sec-head">
-    <span class="eyebrow">13 of 13</span>
-    <h2>What it gets right</h2>
   </div>
-  <div class="rights">
-    <h3>Modern TanStack Query is second nature to the model.</h3>
-    <p>Queries, mutations, caching config, conditional fetching, pagination, and infinite scroll all compile clean on the first try — with the current v5 API surface, not the v4 one.</p>
-    <div class="chips">
-      <span class="chip">useQuery (object)</span>
-      <span class="chip">useMutation</span>
-      <span class="chip">select</span>
-      <span class="chip">enabled</span>
-      <span class="chip">multi-part queryKey</span>
-      <span class="chip">staleTime</span>
-      <span class="chip star">gcTime</span>
-      <span class="chip star">placeholderData: keepPreviousData</span>
-      <span class="chip star">status: 'pending'</span>
-      <span class="chip star">initialPageParam</span>
+
+  <div class="facts">
+    <span><b>Model:</b> claude-opus-5</span>
+    <span><b>Tasks:</b> 13</span>
+    <span><b>Package:</b> @tanstack/react-query 5.101.4</span>
+    <span><b>Run:</b> 26 July 2026</span>
+    <span><b>Pass:</b> it compiles</span>
+  </div>
+
+  <!-- ================= the traps ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What it could have got wrong</span>
+      <h2>Five things v5 changed, side by side</h2>
+      <p>Every line on the left was correct v4 and is an error against the installed v5. A model still writing v4 from memory fails all five.</p>
+      <p><b>The model wrote the right-hand column on its own.</b> The prompts name the job — "fetch a to-do", "keep the last page on screen" — never the option names.</p>
     </div>
-  </div>
 
-  <!-- INSIGHT -->
-  <div class="sec-head">
-    <span class="eyebrow">Read the whole board together</span>
-    <h2>Readiness tracks the drift window</h2>
-  </div>
-  <div class="insight">
-    <p>Read the board top to bottom and the pattern is exact: <b>the older the breaking change, the higher the score.</b> Prisma 7 (most recent major) → <b>87</b>, Next.js 16 → <b>92</b>. The 2025 majors — the Vercel AI SDK and Zod — are now fully absorbed by Opus 5 → <b>100</b>. TanStack Query v5 (shipped 2023) → <b>100</b> too, absorbed long ago.</p>
-    <p><b>A perfect score isn't luck — it's a library that changed long enough ago for the model to have learned it.</b> The gap only shows on recent majors, and it re-opens the day your library ships its next one. That moving number is exactly what SDKProof tracks.</p>
-  </div>
+    <div class="cmp">
+      <figure class="pane bad">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What a v4 memory writes</span>
+          <code class="pv">fails against 5.101.4</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-com">// two positional arguments</span>
+<span class="c-fn">useQuery</span>(<span class="bad-t">[<span class="c-str">'todo'</span>, id]</span>, fetchTodo);
 
-  <!-- METHOD -->
-  <div class="sec-head">
-    <span class="eyebrow">No opinions — just the compiler</span>
-    <h2>How this was measured</h2>
-  </div>
-  <div class="method">
-    <span class="k">13</span> realistic TanStack Query tasks → generated by <span class="k">claude-opus-5</span> → each solution written into a project with the <b>real installed <code>@tanstack/react-query</code> v5.101.4</b> (+ <code>react</code>, <code>@types/react</code>) and type-checked with <span class="k">tsc --noEmit</span>.<br>
-    A task <b>passes</b> only if it compiles clean. The prompts name the functions but never the option names — so this measures what the model <em>reaches for</em>, not what it's told. Reproducible: pinned package versions, pinned model.
-  </div>
+<span class="c-com">// how long to keep unused cache</span>
+{ <span class="bad-t">cacheTime</span>: <span class="c-typ">5</span> * <span class="c-typ">60_000</span> }
 
-  <!-- CTA -->
-  <div class="cta">
-    <h2>Is your SDK ready for AI agents?</h2>
-    <p>Right after a major release, agents keep shipping your old API. SDKProof scores it, tracks it across model releases, and tells you exactly what to fix.</p>
-    <a class="btn" href="https://github.com/Kalpitrathore/sdkproof">See it on GitHub →</a>
-    <div class="note">early project · scorecards are independent analysis</div>
+<span class="c-com">// hold the last page while loading</span>
+{ <span class="bad-t">keepPreviousData</span>: <span class="c-kw">true</span> }
+
+<span class="c-com">// the first status</span>
+q.status === <span class="bad-t"><span class="c-str">'loading'</span></span>
+
+<span class="c-com">// infinite list</span>
+<span class="c-fn">useInfiniteQuery</span>({ queryKey, queryFn,
+  getNextPageParam });</code></pre></div>
+        <p class="out">Every line here was correct in v4 and is an error against 5.101.4.</p>
+      </figure>
+
+      <figure class="pane good">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What the model actually wrote</span>
+          <code class="pv">@tanstack/react-query 5.101.4</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-com">// one object</span>
+<span class="c-fn">useQuery</span>({ <span class="good-t">queryKey: [<span class="c-str">'todo'</span>, id]</span>,
+  queryFn: fetchTodo });
+
+<span class="c-com">// renamed</span>
+{ <span class="good-t">gcTime</span>: <span class="c-typ">5</span> * <span class="c-typ">60_000</span> }
+
+<span class="c-com">// now a helper you import</span>
+{ <span class="good-t">placeholderData: keepPreviousData</span> }
+
+<span class="c-com">// renamed</span>
+q.status === <span class="good-t"><span class="c-str">'pending'</span></span>
+
+<span class="c-com">// a starting page is required now</span>
+<span class="c-fn">useInfiniteQuery</span>({ queryKey, queryFn,
+  <span class="good-t">initialPageParam: <span class="c-typ">0</span></span>, getNextPageParam });</code></pre></div>
+        <p class="out">tsc --noEmit — 0 errors</p>
+      </figure>
+    </div>
+
+    <p class="cap"><b><code>placeholderData</code> is the interesting one.</b> v4's <code>keepPreviousData: true</code> became a function you import and pass in. That's not a rename you can guess — the model had to have read v5 code. It imported the helper without being asked to.</p>
+  </section>
+
+  <!-- ================= why 100 ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What a 100 means here</span>
+      <h2>Not luck. Age.</h2>
+    </div>
+    <div class="panel">
+      <p>v5 shipped in 2023. The model has seen years of v5 code, years of migration guides, and years of people answering questions about it. By now the v4 shapes are the unusual ones.</p>
+      <p>Compare the other end of the board. <a href="index.html#drift">TanStack Table v9</a> is fresh, and the same model wrote the v8 API on all twelve tasks — 0 of 12 compiled. Same maintainers, same model, same day. The only thing that differs is how long the current version has been out.</p>
+      <p><b>So a 100 is a statement about time, not quality.</b> It also has a shelf life: the day this library ships a release that renames something, this number drops and stays down until models retrain.</p>
+    </div>
+  </section>
+
+  <!-- ================= all thirteen ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">All thirteen</span>
+      <h2>What the model wrote</h2>
+      <p>Marked ones are the version-specific probes — tasks written to catch a v4 answer.</p>
+    </div>
+    <div class="panel">
+      <div class="chips">
+        <span class="chip">useQuery — object form</span>
+        <span class="chip">useMutation</span>
+        <span class="chip">select</span>
+        <span class="chip">enabled</span>
+        <span class="chip">multi-part queryKey</span>
+        <span class="chip">staleTime</span>
+        <span class="chip">invalidateQueries</span>
+        <span class="chip">dependent queries</span>
+        <span class="chip">error handling</span>
+        <span class="chip key">gcTime</span>
+        <span class="chip key">placeholderData: keepPreviousData</span>
+        <span class="chip key">status: 'pending'</span>
+        <span class="chip key">initialPageParam</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= method ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">How this was measured</span>
+      <h2>The compiler has the last word</h2>
+      <p>Thirteen realistic TanStack Query tasks, written by <code>claude-opus-5</code>, each dropped into a small project with <code>@tanstack/react-query</code> 5.101.4, <code>react</code> and <code>@types/react</code> actually installed, then run through <code>tsc --noEmit</code>. A task passes only if it compiles.</p>
+    </div>
+    <dl class="limits">
+      <div><dt>One model</dt><dd>Everything here is <code>claude-opus-5</code>. Another model will score differently.</dd></div>
+      <div><dt>One shot, no docs</dt><dd>The model gets the task and nothing else. No release notes, no editor rules, no retries.</dd></div>
+      <div><dt>Small numbers</dt><dd>Thirteen tasks. A clean sweep rules out a common failure, not a rare one.</dd></div>
+      <div><dt>Compiles is not correct</dt><dd><code>tsc</code>, the TypeScript compiler, checks that the API exists and the types line up. It never runs the code, so nothing here says the fetching logic behaves properly.</dd></div>
+      <div><dt>Refusals</dt><dd>A refusal is neither a pass nor a fail — the model writes no code, so there is nothing to compile, and refused tasks drop out of the denominator. This run had none. <a href="stripe.html">Stripe had five</a>, which is why its 100 is out of 10 rather than 15.</dd></div>
+      <div><dt>It measures the model</dt><dd>100 says <code>claude-opus-5</code> knows current TanStack Query. It says nothing about whether the library is well designed.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ================= elsewhere ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Elsewhere</span>
+      <h2>Related findings</h2>
+    </div>
+    <a class="finding" href="agent-docs.html">
+      <span class="fl">Agent docs</span>
+      <span class="ft">One sentence from a library's own docs fixes the failure 10 times out of 10. The same sentence buried in their full docs pack fixes nothing.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+    <a class="finding" href="skills-delta.html">
+      <span class="fl">Agent skills</span>
+      <span class="ft">Three libraries ship files meant for AI agents. Scored with and without them, across six runs, not one difference clears zero.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+
+    <div class="head" style="margin-top:52px">
+      <span class="eyebrow">The rest of the board</span>
+      <h2>Other libraries, scored the same way</h2>
+    </div>
+    <div class="board">
+      <a class="card" href="index.html#drift">
+        <div class="top"><span class="name">TanStack Table 9</span><span class="score s-fail">0<s>/100</s></span></div>
+        <div class="ratio">0 of 12 compiled</div>
+        <p class="why">v9 renamed the main hook. The model wrote v8 every time.</p>
+      </a>
+      <a class="card" href="aisdk.html">
+        <div class="top"><span class="name">Vercel AI SDK 7</span><span class="score s-warn">71<s>/100</s></span></div>
+        <div class="ratio">10 of 14 compiled</div>
+        <p class="why">Breaks the moment a callback gets an explicit type.</p>
+      </a>
+      <a class="card" href="prisma7.html">
+        <div class="top"><span class="name">Prisma 7</span><span class="score s-warn">87<s>/100</s></span></div>
+        <div class="ratio">13 of 15 compiled</div>
+        <p class="why">Queries are clean. It still builds the client the v6 way.</p>
+      </a>
+      <a class="card" href="zod.html">
+        <div class="top"><span class="name">Zod 4</span><span class="score s-pass">100<s>/100</s></span></div>
+        <div class="ratio">10 of 10 compiled</div>
+        <p class="why">The unified error option and the 2-argument z.record().</p>
+      </a>
+    </div>
+    <p class="cap"><a href="index.html">All eight scores are on the home page →</a></p>
+  </section>
+
+  <div class="close">
+    <h2>Score my library</h2>
+    <p>Name any TypeScript package &amp; I'll run it. Or do it yourself — it's all open source.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">Read the code</a>
+    </div>
+    <p class="note">There's no npm package. Clone the repo, point it at a library, run it. The compiler is the judge.</p>
   </div>
 
   <footer>
-    SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by TanStack.<br>
-    Measured 2026-07-26 against @tanstack/react-query v5.101.4 (+ react, @types/react) with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior.
+    <p class="fine">SDKProof — independent measurement of how AI coding agents write real SDKs. Measured 26 July 2026 against <code>@tanstack/react-query</code> 5.101.4 with <code>claude-opus-5</code>. Type-check only: it checks the API surface, not what the code does when it runs. Not affiliated with TanStack.</p>
   </footer>
-
 </div>

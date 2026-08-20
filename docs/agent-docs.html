@@ -39,188 +39,588 @@
 </head>
 <body>
 <style>
+  /* ---------- tokens: light is the base, dark is a redefinition ---------- */
   :root {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff;
+    color-scheme: light;
+    --bg: #f7f8f7;
+    --bg-line: rgba(14,18,22,.055);
+    --panel: #ffffff;
+    --panel-2: #f1f3f2;
+    --ink: #0e1216;
+    --ink-soft: #4a545e;
+    --ink-faint: #78838e;
+    --line: #e2e7e5;
+    --line-2: #d1d8d5;
+    --accent: #0a7f74;
+    --accent-soft: #e4f2f0;
+    --on-accent: #ffffff;
+    --pass: #16794a;
+    --warn: #9a6a00;
+    --fail: #c62f3b;
+    --code-bg: #fbfcfb;
+    --tok-com: #79848f;
+    --tok-kw: #8b34c9;
+    --tok-str: #0b6484;
+    --tok-fn: #a4560a;
+    --tok-typ: #0a7f74;
+    --hi-bad: rgba(198,47,59,.13);
+    --hi-good: rgba(22,121,74,.13);
+    --shadow: 0 1px 2px rgba(14,18,22,.05), 0 14px 34px rgba(14,18,22,.07);
     --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-      --brand: #2dd4bf; --brand-ink: #06231f;
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0a0d11;
+      --bg-line: rgba(255,255,255,.045);
+      --panel: #0f141a;
+      --panel-2: #141a22;
+      --ink: #e9eff4;
+      --ink-soft: #a0aeba;
+      --ink-faint: #6e7c89;
+      --line: #1d2530;
+      --line-2: #2b3542;
+      --accent: #3fd8b8;
+      --accent-soft: #0d2b27;
+      --on-accent: #04211d;
+      --pass: #3ecf7f;
+      --warn: #e0a83a;
+      --fail: #f2656f;
+      --code-bg: #0c1117;
+      --tok-com: #6e7c89;
+      --tok-kw: #c48cf5;
+      --tok-str: #7cc7f0;
+      --tok-fn: #f0b866;
+      --tok-typ: #4fd6bd;
+      --hi-bad: rgba(242,101,111,.17);
+      --hi-good: rgba(62,207,127,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
     }
   }
-  :root[data-theme="light"] {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff;
-  }
   :root[data-theme="dark"] {
-    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-    --brand: #2dd4bf; --brand-ink: #06231f;
+    color-scheme: dark;
+    --bg: #0a0d11;
+    --bg-line: rgba(255,255,255,.045);
+    --panel: #0f141a;
+    --panel-2: #141a22;
+    --ink: #e9eff4;
+    --ink-soft: #a0aeba;
+    --ink-faint: #6e7c89;
+    --line: #1d2530;
+    --line-2: #2b3542;
+    --accent: #3fd8b8;
+    --accent-soft: #0d2b27;
+    --on-accent: #04211d;
+    --pass: #3ecf7f;
+    --warn: #e0a83a;
+    --fail: #f2656f;
+    --code-bg: #0c1117;
+    --tok-com: #6e7c89;
+    --tok-kw: #c48cf5;
+    --tok-str: #7cc7f0;
+    --tok-fn: #f0b866;
+    --tok-typ: #4fd6bd;
+    --hi-bad: rgba(242,101,111,.17);
+    --hi-good: rgba(62,207,127,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
   }
+
+  /* ---------- base ---------- */
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 90px; }
-  h1, h2 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
-  code { font-family: var(--font-mono); font-size: .92em; }
-  a { color: var(--brand); }
-  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--bg-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-line) 1px, transparent 1px);
+    background-size: 72px 72px, 72px 72px;
+    background-position: -1px -1px, -1px -1px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.62;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 96px; }
+  h1, h2, h3 { margin: 0; letter-spacing: -.022em; line-height: 1.1; text-wrap: balance; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  code, pre, .num { font-family: var(--font-mono); }
+  code { font-size: .9em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
-  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
-  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); }
-  .logo b { color: var(--brand); }
-  .mast .gh { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-decoration: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 11px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--ink-faint); display: block;
+  }
+  .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
-  .hero { padding: 40px 0 30px; border-bottom: 1px solid var(--line-strong); margin-bottom: 34px; }
-  .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; }
-  .hero .sub { color: var(--ink-soft); font-size: 17px; margin: 14px 0 0; max-width: 62ch; }
+  /* ---------- masthead ---------- */
+  .mast { display: flex; align-items: center; gap: 12px; padding: 24px 0 0; }
+  .logo { font-weight: 700; font-size: 16px; letter-spacing: -.03em; color: var(--ink); }
+  .logo b { color: var(--accent); font-weight: 700; }
+  .mast .navs { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .mast .gh {
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 14px;
+  }
+  .mast .gh:hover { border-color: var(--accent); color: var(--accent); }
 
-  .doc h2 { font-size: 19px; font-weight: 700; margin: 34px 0 10px; }
-  .doc p { color: var(--ink-soft); margin: 0 0 12px; max-width: 68ch; }
-  .doc ul { color: var(--ink-soft); margin: 0 0 12px; padding-left: 20px; max-width: 68ch; }
-  .doc li { margin-bottom: 7px; }
-  .doc b { color: var(--ink); }
-  .updated { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); margin-top: 30px; }
+  /* ---------- hero ---------- */
+  .hero { padding: 58px 0 0; }
+  .hero h1 {
+    font-size: clamp(32px, 6.4vw, 62px); font-weight: 800; letter-spacing: -.04em; line-height: 1.0;
+    margin: 18px 0 0;
+  }
+  .hero h1 .dim { color: var(--ink-faint); }
+  .hero .pkg {
+    display: inline-block; margin-top: 14px; font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 5px 13px;
+  }
+  .lede { max-width: 64ch; margin-top: 28px; }
+  .lede p { color: var(--ink-soft); font-size: clamp(16px, 2.1vw, 18.5px); margin-bottom: 15px; }
+  .lede p:last-child { margin-bottom: 0; }
+  .lede b { color: var(--ink); font-weight: 650; }
+  .verdict-line {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 7px 16px 7px 12px;
+  }
+  .verdict-line svg { flex: none; }
 
-  footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
-  footer .fine { margin: 0; }
-  .doc h3 { font-size: 15.5px; font-weight: 700; margin: 22px 0 8px; }
-  .t { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 6px 0 14px; }
-  .t th { text-align: left; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
-  .t td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); white-space: nowrap; }
-  .t td.l { color: var(--ink); font-weight: 650; white-space: normal; }
-  .t td.n { font-family: var(--font-mono); font-size: 12.5px; }
-  .t td.ok { color: var(--brand); }
-  .t td.no { color: var(--ink-faint); }
-  .wrapx { overflow-x: auto; }
-  .callout { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--brand); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 0 0 14px; }
-  .callout p { margin: 0; color: var(--ink-soft); font-size: 14.5px; } .callout b { color: var(--ink); }
-  pre.sh { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 8px 0 0; }
+  /* ---------- score panel ---------- */
+  .scorebox {
+    display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center;
+    margin-top: 44px; padding: 26px 28px; background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 16px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 720px) { .scorebox { grid-template-columns: 1fr; gap: 24px; padding: 22px 20px; } }
+  .scorebox .big {
+    font-family: var(--font-mono); font-size: clamp(50px, 9vw, 74px); font-weight: 700;
+    letter-spacing: -.05em; line-height: .9; font-variant-numeric: tabular-nums; display: block;
+  }
+  .scorebox .big s { text-decoration: none; font-size: 21px; color: var(--ink-faint); letter-spacing: -.02em; }
+  .scorebox .lbl {
+    display: block; margin-top: 13px; font-size: 11px; font-weight: 700; letter-spacing: .17em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  .s-fail { color: var(--fail); }
+  .s-warn { color: var(--warn); }
+  .s-ok   { color: var(--ink); }
+  .s-pass { color: var(--pass); }
+  .ticks { display: flex; gap: 4px; }
+  .ticks i { flex: 1 1 0; height: 26px; border-radius: 3px; background: var(--pass); }
+  .ticks i.x { background: var(--fail); }
+  .ticks i.r { background: var(--line-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 13px; font-size: 12.5px; color: var(--ink-faint); }
+  .legend b { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .legend .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+  .sw.p { background: var(--pass); }
+  .sw.f { background: var(--fail); }
+  .sw.r { background: var(--line-2); }
+
+  .facts { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+  .facts span {
+    font-size: 12.5px; color: var(--ink-soft); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+  }
+  .facts b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- section heads ---------- */
+  .sec { margin-top: 82px; }
+  .sec > .head { max-width: 66ch; margin-bottom: 24px; }
+  .sec h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 780; margin: 12px 0 0; }
+  .sec .head p { color: var(--ink-soft); font-size: 16.5px; margin-top: 14px; }
+  .sec .head p b { color: var(--ink); font-weight: 650; }
+  .sec .head p + p { margin-top: 12px; }
+
+  /* ---------- code comparison ---------- */
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .cmp { grid-template-columns: 1fr; } }
+  .cmp + .cmp { margin-top: 22px; }
+  .pane {
+    margin: 0; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .pane figcaption {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  }
+  .pane .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .pane.bad .dot { background: var(--fail); }
+  .pane.good .dot { background: var(--pass); }
+  .pane .pl { font-size: 13.5px; font-weight: 650; color: var(--ink); }
+  .pane .pv { margin-left: auto; font-size: 11.5px; color: var(--ink-faint); }
+  .pane .scroll { overflow-x: auto; background: var(--code-bg); }
+  .pane pre {
+    margin: 0; padding: 18px 18px 20px; font-size: 12.5px; line-height: 1.72;
+    color: var(--ink); tab-size: 2;
+  }
+  .pane .out {
+    border-top: 1px solid var(--line); padding: 13px 16px; font-family: var(--font-mono);
+    font-size: 11.5px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .pane.bad .out { color: var(--fail); background: var(--hi-bad); }
+  .pane.good .out { color: var(--pass); background: var(--hi-good); }
+  .c-com { color: var(--tok-com); }
+  .c-kw  { color: var(--tok-kw); }
+  .c-str { color: var(--tok-str); }
+  .c-fn  { color: var(--tok-fn); }
+  .c-typ { color: var(--tok-typ); }
+  .bad-t  { background: var(--hi-bad); border-bottom: 1.5px solid var(--fail); border-radius: 2px; padding: 0 2px; }
+  .good-t { background: var(--hi-good); border-bottom: 1.5px solid var(--pass); border-radius: 2px; padding: 0 2px; }
+  .cap { font-size: 13px; color: var(--ink-faint); margin-top: 16px; max-width: 70ch; }
+  .cap b { color: var(--ink-soft); font-weight: 650; }
+
+  /* ---------- panels of prose ---------- */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 24px 26px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 640px) { .panel { padding: 20px 18px; } }
+  .panel h3 { font-size: 17.5px; font-weight: 720; margin: 26px 0 9px; }
+  .panel h3:first-child { margin-top: 0; }
+  .panel p { color: var(--ink-soft); font-size: 15px; margin-bottom: 13px; max-width: 74ch; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel b { color: var(--ink); font-weight: 650; }
+  .panel .lead-in { color: var(--ink); }
+
+  /* ---------- chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
+  }
+  .chip::before { content: "\2713"; color: var(--pass); font-weight: 700; margin-right: 6px; }
+  .chip.key { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
+
+  /* ---------- tables ---------- */
+  .tblwrap {
+    overflow-x: auto; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; box-shadow: var(--shadow);
+  }
+  table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 540px; }
+  table.t th {
+    text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-faint); padding: 15px 18px;
+    border-bottom: 1px solid var(--line-2); white-space: nowrap;
+  }
+  table.t td { padding: 13px 18px; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
+  table.t tr:last-child td { border-bottom: 0; }
+  table.t td.l { color: var(--ink); font-weight: 650; }
+  table.t td.n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.t td.good { color: var(--pass); font-weight: 700; }
+  table.t td.bad { color: var(--fail); font-weight: 700; }
+  table.t td.dim { color: var(--ink-faint); }
+  table.t th.r, table.t td.r { text-align: right; }
+
+  /* ---------- limits ---------- */
+  .limits { border-top: 1px solid var(--line-2); }
+  .limits div { display: grid; grid-template-columns: 178px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .limits dt { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .limits dd { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+  .limits dd code { color: var(--ink); }
+  @media (max-width: 640px) { .limits div { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ---------- callout ---------- */
+  .callout {
+    background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--accent);
+    border-radius: 0 14px 14px 0; padding: 20px 22px; margin-top: 20px;
+  }
+  .callout p { color: var(--ink-soft); font-size: 15px; margin-bottom: 12px; max-width: 74ch; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- board of other scores ---------- */
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 18px; box-shadow: var(--shadow); transition: border-color .13s, transform .13s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .card .name { font-size: 15.5px; font-weight: 720; letter-spacing: -.02em; }
+  .card .score {
+    font-family: var(--font-mono); font-size: 27px; font-weight: 700; letter-spacing: -.04em;
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .card .score s { text-decoration: none; font-size: 12px; color: var(--ink-faint); }
+  .card .ratio { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .card .why { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
+  .card.cur { border-color: var(--accent); }
+  .card.cur .why { color: var(--ink); }
+
+  /* ---------- finding links ---------- */
+  .finding {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap; text-decoration: none;
+    margin-top: 14px; padding: 20px 22px; background: var(--panel);
+    border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0;
+  }
+  .finding:hover { border-color: var(--accent); }
+  .finding .fl { font-size: 10.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .finding .ft { flex: 1; min-width: 250px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .finding .fa { font-size: 13px; font-weight: 650; color: var(--accent); white-space: nowrap; }
+
+  /* ---------- closing ---------- */
+  .btn {
+    display: inline-block; font-size: 14px; font-weight: 650; text-decoration: none;
+    background: var(--accent); color: var(--on-accent); padding: 11px 20px; border-radius: 9px;
+    white-space: nowrap;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); padding: 9.5px 18.5px; }
+  .btn:hover { filter: brightness(1.06); }
+  .close {
+    margin-top: 80px; padding: 44px 32px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px;
+  }
+  .close h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
+  .close p { color: var(--ink-soft); font-size: 16px; margin: 14px auto 24px; max-width: 54ch; }
+  .close .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .close .note { font-size: 12.5px; color: var(--ink-faint); margin-top: 20px; }
+
+  /* ---------- footer ---------- */
+  footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
+  footer .fine { margin: 0; max-width: 78ch; }
+  footer a { color: var(--ink-soft); }
 </style>
 
 <div class="wrap">
+
   <div class="mast">
     <a href="index.html" aria-label="SDKProof home" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span></a>
-    <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">GitHub ↗</a>
+    <span class="navs">
+      <a class="gh" href="index.html">All eight scores</a>
+      <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">Source on GitHub</a>
+    </span>
   </div>
 
   <header class="hero">
-    <div class="eyebrow">Measurement · 7 August 2026</div>
-    <h1>A library's own docs bury its own correction.</h1>
-    <p class="sub">Across three libraries, a single sentence naming a breaking change fixes the failure it names, ten times out of ten. Two of those libraries ship the same sentence inside their own larger documentation, and there it fixes nothing. <b>It is not the length. Twenty-five kilobytes of unrelated documentation leaves the fix working; seven kilobytes of their own routing docs destroys it.</b></p>
+    <span class="eyebrow">Finding · 7 August 2026</span>
+    <h1>A library's own docs<br><span class="dim">bury its own correction.</span></h1>
   </header>
 
-  <div class="doc">
-    <h2>What is measured</h2>
-    <p>Three libraries, each with one task an AI assistant reliably gets wrong, and each with a sentence in its own documentation that names the fix. Ten trials per cell. The only thing that changes is how that sentence reaches the model.</p>
+  <div class="lede">
+    <p>AI coding assistants write library code from memory. When a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it doesn't build.</p>
+    <p><b>SDKProof measures how often that happens.</b> It gives a model real coding jobs for one library, then compiles every answer against the real installed package with <code>tsc</code>, the TypeScript compiler. A task passes only if it compiles &mdash; which turns "did the docs help?" into something you can count.</p>
+    <p>So I counted. Three libraries, each with one job the model reliably gets wrong, and each with a sentence in its own documentation that names the fix.</p>
+    <p><b>The sentence on its own fixes the failure, ten times out of ten.</b> Two of the three ship that same sentence inside their own larger docs, and there it fixes nothing.</p>
+    <p class="verdict-line">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+      It's not the length. That was tested and it doesn't hold.
+    </p>
+  </div>
 
-    <div class="wrapx">
-    <table class="t">
-      <thead><tr><th>Library &amp; failing task</th><th>No context</th><th>The sentence alone</th><th>Inside the library's own docs</th></tr></thead>
-      <tbody>
-        <tr><td class="l">React Router — <code>meta()</code> arg</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(76 B)</span></td><td class="n no">0 / 10 <span style="color:var(--ink-faint)">(25 KB pack)</span></td></tr>
-        <tr><td class="l">Prisma — client constructor</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(174 B)</span></td><td class="n">5 / 10 <span style="color:var(--ink-faint)">(25 KB pack)</span></td></tr>
-        <tr><td class="l">Next.js — <code>revalidateTag</code> arity</td><td class="n no">0 / 10</td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(137 B)</span></td><td class="n ok">10 / 10 <span style="color:var(--ink-faint)">(6.6 KB page)</span></td></tr>
-      </tbody>
-    </table>
+  <!-- ================= what is measured ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What is measured</span>
+      <h2>One failing task per library, ten tries per cell</h2>
+      <p>The only thing that changes between columns is how the sentence reaches the model. Same task, same model, same installed package, same compiler.</p>
+    </div>
+
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>Library and the task it fails</th><th class="r">No context</th><th class="r">The sentence alone</th><th class="r">Inside the library's own docs</th></tr></thead>
+        <tbody>
+          <tr><td class="l">React Router — the <code>meta()</code> argument</td><td class="n r bad">0 / 10</td><td class="n r good">10 / 10 <span class="dim">(76 B)</span></td><td class="n r bad">0 / 10 <span class="dim">(25 KB pack)</span></td></tr>
+          <tr><td class="l">Prisma — building the client</td><td class="n r bad">0 / 10</td><td class="n r good">10 / 10 <span class="dim">(174 B)</span></td><td class="n r">5 / 10 <span class="dim">(25 KB pack)</span></td></tr>
+          <tr><td class="l">Next.js — <code>revalidateTag</code> argument count</td><td class="n r bad">0 / 10</td><td class="n r good">10 / 10 <span class="dim">(137 B)</span></td><td class="n r good">10 / 10 <span class="dim">(6.6 KB page)</span></td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="callout">
-      <p><b>The one thing that holds across all three: the sentence works.</b> These are not corrections written for the experiment — every one is quoted verbatim from the library's own documentation. The model reads the instruction and follows it.</p>
+      <p><b>The one thing that holds across all three: the sentence works.</b> None of these were written for the experiment — every one is quoted word for word from the library's own documentation. The model reads the instruction and follows it.</p>
+    </div>
+  </section>
+
+  <!-- ================= not length ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The obvious explanation, tested</span>
+      <h2>It is not length</h2>
+      <p>The obvious reading of that table is that long documents swallow a correction. React Router's sentence sits at line 182 of a 213-line file, and there it never works.</p>
+      <p><b>That was tested directly, and it's wrong.</b> Same Next.js task, same sentence, nothing varying but how much text surrounded it and where the sentence sat. The padding was real Next.js documentation for other APIs, checked to never state the signature under test.</p>
     </div>
 
-    <h2>It is not length. It is how much related material surrounds it.</h2>
-    <p>The obvious reading of the table above is that long documents bury a correction — React Router's sentence sits at line 182 of a 213-line file, and there it never works. <b>That was tested directly and it is wrong.</b></p>
-    <p>On Next.js: same task, same sentence, nothing varying but the amount of surrounding text and where the sentence sat in it. The padding was real Next.js documentation for unrelated APIs, checked never to state the signature under test.</p>
-
-    <div class="wrapx">
-    <table class="t">
-      <thead><tr><th>Context</th><th>Size</th><th>Sentence position</th><th>Passes</th></tr></thead>
-      <tbody>
-        <tr class="base"><td class="l">nothing</td><td class="n">—</td><td class="n">—</td><td class="n no">0 / 10</td></tr>
-        <tr><td class="l">the sentence alone</td><td class="n">137 B</td><td class="n">—</td><td class="n ok">10 / 10</td></tr>
-        <tr><td class="l">sentence, then padding</td><td class="n">25 KB</td><td class="n">first</td><td class="n ok">10 / 10</td></tr>
-        <tr><td class="l">padding, then sentence</td><td class="n">25 KB</td><td class="n">last (char 24,960)</td><td class="n ok">10 / 10</td></tr>
-        <tr><td class="l">sentence, then padding</td><td class="n">50 KB</td><td class="n">first</td><td class="n ok">9 / 10</td></tr>
-      </tbody>
-    </table>
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>What was in the prompt</th><th class="r">Size</th><th>Where the sentence sat</th><th class="r">Compiled</th></tr></thead>
+        <tbody>
+          <tr><td class="l">nothing</td><td class="n r dim">—</td><td class="dim">—</td><td class="n r bad">0 / 10</td></tr>
+          <tr><td class="l">the sentence alone</td><td class="n r">137 B</td><td class="dim">—</td><td class="n r good">10 / 10</td></tr>
+          <tr><td class="l">sentence, then padding</td><td class="n r">25 KB</td><td>first</td><td class="n r good">10 / 10</td></tr>
+          <tr><td class="l">padding, then sentence</td><td class="n r">25 KB</td><td>last, at character 24,960</td><td class="n r good">10 / 10</td></tr>
+          <tr><td class="l">sentence, then twice the padding</td><td class="n r">50 KB</td><td>first</td><td class="n r good">9 / 10</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <p>Neither size nor position reproduced the failure. So the question became what is different about the documents that <i>do</i> smother it.</p>
+    <p class="cap">Neither size nor position brought the failure back. So the question became: what is different about the documents that <i>do</i> smother it?</p>
+  </section>
 
-    <h2>Two controlled comparisons, and they agree</h2>
-    <p>Both run on React Router, on the one task it fails, ten trials per cell.</p>
-
-    <div class="wrapx">
-    <table class="t">
-      <thead><tr><th>What was in the prompt</th><th>Size</th><th>Topic</th><th>Passes</th></tr></thead>
-      <tbody>
-        <tr><td class="l">the sentence alone</td><td class="n">76 B</td><td class="n">—</td><td class="n ok">10 / 10</td></tr>
-        <tr><td class="l">the section it sits in</td><td class="n">215 B</td><td class="n">routing</td><td class="n ok">10 / 10</td></tr>
-        <tr><td class="l">25 KB of Zod docs, then the sentence</td><td class="n">25 KB</td><td class="n">unrelated</td><td class="n ok">8 / 10</td></tr>
-        <tr><td class="l"><b>the file it sits in</b></td><td class="n">7.3 KB</td><td class="n">routing</td><td class="n no"><b>0 / 10</b></td></tr>
-        <tr><td class="l">all five files of the pack</td><td class="n">25 KB</td><td class="n">routing</td><td class="n no">0 / 10</td></tr>
-      </tbody>
-    </table>
+  <!-- ================= two comparisons ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Two controlled comparisons</span>
+      <h2>They agree, and they point at the same thing</h2>
+      <p>Both run on React Router, on the one task it fails, ten tries per row.</p>
     </div>
 
-    <p><b>Read the two middle rows together.</b> Twenty-five kilobytes of schema-validation documentation leaves the correction working. Seven kilobytes of the library's own routing documentation destroys it — and it is the same sentence, from the same file, in both cases.</p>
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>What was in the prompt</th><th class="r">Size</th><th>What it was about</th><th class="r">Compiled</th></tr></thead>
+        <tbody>
+          <tr><td class="l">the sentence alone</td><td class="n r">76 B</td><td class="dim">—</td><td class="n r good">10 / 10</td></tr>
+          <tr><td class="l">the section it sits in</td><td class="n r">215 B</td><td>routing</td><td class="n r good">10 / 10</td></tr>
+          <tr><td class="l">25 KB of Zod docs, then the sentence</td><td class="n r">25 KB</td><td>unrelated</td><td class="n r good">8 / 10</td></tr>
+          <tr><td class="l">the file the sentence lives in</td><td class="n r">7.3 KB</td><td>routing</td><td class="n r bad">0 / 10</td></tr>
+          <tr><td class="l">all five files of the pack</td><td class="n r">25 KB</td><td>routing</td><td class="n r bad">0 / 10</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="callout">
-      <p><b>So it is neither length nor topic on its own.</b> 25 KB of unrelated text is harmless. 215 bytes of the library's own routing text is harmless. About 7 KB of it is not. What crowds out a correction is <b>the quantity of material about the same domain</b> — and the other four files in React Router's pack turned out to be irrelevant. Its own containing file is enough.</p>
+      <p><b>Read the two middle rows together.</b> Twenty-five kilobytes of schema-validation documentation leaves the correction working. Seven kilobytes of the library's own routing documentation destroys it. Same sentence, same file, both times.</p>
+      <p><b>So it's neither length nor topic on its own.</b> 25 KB of unrelated text is harmless. 215 bytes of the library's own routing text is harmless. About 7 KB of it is not. What crowds out a correction is <b>how much material about the same subject sits around it</b> — and the other four files in React Router's pack turned out to be irrelevant. Its own containing file is enough on its own.</p>
     </div>
 
-    <p>That also explains Next.js, which looked like a counterexample. Its 6.6 KB page is the same domain as the correction but is <i>entirely about the failing API</i> — there is nothing in it competing for the same decision, so nothing to crowd anything out.</p>
+    <p class="cap">That also explains Next.js, which looked like a counterexample. Its 6.6 KB page is the same subject as the correction but it is <i>entirely about the failing function</i> — nothing in it competes for the same decision, so there's nothing to crowd anything out.</p>
+  </section>
 
-    <h2>A confound worth stating</h2>
-    <p>The three failures are not equally hard to correct. Next.js's is an arity error — <i>"the second argument is required"</i> is about as direct as a fix gets. React Router's is a field rename inside a destructured argument. It is entirely possible that some corrections are robust to their surroundings and others are fragile, and that this explains the table above better than anything about the documents.</p>
-
-    <h2>What can be said, and what cannot</h2>
-    <p><b>Supported:</b> a short, specific sentence naming a breaking change fixes the failure it names, on all three libraries measured, 9–10 times out of ten. It is worth shipping one.</p>
-    <p><b>Supported:</b> two of these three libraries already contain that sentence somewhere in their own documentation, and it is not reaching the model there.</p>
-    <p><b>Supported:</b> the cause is not length. It is how much same-domain material surrounds the correction — 25 KB of unrelated docs leaves it working, 7.3 KB of the library's own routing docs does not.</p>
-    <p><b>Not supported, and withdrawn:</b> that document length alone is the cause. That was an earlier conclusion on this page; the size-and-position sweep did not reproduce it.</p>
-
-    <h2>What libraries publish today</h2>
-    <p>The same nine-library survey that prompted all of this. The filename is a convention; the contents are not.</p>
-    <div class="wrapx">
-    <table class="t">
-      <thead><tr><th>Library</th><th>llms.txt</th><th>llms-full.txt</th></tr></thead>
-      <tbody>
-        <tr><td class="l">Prisma</td><td class="n">2,450 · 71% links</td><td class="n">6,915 · 0% links</td></tr>
-        <tr><td class="l">tRPC</td><td class="n">15,699 · 0% links</td><td class="n">599,762</td></tr>
-        <tr><td class="l">Zod</td><td class="n">21,522 · 94% links</td><td class="n">259,341 · 1% links</td></tr>
-        <tr><td class="l">Vercel AI SDK</td><td class="n">2,217 · 33% links</td><td class="n">5,673,960</td></tr>
-        <tr><td class="l">Drizzle ORM</td><td class="n">37,377 · 84% links</td><td class="n">3,553,515</td></tr>
-        <tr><td class="l">Next.js</td><td class="n">8,792 · 58% links</td><td class="n">— (404)</td></tr>
-        <tr><td class="l">Stripe</td><td class="n">93,150 · 87% links</td><td class="n">— (404)</td></tr>
-        <tr><td class="l">TanStack Query</td><td class="n">11,396 · 78% links</td><td class="n">identical file</td></tr>
-        <tr><td class="l">React Router</td><td class="n">— (404)</td><td class="n">— (404)</td></tr>
-      </tbody>
-    </table>
+  <!-- ================= confound ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Stated before anyone asks</span>
+      <h2>A confound worth naming</h2>
     </div>
-    <p>Sizes span 2,217 characters to 5,673,960 under two filenames that promise the same thing. A model with no ability to fetch gets nothing usable from a link index, and nothing at all from a five-megabyte bundle. <b>Next.js is worth copying on one point regardless of the above:</b> it serves a Markdown version alongside every docs page — 6.6&nbsp;KB where the HTML is 490&nbsp;KB — and that file fixed its failure ten times out of ten.</p>
+    <div class="panel">
+      <p>The three failures are not equally easy to correct. Next.js's is an argument-count error, and <i>"the second argument is required"</i> is about as direct as a fix gets. React Router's is a renamed field inside a destructured argument.</p>
+      <p>It is entirely possible that some corrections survive their surroundings and others are fragile, and that this explains the tables above better than anything about the documents themselves. I can't rule it out with three libraries.</p>
+    </div>
+  </section>
 
-    <h2>Limits</h2>
-    <p>One model (Claude Opus 5), three libraries, one failing task each, ten trials per cell, one-shot prompts rather than an agent that can search. <b>The single-sentence arm is close to handing the model the answer</b> — its entire context <i>is</i> the correction — so it measures whether a salient instruction is followed, not whether documentation works in normal use.</p>
+  <!-- ================= what can be said ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The claims</span>
+      <h2>What can be said, and what cannot</h2>
+    </div>
+    <div class="panel">
+      <h3>Supported</h3>
+      <p>A short, specific sentence naming a change fixes the failure it names, on all three libraries measured, 9 or 10 times out of ten. It is worth shipping one.</p>
+      <h3>Supported</h3>
+      <p>Two of these three libraries already contain that sentence somewhere in their own documentation, and it is not reaching the model there.</p>
+      <h3>Supported</h3>
+      <p>The cause is not length. It's how much same-subject material surrounds the correction — 25 KB of unrelated docs leaves it working, 7.3 KB of the library's own routing docs does not.</p>
+      <h3>Not supported, and withdrawn</h3>
+      <p>That document length alone is the cause. That was an earlier conclusion on this page. The size-and-position sweep did not reproduce it, so it's gone.</p>
+    </div>
+  </section>
 
-    <h2>Check it yourself</h2>
-    <pre class="sh">curl -sL https://nextjs.org/docs/app/api-reference/functions/revalidateTag.md | wc -c
-curl -sL https://ai-sdk.dev/llms-full.txt | wc -c</pre>
-    <div class="callout"><p><b>A follow-on question this raises:</b> if a library's own docs can bury its own correction, does scoring a library with and without those docs detect anything at all? <a href="skills-delta.html">Measured — and the answer is no, for a structural reason</a>: across six arms not one difference clears zero, and for one library a perfect fix would not register either.</p></div>
+  <!-- ================= survey ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The survey behind all this</span>
+      <h2>What libraries publish today</h2>
+      <p>Nine libraries, two filenames that promise the same thing. The filename is a convention. The contents are not. Sizes are in characters; "links" is the share of the file that is a link index rather than prose.</p>
+    </div>
 
-    <p style="margin-top:12px">Survey script: <code>scripts/survey-agent-docs.mjs</code> → <code>data/agent-docs.json</code>. The arms are the <code>--with-context</code> path in the same repo; per-library numbers are on the <a href="react-router.html">React Router</a>, <a href="prisma7.html">Prisma</a> and <a href="nextjs.html">Next.js</a> scorecards.</p>
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>Library</th><th>llms.txt</th><th>llms-full.txt</th></tr></thead>
+        <tbody>
+          <tr><td class="l">Prisma</td><td class="n">2,450 · 71% links</td><td class="n">6,915 · 0% links</td></tr>
+          <tr><td class="l">tRPC</td><td class="n">15,699 · 0% links</td><td class="n">599,762</td></tr>
+          <tr><td class="l">Zod</td><td class="n">21,522 · 94% links</td><td class="n">259,341 · 1% links</td></tr>
+          <tr><td class="l">Vercel AI SDK</td><td class="n">2,217 · 33% links</td><td class="n">5,673,960</td></tr>
+          <tr><td class="l">Drizzle ORM</td><td class="n">37,377 · 84% links</td><td class="n">3,553,515</td></tr>
+          <tr><td class="l">Next.js</td><td class="n">8,792 · 58% links</td><td class="n dim">— (404)</td></tr>
+          <tr><td class="l">Stripe</td><td class="n">93,150 · 87% links</td><td class="n dim">— (404)</td></tr>
+          <tr><td class="l">TanStack Query</td><td class="n">11,396 · 78% links</td><td class="n dim">identical file</td></tr>
+          <tr><td class="l">React Router</td><td class="n dim">— (404)</td><td class="n dim">— (404)</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-    <p class="updated">Revised 7 August 2026, twice. An earlier version concluded document size was the cause; a controlled size-and-position sweep did not reproduce it, and that claim is withdrawn. The current claim rests on two controlled comparisons — one holding size constant, one holding topic constant — and on a bisection that narrowed the effect to a single file.</p>
+    <p class="cap">Sizes run from 2,217 characters to 5,673,960, under two filenames that claim to be the same thing. A model that can't fetch anything gets nothing usable out of a link index, and nothing at all out of a five-megabyte bundle. <b>Next.js is worth copying on one point regardless:</b> it serves a Markdown version next to every docs page — 6.6&nbsp;KB where the HTML is 490&nbsp;KB — and that file fixed its failure ten times out of ten.</p>
+  </section>
+
+  <!-- ================= check it ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Check it yourself</span>
+      <h2>Two commands</h2>
+      <p>The size difference in the last row of that table is one <code>curl</code> away.</p>
+    </div>
+
+    <figure class="pane">
+      <figcaption>
+        <span class="pl">shell</span>
+        <code class="pv">measure the two files</code>
+      </figcaption>
+      <div class="scroll"><pre><code><span class="c-fn">curl</span> -sL https://nextjs.org/docs/app/api-reference/functions/revalidateTag.md | <span class="c-fn">wc</span> -c
+<span class="c-fn">curl</span> -sL https://ai-sdk.dev/llms-full.txt | <span class="c-fn">wc</span> -c</code></pre></div>
+    </figure>
+
+    <p class="cap">Survey script: <code>scripts/survey-agent-docs.mjs</code> → <code>data/agent-docs.json</code>. The context runs are the <code>--with-context</code> path in the same repo. Per-library numbers sit on the <a href="react-router.html">React Router</a>, <a href="prisma7.html">Prisma</a> and <a href="nextjs.html">Next.js</a> scorecards.</p>
+  </section>
+
+  <!-- ================= limits ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Limits</span>
+      <h2>What this does not tell you</h2>
+    </div>
+    <dl class="limits">
+      <div><dt>One model</dt><dd>Everything here is <code>claude-opus-5</code>. Another model may read a long document differently.</dd></div>
+      <div><dt>Three libraries</dt><dd>One failing task each, ten tries per cell. That's enough to see a 0-versus-10 gap and not enough to explain it.</dd></div>
+      <div><dt>Close to handing over the answer</dt><dd>In the single-sentence run the model's entire context <i>is</i> the correction. So it measures whether an obvious instruction gets followed, not whether documentation works in normal use.</dd></div>
+      <div><dt>One shot, not an agent</dt><dd>These are single prompts. A real agent can search, fetch and re-read, which is a different situation and probably a kinder one.</dd></div>
+      <div><dt>Compiles is not correct</dt><dd><code>tsc</code>, the TypeScript compiler, checks that the API exists and the types line up. It never runs the code.</dd></div>
+      <div><dt>Refusals</dt><dd>A refusal is neither a pass nor a fail — the model writes no code, so there is nothing to compile, and refused tasks drop out of the denominator. None of the tasks here were refused. <a href="stripe.html">Stripe is the one library where that happens</a>, which is why its 100 is out of 10 rather than 15.</dd></div>
+      <div><dt>It measures the model</dt><dd>Everything on this page is a statement about how one model reads documentation, not about how well any of these libraries are documented.</dd></div>
+    </dl>
+
+    <p class="cap" style="margin-top:20px">Revised twice on 7 August 2026. An earlier version concluded that document size was the cause; a controlled size-and-position sweep did not reproduce it, and that claim is withdrawn. The current claim rests on two controlled comparisons — one holding size steady, one holding subject steady — and on narrowing the effect down to a single file.</p>
+  </section>
+
+  <!-- ================= elsewhere ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Elsewhere</span>
+      <h2>The follow-on question</h2>
+    </div>
+    <a class="finding" href="skills-delta.html">
+      <span class="fl">Agent skills</span>
+      <span class="ft">If a library's own docs can bury its own correction, does scoring a library with and without those docs detect anything at all? Measured — and the answer is no, for a structural reason.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+    <a class="finding" href="index.html">
+      <span class="fl">The board</span>
+      <span class="ft">Eight libraries, each given 10 to 15 coding jobs and compiled against the real installed package.</span>
+      <span class="fa">See all eight scores →</span>
+    </a>
+  </section>
+
+  <div class="close">
+    <h2>Score my library</h2>
+    <p>Name any TypeScript package &amp; I'll run it. Or do it yourself — it's all open source.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">Read the code</a>
+    </div>
+    <p class="note">There's no npm package. Clone the repo, point it at a library, run it. The compiler is the judge.</p>
   </div>
 
   <footer>
-    <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with any library surveyed.</p>
+    <p class="fine">SDKProof — independent measurement of how AI coding agents write real SDKs. Every number on this page is <code>claude-opus-5</code>, type-check only: it checks the API surface, not what the code does when it runs. Not affiliated with any library surveyed.</p>
     <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="skills-delta.html">Do agent docs work?</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
   </footer>
 </div>

@@ -39,389 +39,679 @@
 </head>
 <body>
 <style>
+  /* ---------- tokens: light is the base, dark is a redefinition ---------- */
   :root {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --fail: #cf222e;
-    --pass-bg: #dafbe1; --fail-bg: #ffebe9; --track: #e2e8ee;
-    --code-bg: #f5f7fa; --code-ink: #1b2430;
-    --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
+    color-scheme: light;
+    --bg: #f7f8f7;
+    --bg-line: rgba(14,18,22,.055);
+    --panel: #ffffff;
+    --panel-2: #f1f3f2;
+    --ink: #0e1216;
+    --ink-soft: #4a545e;
+    --ink-faint: #78838e;
+    --line: #e2e7e5;
+    --line-2: #d1d8d5;
+    --accent: #0a7f74;
+    --accent-soft: #e4f2f0;
+    --on-accent: #ffffff;
+    --pass: #16794a;
+    --warn: #9a6a00;
+    --fail: #c62f3b;
+    --code-bg: #fbfcfb;
+    --tok-com: #79848f;
+    --tok-kw: #8b34c9;
+    --tok-str: #0b6484;
+    --tok-fn: #a4560a;
+    --tok-typ: #0a7f74;
+    --hi-bad: rgba(198,47,59,.13);
+    --hi-good: rgba(22,121,74,.13);
+    --shadow: 0 1px 2px rgba(14,18,22,.05), 0 14px 34px rgba(14,18,22,.07);
     --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-      --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --fail: #f85149;
-      --pass-bg: #12261a; --fail-bg: #2a1416; --track: #222c37;
-      --code-bg: #0d1319; --code-ink: #d7e2ee;
-      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0a0d11;
+      --bg-line: rgba(255,255,255,.045);
+      --panel: #0f141a;
+      --panel-2: #141a22;
+      --ink: #e9eff4;
+      --ink-soft: #a0aeba;
+      --ink-faint: #6e7c89;
+      --line: #1d2530;
+      --line-2: #2b3542;
+      --accent: #3fd8b8;
+      --accent-soft: #0d2b27;
+      --on-accent: #04211d;
+      --pass: #3ecf7f;
+      --warn: #e0a83a;
+      --fail: #f2656f;
+      --code-bg: #0c1117;
+      --tok-com: #6e7c89;
+      --tok-kw: #c48cf5;
+      --tok-str: #7cc7f0;
+      --tok-fn: #f0b866;
+      --tok-typ: #4fd6bd;
+      --hi-bad: rgba(242,101,111,.17);
+      --hi-good: rgba(62,207,127,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
     }
   }
-  :root[data-theme="light"] {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff; --pass: #1a7f37; --fail: #cf222e;
-    --pass-bg: #dafbe1; --fail-bg: #ffebe9; --track: #e2e8ee;
-    --code-bg: #f5f7fa; --code-ink: #1b2430;
-    --shadow: 0 1px 2px rgba(16,21,27,.05), 0 10px 30px rgba(16,21,27,.06);
-  }
   :root[data-theme="dark"] {
-    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-    --brand: #2dd4bf; --brand-ink: #06231f; --pass: #3fb950; --fail: #f85149;
-    --pass-bg: #12261a; --fail-bg: #2a1416; --track: #222c37;
-    --code-bg: #0d1319; --code-ink: #d7e2ee;
-    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+    color-scheme: dark;
+    --bg: #0a0d11;
+    --bg-line: rgba(255,255,255,.045);
+    --panel: #0f141a;
+    --panel-2: #141a22;
+    --ink: #e9eff4;
+    --ink-soft: #a0aeba;
+    --ink-faint: #6e7c89;
+    --line: #1d2530;
+    --line-2: #2b3542;
+    --accent: #3fd8b8;
+    --accent-soft: #0d2b27;
+    --on-accent: #04211d;
+    --pass: #3ecf7f;
+    --warn: #e0a83a;
+    --fail: #f2656f;
+    --code-bg: #0c1117;
+    --tok-com: #6e7c89;
+    --tok-kw: #c48cf5;
+    --tok-str: #7cc7f0;
+    --tok-fn: #f0b866;
+    --tok-typ: #4fd6bd;
+    --hi-bad: rgba(242,101,111,.17);
+    --hi-good: rgba(62,207,127,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
   }
 
+  /* ---------- base ---------- */
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 88px; }
-  h1, h2, h3 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
-  code, pre { font-family: var(--font-mono); }
-  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--bg-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-line) 1px, transparent 1px);
+    background-size: 72px 72px, 72px 72px;
+    background-position: -1px -1px, -1px -1px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.62;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 96px; }
+  h1, h2, h3 { margin: 0; letter-spacing: -.022em; line-height: 1.1; text-wrap: balance; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  code, pre, .num { font-family: var(--font-mono); }
+  code { font-size: .9em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
-  /* masthead */
-  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
-  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); }
-  .logo b { color: var(--brand); }
-  .mast .tag { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px 9px; margin-left: auto; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--ink-faint); display: block;
+  }
+  .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
-  /* hero */
-  .hero { border-bottom: 1px solid var(--line-strong); padding: 30px 0 30px; margin-bottom: 34px; }
-  .hero .lib { font-family: var(--font-mono); font-size: 13px; color: var(--brand); font-weight: 600; }
-  .hero h1 { font-size: clamp(27px, 5vw, 44px); font-weight: 800; margin: 10px 0 0; }
-  .hero .verdict { color: var(--ink-soft); font-size: 17px; margin: 14px 0 0; max-width: 60ch; }
-  .hero .verdict b { color: var(--ink); }
+  /* ---------- masthead ---------- */
+  .mast { display: flex; align-items: center; gap: 12px; padding: 24px 0 0; }
+  .logo { font-weight: 700; font-size: 16px; letter-spacing: -.03em; color: var(--ink); }
+  .logo b { color: var(--accent); font-weight: 700; }
+  .mast .navs { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .mast .gh {
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 14px;
+  }
+  .mast .gh:hover { border-color: var(--accent); color: var(--accent); }
 
-  .scorerow { display: flex; align-items: flex-end; gap: 24px; margin-top: 26px; flex-wrap: wrap; }
-  .scorebig { font-family: var(--font-mono); line-height: .9; }
-  .scorebig .n { font-size: 68px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .scorebig .d { font-size: 22px; font-weight: 700; color: var(--ink-faint); }
-  .scorebig .l { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; }
-  .segs { flex: 1; min-width: 240px; }
-  .segbar { display: flex; gap: 4px; }
-  .seg { height: 30px; flex: 1; border-radius: 3px; }
-  .seg.p { background: var(--pass); }
-  .seg.f { background: var(--fail); }
-  .seglegend { display: flex; gap: 16px; margin-top: 10px; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); }
-  .seglegend b { color: var(--ink); }
-  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; vertical-align: baseline; margin-right: 5px; }
-  .dot.p { background: var(--pass); } .dot.f { background: var(--fail); }
+  /* ---------- hero ---------- */
+  .hero { padding: 58px 0 0; }
+  .hero h1 {
+    font-size: clamp(32px, 6.4vw, 62px); font-weight: 800; letter-spacing: -.04em; line-height: 1.0;
+    margin: 18px 0 0;
+  }
+  .hero h1 .dim { color: var(--ink-faint); }
+  .hero .pkg {
+    display: inline-block; margin-top: 14px; font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 5px 13px;
+  }
+  .lede { max-width: 64ch; margin-top: 28px; }
+  .lede p { color: var(--ink-soft); font-size: clamp(16px, 2.1vw, 18.5px); margin-bottom: 15px; }
+  .lede p:last-child { margin-bottom: 0; }
+  .lede b { color: var(--ink); font-weight: 650; }
+  .verdict-line {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 7px 16px 7px 12px;
+  }
+  .verdict-line svg { flex: none; }
 
-  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 24px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
-  .meta b { color: var(--ink-soft); font-weight: 600; }
+  /* ---------- score panel ---------- */
+  .scorebox {
+    display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center;
+    margin-top: 44px; padding: 26px 28px; background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 16px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 720px) { .scorebox { grid-template-columns: 1fr; gap: 24px; padding: 22px 20px; } }
+  .scorebox .big {
+    font-family: var(--font-mono); font-size: clamp(50px, 9vw, 74px); font-weight: 700;
+    letter-spacing: -.05em; line-height: .9; font-variant-numeric: tabular-nums; display: block;
+  }
+  .scorebox .big s { text-decoration: none; font-size: 21px; color: var(--ink-faint); letter-spacing: -.02em; }
+  .scorebox .lbl {
+    display: block; margin-top: 13px; font-size: 11px; font-weight: 700; letter-spacing: .17em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  .s-fail { color: var(--fail); }
+  .s-warn { color: var(--warn); }
+  .s-ok   { color: var(--ink); }
+  .s-pass { color: var(--pass); }
+  .ticks { display: flex; gap: 4px; }
+  .ticks i { flex: 1 1 0; height: 26px; border-radius: 3px; background: var(--pass); }
+  .ticks i.x { background: var(--fail); }
+  .ticks i.r { background: var(--line-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 13px; font-size: 12.5px; color: var(--ink-faint); }
+  .legend b { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .legend .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+  .sw.p { background: var(--pass); }
+  .sw.f { background: var(--fail); }
+  .sw.r { background: var(--line-2); }
 
-  .sec-head { margin: 46px 0 18px; }
-  .sec-head h2 { font-size: clamp(19px, 3.2vw, 25px); font-weight: 760; margin-top: 8px; }
-  .sec-head p { color: var(--ink-soft); font-size: 14.5px; margin: 8px 0 0; max-width: 64ch; }
+  .facts { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+  .facts span {
+    font-size: 12.5px; color: var(--ink-soft); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+  }
+  .facts b { color: var(--ink); font-weight: 650; }
 
-  /* wrong cards */
-  .fails { display: flex; flex-direction: column; gap: 18px; }
-  .fcard { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow); overflow: hidden; }
-  .fcard .top { display: flex; align-items: center; gap: 10px; padding: 15px 18px; border-bottom: 1px solid var(--line); }
-  .fcard .top .x { color: var(--fail); font-weight: 800; font-family: var(--font-mono); }
-  .fcard .top .t { font-weight: 700; font-size: 15.5px; }
-  .fcard .top .tsx { margin-left: auto; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--fail); background: var(--fail-bg); border-radius: 5px; padding: 3px 8px; white-space: nowrap; }
-  .fbody { display: grid; grid-template-columns: 1fr 1fr; }
-  @media (max-width: 640px) { .fbody { grid-template-columns: 1fr; } }
-  .col { padding: 16px 18px; }
-  .col + .col { border-left: 1px solid var(--line); }
-  @media (max-width: 640px) { .col + .col { border-left: none; border-top: 1px solid var(--line); } }
-  .col .clabel { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; font-weight: 650; margin-bottom: 9px; }
-  .col.bad .clabel { color: var(--fail); }
-  .col.good .clabel { color: var(--pass); }
-  pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 13px; overflow-x: auto; font-size: 12.5px; line-height: 1.55; color: var(--code-ink); }
-  .fcard .errline { padding: 0 18px 16px; }
-  .fcard .errline .e { font-family: var(--font-mono); font-size: 12px; color: var(--fail); background: var(--fail-bg); border-left: 3px solid var(--fail); border-radius: 0 6px 6px 0; padding: 8px 11px; }
-  .fcard .why { padding: 0 18px 16px; font-size: 13.5px; color: var(--ink-soft); }
-  .fcard .why b { color: var(--ink); }
+  /* ---------- section heads ---------- */
+  .sec { margin-top: 82px; }
+  .sec > .head { max-width: 66ch; margin-bottom: 24px; }
+  .sec h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 780; margin: 12px 0 0; }
+  .sec .head p { color: var(--ink-soft); font-size: 16.5px; margin-top: 14px; }
+  .sec .head p b { color: var(--ink); font-weight: 650; }
+  .sec .head p + p { margin-top: 12px; }
 
-  /* right list */
-  .rights { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--pass); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); }
-  .rights h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-  .rights p { margin: 0 0 12px; color: var(--ink-soft); font-size: 14px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); background: var(--pass-bg); border-radius: 6px; padding: 4px 9px; }
-  .chip::before { content: "✓ "; color: var(--pass); font-weight: 700; }
+  /* ---------- code comparison ---------- */
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .cmp { grid-template-columns: 1fr; } }
+  .cmp + .cmp { margin-top: 22px; }
+  .pane {
+    margin: 0; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .pane figcaption {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  }
+  .pane .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .pane.bad .dot { background: var(--fail); }
+  .pane.good .dot { background: var(--pass); }
+  .pane .pl { font-size: 13.5px; font-weight: 650; color: var(--ink); }
+  .pane .pv { margin-left: auto; font-size: 11.5px; color: var(--ink-faint); }
+  .pane .scroll { overflow-x: auto; background: var(--code-bg); }
+  .pane pre {
+    margin: 0; padding: 18px 18px 20px; font-size: 12.5px; line-height: 1.72;
+    color: var(--ink); tab-size: 2;
+  }
+  .pane .out {
+    border-top: 1px solid var(--line); padding: 13px 16px; font-family: var(--font-mono);
+    font-size: 11.5px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .pane.bad .out { color: var(--fail); background: var(--hi-bad); }
+  .pane.good .out { color: var(--pass); background: var(--hi-good); }
+  .c-com { color: var(--tok-com); }
+  .c-kw  { color: var(--tok-kw); }
+  .c-str { color: var(--tok-str); }
+  .c-fn  { color: var(--tok-fn); }
+  .c-typ { color: var(--tok-typ); }
+  .bad-t  { background: var(--hi-bad); border-bottom: 1.5px solid var(--fail); border-radius: 2px; padding: 0 2px; }
+  .good-t { background: var(--hi-good); border-bottom: 1.5px solid var(--pass); border-radius: 2px; padding: 0 2px; }
+  .cap { font-size: 13px; color: var(--ink-faint); margin-top: 16px; max-width: 70ch; }
+  .cap b { color: var(--ink-soft); font-weight: 650; }
 
-  /* insight */
-  .insight { background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 22px 24px; }
-  .insight h2 { font-size: 20px; font-weight: 760; margin-bottom: 10px; }
-  .insight p { margin: 0 0 12px; color: var(--ink-soft); font-size: 15px; }
-  .insight p:last-child { margin-bottom: 0; }
-  .insight b { color: var(--ink); }
+  /* ---------- panels of prose ---------- */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 24px 26px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 640px) { .panel { padding: 20px 18px; } }
+  .panel h3 { font-size: 17.5px; font-weight: 720; margin: 26px 0 9px; }
+  .panel h3:first-child { margin-top: 0; }
+  .panel p { color: var(--ink-soft); font-size: 15px; margin-bottom: 13px; max-width: 74ch; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel b { color: var(--ink); font-weight: 650; }
+  .panel .lead-in { color: var(--ink); }
 
-  /* method */
-  .method { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; line-height: 1.7; }
-  .method b { color: var(--ink); }
-  .method .k { color: var(--brand); }
-  .arms { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0 16px; }
-  .arms th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
-  .arms td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
-  .arms td.a { font-family: var(--font-mono); font-size: 13px; color: var(--ink); white-space: nowrap; }
-  .arms td.n { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--ink); text-align: right; white-space: nowrap; }
-  .arms td.d { font-family: var(--font-mono); font-size: 14px; font-weight: 700; text-align: right; white-space: nowrap; }
-  .arms td.d.up { color: var(--pass); } .arms td.d.flat { color: var(--ink-faint); }
-  .arms tr.base td { color: var(--ink-faint); }
-  .codeblock { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.65; color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--fail); border-radius: 0 8px 8px 0; padding: 14px 16px; margin: 10px 0 0; overflow-x: auto; white-space: pre; }
-  .codeblock .cmt { color: var(--ink-faint); }
-  .caveat { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); line-height: 1.75; margin-top: 12px; padding: 16px 20px; border: 1px dashed var(--line); border-radius: 12px; }
-  .caveat b { color: var(--ink-soft); font-weight: 650; }
-  .caveat .k { color: var(--brand); }
+  /* ---------- chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
+  }
+  .chip::before { content: "\2713"; color: var(--pass); font-weight: 700; margin-right: 6px; }
+  .chip.key { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
 
-  /* next + cta */
-  .next { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; padding: 22px 24px; box-shadow: var(--shadow); }
-  .next h2 { font-size: 20px; font-weight: 760; margin-bottom: 12px; }
-  .next .list { display: flex; flex-direction: column; gap: 10px; }
-  .next .row { display: flex; gap: 12px; align-items: baseline; font-size: 14.5px; }
-  .next .row .r { font-family: var(--font-mono); font-size: 12px; color: var(--brand); font-weight: 700; flex: none; width: 22px; }
-  .next .row b { color: var(--ink); font-weight: 650; }
-  .next .row span { color: var(--ink-soft); }
-  .scanning { font-family: var(--font-mono); font-size: 13px; color: var(--ink-faint); }
+  /* ---------- tables ---------- */
+  .tblwrap {
+    overflow-x: auto; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; box-shadow: var(--shadow);
+  }
+  table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 540px; }
+  table.t th {
+    text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-faint); padding: 15px 18px;
+    border-bottom: 1px solid var(--line-2); white-space: nowrap;
+  }
+  table.t td { padding: 13px 18px; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
+  table.t tr:last-child td { border-bottom: 0; }
+  table.t td.l { color: var(--ink); font-weight: 650; }
+  table.t td.n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.t td.good { color: var(--pass); font-weight: 700; }
+  table.t td.bad { color: var(--fail); font-weight: 700; }
+  table.t td.dim { color: var(--ink-faint); }
+  table.t th.r, table.t td.r { text-align: right; }
 
-  .cta { text-align: center; margin-top: 46px; padding: 30px 24px; background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--line-strong); border-radius: 16px; }
-  .cta h2 { font-size: clamp(20px, 3.4vw, 26px); font-weight: 780; }
-  .cta p { color: var(--ink-soft); font-size: 15px; margin: 12px auto 20px; max-width: 52ch; }
-  .cta .btn { display: inline-block; font-family: var(--font-mono); font-size: 14px; font-weight: 650; background: var(--brand); color: var(--brand-ink); padding: 11px 22px; border-radius: 9px; text-decoration: none; }
-  .cta .note { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-top: 14px; }
+  /* ---------- limits ---------- */
+  .limits { border-top: 1px solid var(--line-2); }
+  .limits div { display: grid; grid-template-columns: 178px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .limits dt { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .limits dd { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+  .limits dd code { color: var(--ink); }
+  @media (max-width: 640px) { .limits div { grid-template-columns: 1fr; gap: 6px; } }
 
-  footer { margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
+  /* ---------- callout ---------- */
+  .callout {
+    background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--accent);
+    border-radius: 0 14px 14px 0; padding: 20px 22px; margin-top: 20px;
+  }
+  .callout p { color: var(--ink-soft); font-size: 15px; margin-bottom: 12px; max-width: 74ch; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- board of other scores ---------- */
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 18px; box-shadow: var(--shadow); transition: border-color .13s, transform .13s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .card .name { font-size: 15.5px; font-weight: 720; letter-spacing: -.02em; }
+  .card .score {
+    font-family: var(--font-mono); font-size: 27px; font-weight: 700; letter-spacing: -.04em;
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .card .score s { text-decoration: none; font-size: 12px; color: var(--ink-faint); }
+  .card .ratio { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .card .why { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
+  .card.cur { border-color: var(--accent); }
+  .card.cur .why { color: var(--ink); }
+
+  /* ---------- finding links ---------- */
+  .finding {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap; text-decoration: none;
+    margin-top: 14px; padding: 20px 22px; background: var(--panel);
+    border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0;
+  }
+  .finding:hover { border-color: var(--accent); }
+  .finding .fl { font-size: 10.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .finding .ft { flex: 1; min-width: 250px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .finding .fa { font-size: 13px; font-weight: 650; color: var(--accent); white-space: nowrap; }
+
+  /* ---------- closing ---------- */
+  .btn {
+    display: inline-block; font-size: 14px; font-weight: 650; text-decoration: none;
+    background: var(--accent); color: var(--on-accent); padding: 11px 20px; border-radius: 9px;
+    white-space: nowrap;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); padding: 9.5px 18.5px; }
+  .btn:hover { filter: brightness(1.06); }
+  .close {
+    margin-top: 80px; padding: 44px 32px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px;
+  }
+  .close h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
+  .close p { color: var(--ink-soft); font-size: 16px; margin: 14px auto 24px; max-width: 54ch; }
+  .close .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .close .note { font-size: 12.5px; color: var(--ink-faint); margin-top: 20px; }
+
+  /* ---------- footer ---------- */
+  footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
+  footer .fine { margin: 0; max-width: 78ch; }
+  footer a { color: var(--ink-soft); }
 </style>
 
 <div class="wrap">
 
   <div class="mast">
     <a href="index.html" aria-label="SDKProof home" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span></a>
-    <span class="tag">AI-Readiness Scorecard</span>
+    <span class="navs">
+      <a class="gh" href="index.html">All eight scores</a>
+      <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">Source on GitHub</a>
+    </span>
   </div>
 
   <header class="hero">
-    <div class="lib">@prisma/client · v7.8.0</div>
-    <h1>Prisma 7 is 87% ready for AI coding agents.</h1>
-    <p class="verdict">Claude Opus 5 writes Prisma's <b>query</b> API flawlessly — even the new <code>$extends</code> that replaced <code>$use</code> middleware. The one place it still reaches for <b>old setup code</b> is <b>constructing the client</b>: it hasn't learned that Prisma 7 requires a <b>driver adapter</b>, so it passes bare options and the removed <code>datasourceUrl</code>. <b>2 of 15 real tasks fail to type-check against the installed package.</b></p>
-
-    <div class="scorerow">
-      <div class="scorebig">
-        <span class="n">87</span><span class="d">/100</span>
-        <div class="l">Agent-readiness</div>
-      </div>
-      <div class="segs">
-        <div class="segbar">
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg p"></div><div class="seg p"></div><div class="seg p"></div>
-          <div class="seg f"></div><div class="seg f"></div>
-        </div>
-        <div class="seglegend">
-          <span><span class="dot p"></span><b>13</b> compile clean</span>
-          <span><span class="dot f"></span><b>2</b> fail type-check</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="meta">
-      <span><b>Model:</b> claude-opus-5</span>
-      <span><b>Tasks:</b> 15</span><span><b>Rates:</b> 87% conditional = 87% unconditional (0 refused) · 95% CI 62.1–96.3%</span>
-      <span><b>Method:</b> tsc against real installed package</span>
-      <span><b>Run:</b> 2026-07-26</span>
-    </div>
+    <span class="eyebrow">Scorecard · Prisma 7</span>
+    <h1>Every query compiles.<br><span class="dim">The client setup doesn't.</span></h1>
+    <span class="pkg">@prisma/client 7.8.0 · claude-opus-5</span>
   </header>
 
-  <!-- WRONG -->
-  <div class="sec-head">
-    <span class="eyebrow">The gap</span>
-    <h2>2 things the agent gets wrong</h2>
-    <p>Both are real code the model generated, verified by the TypeScript compiler against Prisma 7's actual types — and both are the same root cause: Prisma 7 now requires a <b>driver adapter</b>, and the model still writes the pre-adapter setup.</p>
+  <div class="lede">
+    <p>AI coding assistants write library code from memory. When a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it doesn't build.</p>
+    <p><b>SDKProof measures how often that happens.</b> It gives a model real coding jobs for one library, then compiles every answer against the real installed package with <code>tsc</code>, the TypeScript compiler. A task passes only if it compiles &mdash; no AI judges another AI.</p>
+    <p>This page is Prisma. Fifteen ordinary jobs — write a row, read across a relation, run a transaction — one shot each, no docs, no retries.</p>
+    <p><b>13 of the 15 compiled.</b> Both misses are the same thing. The model still builds the client the Prisma 6 way, and Prisma 7 changed that.</p>
+    <p class="verdict-line">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+      This measures the model, not Prisma.
+    </p>
   </div>
 
-  <div class="fails">
-
-    <article class="fcard">
-      <div class="top"><span class="x">✗</span><span class="t">Constructing the client</span><span class="tsx">TS2345</span></div>
-      <div class="fbody">
-        <div class="col bad">
-          <div class="clabel">Agent wrote (Prisma 6)</div>
-          <pre>const prisma = new PrismaClient({
-  log: ["warn", "error"],
-})</pre>
-        </div>
-        <div class="col good">
-          <div class="clabel">Prisma 7</div>
-          <pre>import { PrismaPg } from "@prisma/adapter-pg"
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-})
-const prisma = new PrismaClient({
-  adapter,
-  log: ["warn", "error"],
-})</pre>
-        </div>
+  <div class="scorebox">
+    <div>
+      <span class="big s-warn">87<s>/100</s></span>
+      <span class="lbl">13 of 15 compiled</span>
+    </div>
+    <div>
+      <div class="ticks">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i class="x"></i>
       </div>
-      <div class="errline"><div class="e">error TS2345: Argument of type '{ log: ("warn" | "error")[]; }' is not assignable to parameter of type 'Subset&lt;PrismaClientOptions, PrismaClientOptions&gt;'.</div></div>
-      <div class="why"><b>Why:</b> Prisma 7 dropped the bundled query engine — the constructor now requires a <b>driver adapter</b>. The model passes v6-style options (<code>log</code>) but omits the now-required <code>adapter</code>, so the whole options object fails to type-check.</div>
-    </article>
-
-    <article class="fcard">
-      <div class="top"><span class="x">✗</span><span class="t">Setting the datasource URL</span><span class="tsx">TS2353</span></div>
-      <div class="fbody">
-        <div class="col bad">
-          <div class="clabel">Agent wrote (Prisma 5–6)</div>
-          <pre>new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-})</pre>
-        </div>
-        <div class="col good">
-          <div class="clabel">Prisma 7</div>
-          <pre>// the URL now flows through the adapter
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-})
-new PrismaClient({ adapter })</pre>
-        </div>
+      <div class="legend">
+        <span><span class="sw p"></span><b>13</b> compiled</span>
+        <span><span class="sw f"></span><b>2</b> did not compile</span>
+        <span><span class="sw r"></span><b>0</b> refused</span>
       </div>
-      <div class="errline"><div class="e">error TS2353: Object literal may only specify known properties, and 'datasourceUrl' does not exist in type 'Subset&lt;PrismaClientOptions, PrismaClientOptions&gt;'.</div></div>
-      <div class="why"><b>Why:</b> the <code>datasourceUrl</code> option (Prisma 5–6) was removed. In Prisma 7 the connection string is configured on the driver adapter instead.</div>
-    </article>
-
-  </div>
-
-  <!-- RIGHT -->
-  <div class="sec-head">
-    <span class="eyebrow">Fair's fair</span>
-    <h2>What it gets right — 13 of 15</h2>
-  </div>
-  <div class="rights">
-    <h3>The query surface is solid.</h3>
-    <p>Every CRUD, relation, and query task compiled clean against Prisma 7 — including the <em>new</em> <code>$extends</code> computed fields, <code>$extends</code> query middleware (which replaced <code>$use</code>), and raw queries. The only gap is <b>constructing the client</b>, where v7's driver-adapter requirement changed the setup.</p>
-    <div class="chips">
-      <span class="chip">create / update</span>
-      <span class="chip">upsert</span>
-      <span class="chip">findUnique / findMany</span>
-      <span class="chip">where + orderBy</span>
-      <span class="chip">nested relation writes</span>
-      <span class="chip">include</span>
-      <span class="chip">cursor pagination</span>
-      <span class="chip">$transaction</span>
-      <span class="chip">count</span>
-      <span class="chip">$extends (computed field)</span>
-      <span class="chip">$extends (query middleware)</span>
-      <span class="chip">$queryRaw</span>
     </div>
   </div>
 
-  <!-- CONTEXT ARMS -->
-  <div class="sec-head">
-    <span class="eyebrow">Do Prisma's own docs fix it?</span>
-    <h2>Scored again with the skills <code>prisma init</code> installs</h2>
-    <p>Same 15 tasks, same model, 3 trials each. The only thing that changes is how much of Prisma's shipped agent context is in the prompt. Asked for by a Prisma maintainer, which is the reason this measurement exists.</p>
+  <div class="facts">
+    <span><b>Model:</b> claude-opus-5</span>
+    <span><b>Tasks:</b> 15</span>
+    <span><b>Package:</b> @prisma/client 7.8.0</span>
+    <span><b>Run:</b> 6 August 2026</span>
+    <span><b>Pass:</b> it compiles</span>
   </div>
-  <div class="rights">
-    <table class="arms">
-      <thead><tr><th>Context in the prompt</th><th style="text-align:right">Score</th><th style="text-align:right">vs bare</th><th>What changed</th></tr></thead>
-      <tbody>
-        <tr class="base"><td class="a">nothing (the score above)</td><td class="n">87</td><td class="d flat">—</td><td>fails both construction tasks</td></tr>
-        <tr><td class="a">prisma-client-api</td><td class="n">87</td><td class="d flat">+0</td><td><b>fixes neither</b>, 0 of 3 trials on both</td></tr>
-        <tr><td class="a">+ setup &amp; upgrade docs</td><td class="n">93</td><td class="d up">+6</td><td>fixes <code>datasourceUrl</code>, 3 of 3</td></tr>
-      </tbody>
-    </table>
-    <h3>The skills work. The one an agent reaches for first doesn't.</h3>
-    <p><b><code>prisma-client-api</code> contains a file called <code>constructor.md</code></b> — it is the pack an agent routing on skill <i>name</i> would load for "construct a PrismaClient". Loading it moves the score by <b>zero</b>. What actually fixes a task is <code>prisma-postgres-setup/references/prisma7-client.md</code> and <code>prisma-upgrade-v7/references/driver-adapters.md</code>, which state the adapter requirement flatly. That is a routing problem, not a content problem, and it is the kind of thing only a measurement finds.</p>
-    <h3>And one failure survives the full pack — but not a single sentence.</h3>
-    <p>With all of those docs in context, bare <code>new PrismaClient()</code> <b>still fails</b>. Measured properly at ten trials it is <b>5 of 10</b> with the full 25&nbsp;KB pack — and <b>10 of 10 passing</b> when the adapter sentence is the <i>only</i> thing in context. Same words, 174 characters instead of 25,000. In one of the failing runs the model wrote the correct form into a comment and shipped the wrong one directly beneath it:</p>
-    <pre class="codeblock"><span class="cmt">/** Prisma 7 requires a driver adapter:
+
+  <!-- ================= the two misses ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What went wrong</span>
+      <h2>Two tasks failed, and it's the same mistake twice</h2>
+      <p>Prisma 7 dropped the bundled query engine. The client now needs a <b>driver adapter</b> — a small object that holds the database connection and gets passed in when you build the client. The model has not learned that, so it writes the Prisma 6 setup.</p>
+      <p>Both panes below are real output. Left is what the model wrote, right is the version that compiles.</p>
+    </div>
+
+    <div class="cmp">
+      <figure class="pane bad">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">Task: build the client</span>
+          <code class="pv">@prisma/client 7.8.0</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import</span> { <span class="c-typ">PrismaClient</span> } <span class="c-kw">from</span> <span class="c-str">"@prisma/client"</span>;
+
+<span class="c-com">// nothing here sets up a database driver</span>
+<span class="c-kw">const</span> prisma = <span class="c-kw">new</span> <span class="bad-t"><span class="c-typ">PrismaClient</span></span>({
+  log: [<span class="c-str">"warn"</span>, <span class="c-str">"error"</span>],
+});</code></pre></div>
+        <p class="out">error TS2345: Argument of type '{ log: ("error" | "warn")[]; }' is not assignable to parameter of type 'Subset&lt;PrismaClientOptions, PrismaClientOptions&gt;'.</p>
+      </figure>
+
+      <figure class="pane good">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What Prisma 7 compiles</span>
+          <code class="pv">@prisma/client 7.8.0</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import</span> { <span class="c-typ">PrismaClient</span> } <span class="c-kw">from</span> <span class="c-str">"@prisma/client"</span>;
+<span class="c-kw">import</span> { <span class="c-typ">PrismaPg</span> } <span class="c-kw">from</span> <span class="c-str">"@prisma/adapter-pg"</span>;
+
+<span class="c-kw">const</span> adapter = <span class="c-kw">new</span> <span class="c-typ">PrismaPg</span>({
+  connectionString: process.env.<span class="c-typ">DATABASE_URL</span>,
+});
+
+<span class="c-kw">const</span> prisma = <span class="c-kw">new</span> <span class="c-typ">PrismaClient</span>({
+  <span class="good-t">adapter</span>,
+  log: [<span class="c-str">"warn"</span>, <span class="c-str">"error"</span>],
+});</code></pre></div>
+        <p class="out">tsc --noEmit — 0 errors</p>
+      </figure>
+    </div>
+
+    <div class="cmp">
+      <figure class="pane bad">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">Task: point the client at a database URL</span>
+          <code class="pv">@prisma/client 7.8.0</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">const</span> prisma = <span class="c-kw">new</span> <span class="c-typ">PrismaClient</span>({
+  <span class="bad-t">datasourceUrl</span>: process.env.<span class="c-typ">DATABASE_URL</span>,
+});</code></pre></div>
+        <p class="out">error TS2353: Object literal may only specify known properties, and 'datasourceUrl' does not exist in type 'Subset&lt;PrismaClientOptions, PrismaClientOptions&gt;'.</p>
+      </figure>
+
+      <figure class="pane good">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What Prisma 7 compiles</span>
+          <code class="pv">@prisma/client 7.8.0</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-com">// the URL lives on the adapter now</span>
+<span class="c-kw">const</span> adapter = <span class="c-kw">new</span> <span class="c-typ">PrismaPg</span>({
+  <span class="good-t">connectionString</span>: process.env.<span class="c-typ">DATABASE_URL</span>,
+});
+
+<span class="c-kw">const</span> prisma = <span class="c-kw">new</span> <span class="c-typ">PrismaClient</span>({ adapter });</code></pre></div>
+        <p class="out">tsc --noEmit — 0 errors</p>
+      </figure>
+    </div>
+
+    <p class="cap"><b>Reading the errors.</b> TS2345 means the options object is the wrong shape — the required <code>adapter</code> is missing. TS2353 means the option name doesn't exist at all: <code>datasourceUrl</code> worked in Prisma 5 and 6 and was removed in 7. Both are the compiler's own words, not mine.</p>
+  </section>
+
+  <!-- ================= what it got right ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The other 13</span>
+      <h2>The query surface is clean</h2>
+      <p>Every reading and writing task compiled on the first try, including the newer <code>$extends</code> API that replaced <code>$use</code> middleware.</p>
+    </div>
+    <div class="panel">
+      <p>Nothing here needed a hint. The model wrote nested relation writes, cursor pagination and <code>$transaction</code> without being told the option names — the prompts name the job, never the API.</p>
+      <div class="chips">
+        <span class="chip">create / update</span>
+        <span class="chip">upsert</span>
+        <span class="chip">findUnique / findMany</span>
+        <span class="chip">where + orderBy</span>
+        <span class="chip">nested relation writes</span>
+        <span class="chip">include</span>
+        <span class="chip">cursor pagination</span>
+        <span class="chip">$transaction</span>
+        <span class="chip">count</span>
+        <span class="chip key">$extends — computed field</span>
+        <span class="chip key">$extends — query middleware</span>
+        <span class="chip">$queryRaw</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= do prisma's own docs fix it ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Tested, not guessed</span>
+      <h2>Do Prisma's own agent files fix it?</h2>
+      <p>From v7.9, <code>prisma init</code> installs a set of files written for AI agents. I ran the same 15 tasks again with those files in the prompt, three times each. Nothing else changed. A Prisma maintainer asked for this, which is why it exists.</p>
+    </div>
+
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>What was in the prompt</th><th class="r">Score</th><th class="r">Change</th><th>What moved</th></tr></thead>
+        <tbody>
+          <tr><td class="l">nothing — the score above</td><td class="n r">87</td><td class="n r dim">—</td><td>both setup tasks fail</td></tr>
+          <tr><td class="l"><code>prisma-client-api</code></td><td class="n r">87</td><td class="n r dim">+0</td><td>fixes neither, 0 of 3 tries on both</td></tr>
+          <tr><td class="l">plus the v7 setup &amp; upgrade docs</td><td class="n r">93</td><td class="n r good">+6</td><td>fixes <code>datasourceUrl</code>, 3 of 3</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" style="margin-top:20px">
+      <h3>The files work. The one an agent picks up first doesn't.</h3>
+      <p><code>prisma-client-api</code> holds a file called <code>constructor.md</code>. If an agent chooses a file by its name, that is the one it loads to build a client. Loading it moved the score by <b>zero</b>.</p>
+      <p>What actually fixed a task was <code>prisma-postgres-setup/references/prisma7-client.md</code> and <code>prisma-upgrade-v7/references/driver-adapters.md</code>. Both state the adapter requirement flatly. So the right answer is in the box, filed under the wrong label. That's a routing problem, not a writing problem.</p>
+
+      <h3>One failure survives the whole pack, but not a single sentence.</h3>
+      <p>With all of those files in context, a bare <code>new PrismaClient()</code> <b>still fails</b>. Measured on that one task at ten tries: <b>5 of 10</b> with the full 25&nbsp;KB pack, and <b>10 of 10</b> when the adapter sentence is the only thing in the prompt. Same words. 174 characters instead of 25,000.</p>
+      <p>In one of the failing runs the model wrote the correct form into a comment and shipped the wrong one right under it:</p>
+    </div>
+
+    <div class="cmp" style="margin-top:18px">
+      <figure class="pane bad">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">It documented the rule, then broke it</span>
+          <code class="pv">full 25 KB pack in context</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-com">/** Prisma 7 requires a driver adapter:
  *   const prisma = new PrismaClient({ adapter });
  */</span>
-const prisma = new PrismaClient({
-  log: ["warn", "error"],
-  errorFormat: "pretty",
-});</pre>
-    <p style="margin-top:12px">It had read the requirement well enough to document it. It did not apply it.</p>
-  </div>
+<span class="c-kw">const</span> prisma = <span class="c-kw">new</span> <span class="bad-t"><span class="c-typ">PrismaClient</span></span>({
+  log: [<span class="c-str">"warn"</span>, <span class="c-str">"error"</span>],
+  errorFormat: <span class="c-str">"pretty"</span>,
+});</code></pre></div>
+        <p class="out">error TS2345 — the adapter it just described is not there</p>
+      </figure>
 
-  <!-- RECOMMENDATIONS -->
-  <div class="sec-head">
-    <span class="eyebrow">What would move this number</span>
-    <h2>Four changes, each one derived from a measurement above</h2>
-    <p>Not general advice about writing good documentation. Every item below is something this run measured, and every one of them is checkable against Prisma's own shipped files.</p>
-  </div>
+      <figure class="pane good">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">The same model, given only the sentence</span>
+          <code class="pv">174 characters in context</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">const</span> adapter = <span class="c-kw">new</span> <span class="c-typ">PrismaPg</span>({
+  connectionString: process.env.<span class="c-typ">DATABASE_URL</span>,
+});
 
-  <div class="rights">
-    <h3>1. <code>constructor.md</code> never mentions <code>datasourceUrl</code>.</h3>
-    <p>The failing task writes <code>new PrismaClient({ datasourceUrl })</code>, a field v7 removed. It is fixed only in the arm that includes <code>prisma-postgres-setup/references/prisma7-client.md</code> — <b>the only file in the set that names <code>datasourceUrl</code> at all</b>. The pack an agent routes to for client construction, <code>prisma-client-api</code>, mentions it zero times.</p>
-    <p>So the fix arrived from a file about <i>Postgres setup</i>, which an agent working on client construction has no reason to load. <b>Moving the removed-field list into <code>constructor.md</code> would put the answer where the question gets asked.</b></p>
-
-    <h3>2. The file agents reach for hedges; the file they don't reach for is direct.</h3>
-    <p><code>constructor.md</code> heads the field <code>adapter (Required for the SQL provider workflow)</code> — a condition the reader has to decide applies to them. <code>prisma7-client.md</code> instead says: <i>"Adapter is mandatory: <code>new PrismaClient()</code> with no arguments throws."</i></p>
-    <p>Same requirement, two registers, and <b>the unambiguous one is in the file an agent is least likely to load.</b> Stating the failure rather than the condition costs one sentence.</p>
-
-    <h3>3. And the strongest one: make it shorter.</h3>
-    <p>The adapter sentence, on its own, fixes bare <code>new PrismaClient()</code> <b>10 times out of 10</b>. The same sentence inside your 25&nbsp;KB pack fixes it <b>5 times out of 10</b>. Nothing about the wording changed — only how much surrounded it.</p>
-    <p>So the failure is not comprehension and not refusal — <b>the model follows the instruction when it reaches it</b>. <a href="react-router.html">React Router shows the same pattern</a> more starkly: 9 of 10 from a single sentence, 0 of 10 from that sentence inside its own 25&nbsp;KB pack.</p>
-    <p><b>Length is the obvious culprit and it is not supported.</b> A controlled sweep on Next.js put the same sentence at the end of 25&nbsp;KB of unrelated docs and it still passed 10 of 10 — <a href="agent-docs.html">details here</a>. Ship the short file, because that provably works. The reason the full pack does not is still an open question.</p>
-
-    <h3>4. Worth saying plainly: the docs themselves are unusually good.</h3>
-    <p>Across <a href="agent-docs.html">nine libraries surveyed</a>, Prisma's <code>llms-full.txt</code> is one of only three files a model can use without fetching anything — 6,915 characters of prose, no link index. The comparable file from another library on this board is 5.7&nbsp;MB. <b>This is a routing problem, not a writing problem.</b></p>
-  </div>
-
-  <!-- INSIGHT -->
-  <div class="sec-head">
-    <span class="eyebrow">Why this matters</span>
-    <h2>The version-drift gap</h2>
-  </div>
-  <div class="insight">
-    <p><b>Models are trained on a snapshot of the past.</b> The moment your SDK ships a breaking major, coding agents keep writing the old API — confidently, and it looks right — until they're retrained. For your users, that's broken code on their first try with your latest version.</p>
-    <p><b>The gap refreshes twice over:</b> every new SDK major re-opens it, and every new model release shifts it. That makes it a moving target worth <em>monitoring</em>, not a one-time audit — which is exactly what SDKProof watches.</p>
-  </div>
-
-  <!-- METHOD -->
-  <div class="sec-head">
-    <span class="eyebrow">No opinions — just the compiler</span>
-    <h2>How this was measured</h2>
-  </div>
-  <div class="method">
-    <span class="k">15</span> realistic Prisma tasks → generated by <span class="k">claude-opus-5</span> → each solution written into a project with the <b>real installed <code>@prisma/client</code> v7.8.0</b> and type-checked with <span class="k">tsc --noEmit</span>.<br>
-    A task <b>passes</b> only if it compiles clean. Failures are the compiler's own diagnostics (TS2554 / TS2353 / TS2339) — no LLM judge, no hand-waving. Reproducible: pinned package version, pinned model.
-  </div>
-  <div class="caveat">
-    <b>Scope — measured with no project context.</b> The model gets the task and the package's type definitions, nothing else: no <code>AGENTS.md</code>, no editor rules, <b>no agent skills</b>. That is the point — it measures what a model reaches for unaided.<br><br>
-    <b>It matters here.</b> From <span class="k">v7.9</span>, <code>prisma init</code> installs agent skills that address these misses. Scored with them, on all 15 tasks and 3 trials: <b>87 → 93</b> — <b>and that move is not measurable.</b> It is 42 of 45 generations against 39 of 45, a difference of <b>+6.7 points with a 95% interval of −6.6 to +20.2</b>, which includes zero. Thirteen of the fifteen tasks already passed without any context, so the denominator drowns the one task the skills address.<br><br>
-    <b>Measure the failing task instead and the effect is unmistakable.</b> On <code>construct-with-url</code> alone the same files go <b>0/10 → 5/10</b> (+50 points, interval +11.7 to +76.3). That is the finding, and it is the reason "score twice and report the delta" is the wrong instrument: a whole-scorecard delta cannot see a fix to the only thing that was broken. One-shot injection, not a full agent loop.<br><br>
-    So read <span class="k">87</span> as <b>the floor — what an unconfigured agent produces</b> — not as what a properly set-up Prisma project produces. Scored against <code>@prisma/client</code> <span class="k">7.8.0</span>, which predates those skills.
-  </div>
-
-  <!-- NEXT -->
-  <div class="sec-head">
-    <span class="eyebrow">On the board next</span>
-    <h2>SDKs shipping breaking majors — scoring soon</h2>
-  </div>
-  <div class="next">
-    <div id="next-list" class="list">
-      <div class="row"><span class="r">01</span><div><b>Vercel AI SDK 5</b> <span>— <code>ai</code> · agents still write <code>maxTokens</code>, <code>tool({ parameters })</code>, and <code>import … from "ai/react"</code> — all renamed or moved in v5.</span></div></div>
-      <div class="row"><span class="r">02</span><div><b>Zod 4</b> <span>— <code>zod</code> · <code>z.record(z.string())</code> now needs 2 args; <code>required_error</code> and <code>.ip()</code> were removed.</span></div></div>
-      <div class="row"><span class="r">03</span><div><b>React Router 7</b> <span>— <code>react-router</code> · agents still <code>import … from "@remix-run/node"</code> and call <code>json()</code> / <code>defer()</code> — the packages and helpers are gone.</span></div></div>
-      <div class="row"><span class="r">04</span><div><b>Clerk v6</b> <span>— <code>@clerk/nextjs</code> · <code>const { userId } = auth()</code> is now <code>await auth()</code>; <code>authMiddleware</code> → <code>clerkMiddleware</code>.</span></div></div>
-      <div class="row"><span class="r">05</span><div><b>TanStack Query v5</b> <span>— <code>@tanstack/react-query</code> · <code>useQuery(key, fn)</code> is now one object arg; <code>cacheTime</code> → <code>gcTime</code>; status <code>'loading'</code> → <code>'pending'</code>.</span></div></div>
+<span class="c-kw">const</span> prisma = <span class="c-kw">new</span> <span class="c-typ">PrismaClient</span>({ <span class="good-t">adapter</span> });</code></pre></div>
+        <p class="out">10 of 10 tries compiled</p>
+      </figure>
     </div>
-  </div>
+    <p class="cap">It had read the requirement well enough to write it down. It did not apply it.</p>
+  </section>
 
-  <!-- CTA -->
-  <div class="cta">
-    <h2>Is your SDK ready for AI agents?</h2>
-    <p>Right after a major release, most aren't — agents keep shipping your old API. SDKProof scores it, tracks it across model releases, and tells you exactly what to fix.</p>
-    <a class="btn" href="#">Get your SDK scored →</a>
-    <div class="note">early project · scorecards are independent analysis</div>
+  <!-- ================= what would move the number ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What would move the number</span>
+      <h2>Four changes, each one from a measurement above</h2>
+      <p>Not general advice about writing good docs. Every item is something this run measured, and every one is checkable against Prisma's own shipped files.</p>
+    </div>
+    <div class="panel">
+      <h3>1. <code>constructor.md</code> never mentions <code>datasourceUrl</code></h3>
+      <p>The failing task writes <code>new PrismaClient({ datasourceUrl })</code>, a field v7 removed. It is fixed only in the run that includes <code>prisma-postgres-setup/references/prisma7-client.md</code> — the one file in the whole set that names <code>datasourceUrl</code> at all. The pack an agent would reach for to build a client mentions it zero times.</p>
+      <p>So the fix arrived from a file about Postgres setup, which an agent working on client construction has no reason to open. <b>Move the removed-field list into <code>constructor.md</code></b> and the answer sits where the question gets asked.</p>
+
+      <h3>2. The file agents reach for hedges. The file they skip is direct.</h3>
+      <p><code>constructor.md</code> heads the field <code>adapter (Required for the SQL provider workflow)</code> — a condition the reader has to decide applies to them. <code>prisma7-client.md</code> says: <i>"Adapter is mandatory: <code>new PrismaClient()</code> with no arguments throws."</i></p>
+      <p>Same requirement, two registers, and <b>the plain one is in the file an agent is least likely to load</b>. Stating the failure instead of the condition costs one sentence.</p>
+
+      <h3>3. The strongest one: make it shorter</h3>
+      <p>The adapter sentence on its own fixes bare <code>new PrismaClient()</code> <b>10 times out of 10</b>. The same sentence inside the 25&nbsp;KB pack fixes it <b>5 times out of 10</b>. The wording never changed — only how much sat around it.</p>
+      <p>So this is not comprehension and not refusal. The model follows the instruction when it reaches it. <a href="react-router.html">React Router shows the same shape</a>, harder: 10 of 10 from a single sentence, 0 of 10 from that sentence inside its own file.</p>
+      <p><b>Length is the obvious culprit and it does not hold up.</b> A controlled run on Next.js put the same sentence at the end of 25&nbsp;KB of unrelated docs and it still passed 10 of 10 — <a href="agent-docs.html">the numbers are here</a>. Ship the short file, because that provably works. Why the full pack does not is still open.</p>
+
+      <h3>4. Worth saying plainly: the docs themselves are good</h3>
+      <p>Across <a href="agent-docs.html">nine libraries surveyed</a>, Prisma's <code>llms-full.txt</code> is one of only three files a model can use without fetching anything else — 6,915 characters of prose, no link index. The same file from another library on this board is 5.7&nbsp;MB. <b>This is a routing problem, not a writing problem.</b></p>
+    </div>
+  </section>
+
+  <!-- ================= method ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">How this was measured</span>
+      <h2>The compiler has the last word</h2>
+      <p>Fifteen realistic Prisma tasks, written by <code>claude-opus-5</code>, each dropped into a small project with <code>@prisma/client</code> 7.8.0 actually installed, then run through <code>tsc --noEmit</code>. A task passes only if it compiles. Every failure above is the compiler's own error text.</p>
+    </div>
+    <dl class="limits">
+      <div><dt>One model</dt><dd>Everything here is <code>claude-opus-5</code>. Another model will score differently.</dd></div>
+      <div><dt>One shot, no docs</dt><dd>The model gets the task and nothing else — no <code>AGENTS.md</code>, no editor rules, no agent files. That's the point: it measures what a model reaches for unaided. Hand it the release notes and both misses go away.</dd></div>
+      <div><dt>Small numbers</dt><dd>Fifteen tasks. Read the gap between 0 and 100 as the signal, not the gap between 87 and 93.</dd></div>
+      <div><dt>Compiles is not correct</dt><dd><code>tsc</code>, the TypeScript compiler, checks that the API exists and the types line up. It never runs the code, so nothing here says the code does the right thing.</dd></div>
+      <div><dt>Refusals</dt><dd>A refusal is neither a pass nor a fail — the model writes no code, so there is nothing to compile, and refused tasks drop out of the denominator. Prisma had none. <a href="stripe.html">Stripe had five</a>, which is why its 100 is out of 10 rather than 15.</dd></div>
+      <div><dt>It measures the model</dt><dd>87 is a statement about what <code>claude-opus-5</code> remembers of Prisma, not about Prisma's design. A number this size mostly means the release is recent.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ================= elsewhere ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Elsewhere</span>
+      <h2>Related findings</h2>
+    </div>
+    <a class="finding" href="agent-docs.html">
+      <span class="fl">Agent docs</span>
+      <span class="ft">One sentence from a library's own docs fixes the failure 10 times out of 10. The same sentence buried in their full docs pack fixes nothing.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+    <a class="finding" href="skills-delta.html">
+      <span class="fl">Agent skills</span>
+      <span class="ft">Three libraries ship files meant for AI agents. Scored with and without them, across six runs, not one difference clears zero.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+
+    <div class="head" style="margin-top:52px">
+      <span class="eyebrow">The rest of the board</span>
+      <h2>Other libraries, scored the same way</h2>
+    </div>
+    <div class="board">
+      <a class="card" href="index.html#drift">
+        <div class="top"><span class="name">TanStack Table 9</span><span class="score s-fail">0<s>/100</s></span></div>
+        <div class="ratio">0 of 12 compiled</div>
+        <p class="why">v9 renamed the main hook. The model wrote v8 every time.</p>
+      </a>
+      <a class="card" href="aisdk.html">
+        <div class="top"><span class="name">Vercel AI SDK 7</span><span class="score s-warn">71<s>/100</s></span></div>
+        <div class="ratio">10 of 14 compiled</div>
+        <p class="why">Breaks the moment a callback gets an explicit type.</p>
+      </a>
+      <a class="card" href="nextjs.html">
+        <div class="top"><span class="name">Next.js 16</span><span class="score s-ok">92<s>/100</s></span></div>
+        <div class="ratio">12 of 13 compiled</div>
+        <p class="why">One miss: <code>revalidateTag()</code> takes two arguments now.</p>
+      </a>
+      <a class="card" href="tanstack-query.html">
+        <div class="top"><span class="name">TanStack Query 5</span><span class="score s-pass">100<s>/100</s></span></div>
+        <div class="ratio">13 of 13 compiled</div>
+        <p class="why">Every v4 to v5 rename written unprompted.</p>
+      </a>
+    </div>
+    <p class="cap"><a href="index.html">All eight scores are on the home page →</a></p>
+  </section>
+
+  <div class="close">
+    <h2>Score my library</h2>
+    <p>Name any TypeScript package &amp; I'll run it. Or do it yourself — it's all open source.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">Read the code</a>
+    </div>
+    <p class="note">There's no npm package. Clone the repo, point it at a library, run it. The compiler is the judge.</p>
   </div>
 
   <footer>
-    SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with or endorsed by Prisma.<br>
-    Measured 2026-07-26 against @prisma/client v7.8.0 with claude-opus-5. Type-check only — measures API-surface correctness, not runtime behavior.
+    <p class="fine">SDKProof — independent measurement of how AI coding agents write real SDKs. Measured 6 August 2026 against <code>@prisma/client</code> 7.8.0 with <code>claude-opus-5</code>. Type-check only: it checks the API surface, not what the code does when it runs. Not affiliated with Prisma.</p>
     <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="skills-delta.html">Do agent docs work?</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
   </footer>
-
 </div>
 <!-- Cloudflare Web Analytics -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "a50cb1636e514225ad69b1f406df2054"}'></script>

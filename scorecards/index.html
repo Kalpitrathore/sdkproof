@@ -112,6 +112,13 @@
   code, pre, .num { font-family: var(--font-mono); }
   code { font-size: .9em; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  [hidden] { display: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important; scroll-behavior: auto !important;
+    }
+  }
 
   .eyebrow {
     font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
@@ -215,11 +222,13 @@
   /* ---------- board ---------- */
   .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); gap: 16px; }
   .card {
+    position: relative;
     display: flex; flex-direction: column; text-decoration: none; color: inherit;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
     padding: 20px; box-shadow: var(--shadow); transition: border-color .13s, transform .13s;
   }
-  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card:focus-within { border-color: var(--accent); }
   .card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
   .card .name { font-size: 17px; font-weight: 720; letter-spacing: -.02em; }
   .card .score {
@@ -239,7 +248,10 @@
   .ratio b { color: var(--ink-soft); font-weight: 650; }
   .card .why { font-size: 13.5px; color: var(--ink-soft); margin-top: 13px; flex: 1; }
   .card .why b { color: var(--ink); font-weight: 650; }
-  .card .go { font-size: 12.5px; font-weight: 650; color: var(--accent); margin-top: 16px; }
+  .card .go { font-size: 12.5px; font-weight: 650; color: var(--accent); margin-top: 16px; text-decoration: none; }
+  /* The whole card stays clickable: the scorecard link covers it, and the tick
+     buttons sit above that layer so they can be clicked on their own. */
+  .card .go::after { content: ""; position: absolute; inset: 0; border-radius: 14px; }
 
   /* ---------- ask row ---------- */
   .ask {
@@ -316,6 +328,114 @@
   footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
   footer .fine { margin: 0; max-width: 78ch; }
   footer a { color: var(--ink-soft); }
+
+
+  /* ---------- live tick strip (filled from runs.json) ---------- */
+  /* Each tick is one task. The static strip above is a fallback; once the run
+     data loads these become buttons carrying that task's name and error. */
+  .ticks.live { margin: 9.5px 0 1.5px; }
+  .ticks.live .tk {
+    flex: 1 1 0; height: 22px; padding: 0; border: 0; background: none;
+    position: relative; z-index: 2; cursor: pointer; border-radius: 3px;
+    -webkit-appearance: none; appearance: none;
+  }
+  .ticks.live .tk::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 50%;
+    height: 9px; margin-top: -4.5px; border-radius: 2px; background: var(--pass);
+    transition: height .1s, margin-top .1s;
+  }
+  .ticks.live .tk.x::before { background: var(--fail); }
+  .ticks.live .tk:hover::before,
+  .ticks.live .tk:focus-visible::before { height: 15px; margin-top: -7.5px; }
+
+  .tk-pop {
+    position: absolute; left: 14px; right: 14px; bottom: 14px; z-index: 4;
+    pointer-events: none; background: var(--panel-2); border: 1px solid var(--line-2);
+    border-radius: 10px; padding: 10px 12px; box-shadow: var(--shadow);
+  }
+  .tk-pop .p1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 9px; }
+  .tk-pop code { font-size: 11.5px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+  .tk-pop .st { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--pass); }
+  .tk-pop .st.f { color: var(--fail); }
+  .tk-pop .pa { font-size: 12px; line-height: 1.45; color: var(--ink-soft); margin-top: 5px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .tk-pop .pe { font-family: var(--font-mono); font-size: 11px; line-height: 1.5; color: var(--fail);
+    margin-top: 6px; overflow-wrap: anywhere;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .tk-pop .ph { font-size: 10.5px; color: var(--ink-faint); margin-top: 6px; }
+
+  /* ---------- evidence explorer ---------- */
+  .ex-tot { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 16px; }
+  .ex-tot b { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .ex-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .ex-tab {
+    font-family: inherit; font-size: 13px; font-weight: 650; line-height: 1.2;
+    display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 8px 14px;
+  }
+  .ex-tab:hover { border-color: var(--accent); color: var(--accent); }
+  .ex-tab .n { font-family: var(--font-mono); font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--ink-faint); }
+  .ex-tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .ex-tab[aria-selected="true"] .n { color: var(--on-accent); opacity: .8; }
+
+  .ex-panel { background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px; padding: 22px; box-shadow: var(--shadow); }
+  @media (max-width: 520px) { .ex-panel { padding: 16px; } }
+  .ex-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+  .ex-h h3 { font-size: clamp(18px, 3.2vw, 22px); font-weight: 720; }
+  .ex-h .sc { font-family: var(--font-mono); font-size: 28px; font-weight: 700; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .ex-h .sc s { text-decoration: none; font-size: 13px; color: var(--ink-faint); }
+  .ex-sum { font-size: 15px; color: var(--ink-soft); margin-top: 12px; max-width: 64ch; }
+  .ex-sum b { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .ex-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 12px; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); }
+  .ex-meta code { font-size: 11.5px; color: var(--ink-soft); }
+
+  .ex-pat { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .ex-pat h4 { font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: var(--ink-faint); margin: 0; }
+  .ex-pat ul { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
+  .ex-pat li {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+    font-size: 14px; color: var(--ink-soft); background: var(--panel-2);
+    border-radius: 8px; padding: 8px 12px;
+  }
+  .ex-pat li b { font-family: var(--font-mono); font-weight: 700; color: var(--fail); font-variant-numeric: tabular-nums; }
+  .ex-note { font-size: 12.5px; color: var(--ink-faint); margin-top: 10px; max-width: 68ch; }
+
+  .ex-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 22px; }
+  .ex-fb {
+    font-family: inherit; font-size: 12.5px; font-weight: 650; cursor: pointer;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 8px; padding: 7px 13px;
+  }
+  .ex-fb:hover { border-color: var(--accent); color: var(--accent); }
+  .ex-fb[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .ex-count { font-size: 12.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
+  .ex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 12px; margin-top: 14px; }
+  .tkc {
+    background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--pass);
+    border-radius: 10px; padding: 13px 14px;
+  }
+  .tkc.f { border-left-color: var(--fail); }
+  .tkc.is-hit { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tkc .r1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 10px; }
+  .tkc .st { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--pass); }
+  .tkc.f .st { color: var(--fail); }
+  .tkc .id { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+  .tkc .ar { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); }
+  .tkc .prompt { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); margin-top: 9px; }
+  .tkc .prompt code { color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere; }
+  .tkc .err {
+    margin-top: 11px; background: var(--hi-bad); border-radius: 8px; padding: 9px 11px;
+    font-family: var(--font-mono); font-size: 11.5px; line-height: 1.6; color: var(--fail);
+    overflow-wrap: anywhere;
+  }
+  .tkc .err b { display: block; font-weight: 700; margin-bottom: 2px; }
+  .ex-empty {
+    margin-top: 14px; font-size: 14.5px; color: var(--ink-soft); background: var(--panel-2);
+    border: 1px dashed var(--line-2); border-radius: 10px; padding: 18px;
+  }
+  .ex-empty b { color: var(--ink); font-weight: 650; }
 
   /* Inter — the face Peerlist and DevHunt set their own product names in.
      Self-hosted latin subset, used only for the two brand names below. */
@@ -437,82 +557,100 @@ error TS2558: Expected 2 type arguments, but got 1.</p>
     </div>
 
     <div class="board">
-      <a class="card" href="#drift">
+      <div class="card" data-lib="react-table">
         <div class="top"><span class="name">TanStack Table 9</span><span class="score s-fail">0<s>/100</s></span></div>
         <div class="pkg">@tanstack/react-table 9.1.2</div>
-        <div class="ticks"><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></div>
+        <div class="ticks" data-lib="react-table"><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></div>
         <div class="ratio"><b>0 of 12</b> compiled</div>
         <p class="why">v9 renamed the main hook &amp; swapped the <b>getCoreRowModel()</b> family for a <b>features</b> map. The model wrote v8 every single time.</p>
-        <span class="go">↑ See the code</span>
-      </a>
+        <a class="go" href="#drift" aria-label="See the TanStack Table 9 code example above">↑ See the code</a>
+      </div>
 
-      <a class="card" href="aisdk.html">
+      <div class="card" data-lib="aisdk">
         <div class="top"><span class="name">Vercel AI SDK 7</span><span class="score s-warn">71<s>/100</s></span></div>
         <div class="pkg">ai 7.0.30</div>
-        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></div>
+        <div class="ticks" data-lib="aisdk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></div>
         <div class="ratio"><b>10 of 14</b> compiled</div>
         <p class="why">Inline callbacks still infer fine. It only breaks when you give a callback an <b>explicit type</b> — v7 removed the type names it reaches for.</p>
-        <span class="go">View scorecard →</span>
-      </a>
+        <a class="go" href="aisdk.html" aria-label="View the Vercel AI SDK 7 scorecard">View scorecard →</a>
+      </div>
 
-      <a class="card" href="prisma7.html">
+      <div class="card" data-lib="prisma7">
         <div class="top"><span class="name">Prisma 7</span><span class="score s-warn">87<s>/100</s></span></div>
         <div class="pkg">@prisma/client 7.8.0</div>
-        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i class="x"></i></div>
+        <div class="ticks" data-lib="prisma7"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i class="x"></i></div>
         <div class="ratio"><b>13 of 15</b> compiled</div>
         <p class="why">Queries &amp; <b>$extends</b> are clean. It still writes the v6 client setup and leaves out the driver <b>adapter</b> that v7 now requires.</p>
-        <span class="go">View scorecard →</span>
-      </a>
+        <a class="go" href="prisma7.html" aria-label="View the Prisma 7 scorecard">View scorecard →</a>
+      </div>
 
-      <a class="card" href="nextjs.html">
+      <div class="card" data-lib="nextjs">
         <div class="top"><span class="name">Next.js 16</span><span class="score s-ok">92<s>/100</s></span></div>
         <div class="pkg">next 16.2.11</div>
-        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i></div>
+        <div class="ticks" data-lib="nextjs"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i></div>
         <div class="ratio"><b>12 of 13</b> compiled</div>
         <p class="why">Async cookies &amp; headers are absorbed. The one miss is Next 16's new 2-argument <b>revalidateTag()</b>.</p>
-        <span class="go">View scorecard →</span>
-      </a>
+        <a class="go" href="nextjs.html" aria-label="View the Next.js 16 scorecard">View scorecard →</a>
+      </div>
 
-      <a class="card" href="react-router.html">
+      <div class="card" data-lib="react-router">
         <div class="top"><span class="name">React Router 8</span><span class="score s-ok">93<s>/100</s></span></div>
         <div class="pkg">react-router 8.3.0</div>
-        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i></div>
+        <div class="ticks" data-lib="react-router"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i></div>
         <div class="ratio"><b>14 of 15</b> compiled</div>
         <p class="why">Drops the deleted <b>json()</b> &amp; <b>defer()</b> on its own. But <b>meta()</b> still takes the removed <b>data</b> argument. It's <b>loaderData</b> now.</p>
-        <span class="go">View scorecard →</span>
-      </a>
+        <a class="go" href="react-router.html" aria-label="View the React Router 8 scorecard">View scorecard →</a>
+      </div>
 
-      <a class="card" href="stripe.html">
+      <div class="card" data-lib="stripe">
         <div class="top"><span class="name">Stripe 22</span><span class="score s-pass">100<s>/100</s></span></div>
         <div class="pkg">stripe 22.4.0</div>
-        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ticks" data-lib="stripe"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="ratio"><b>10 of 10</b> compiled</div>
         <p class="why">Clean on everything it wrote, including the pinned <b>apiVersion</b>. It refused 5 of the 15 tasks outright, so this score covers 10.</p>
-        <span class="go">View scorecard →</span>
-      </a>
+        <a class="go" href="stripe.html" aria-label="View the Stripe 22 scorecard">View scorecard →</a>
+      </div>
 
-      <a class="card" href="tanstack-query.html">
+      <div class="card" data-lib="tanstack-query">
         <div class="top"><span class="name">TanStack Query 5</span><span class="score s-pass">100<s>/100</s></span></div>
         <div class="pkg">@tanstack/react-query 5.101.4</div>
-        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ticks" data-lib="tanstack-query"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="ratio"><b>13 of 13</b> compiled</div>
         <p class="why">Fully absorbed. Every v4→v5 rename written unprompted: <b>gcTime</b>, <b>placeholderData</b>, <b>'pending'</b>.</p>
-        <span class="go">View scorecard →</span>
-      </a>
+        <a class="go" href="tanstack-query.html" aria-label="View the TanStack Query 5 scorecard">View scorecard →</a>
+      </div>
 
-      <a class="card" href="zod.html">
+      <div class="card" data-lib="zod">
         <div class="top"><span class="name">Zod 4</span><span class="score s-pass">100<s>/100</s></span></div>
         <div class="pkg">zod 4.4.3</div>
-        <div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ticks" data-lib="zod"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="ratio"><b>10 of 10</b> compiled</div>
         <p class="why">Fully absorbed. The unified <b>error</b> option &amp; the 2-argument <b>z.record()</b>, both unprompted.</p>
-        <span class="go">View scorecard →</span>
-      </a>
+        <a class="go" href="zod.html" aria-label="View the Zod 4 scorecard">View scorecard →</a>
+      </div>
     </div>
 
     <div class="ask">
       <p><b>Want your library on this board?</b> Name any TypeScript package &amp; I'll have a model write code for it, then compile every answer against the real thing. React Router 8 is here because someone asked.</p>
       <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+    </div>
+  </section>
+
+  <!-- ================= the evidence ================= -->
+  <!-- Hidden until runs.json is in hand. If the fetch fails the page keeps the
+       static board above and this section never appears. -->
+  <section class="sec" id="evidence" hidden>
+    <div class="head">
+      <span class="eyebrow">The evidence</span>
+      <h2>Read the tasks. Read the errors.</h2>
+      <p>Every score above is built from small coding jobs, like &ldquo;fetch a user and show their name&rdquo;. Each job names the function to write &amp; nothing else. No option names, no docs, one attempt.</p>
+      <p>The answer goes into a project with the real package installed, then through <code>tsc</code>, the TypeScript compiler. <b>A task passes only if it compiles.</b></p>
+      <p>Pick a library to see the jobs the model was given, which answers compiled, and the compiler's own error for the ones that did not.</p>
+    </div>
+    <div class="ex" id="ex">
+      <p class="ex-tot" id="ex-tot"></p>
+      <div class="ex-picker" id="ex-tabs" role="tablist" aria-label="Choose a library"></div>
+      <div class="ex-panel" id="ex-panel" role="tabpanel" tabindex="0"></div>
     </div>
   </section>
 
@@ -655,3 +793,343 @@ error TS2558: Expected 2 type arguments, but got 1.</p>
     <p class="fine">SDKProof — independent measurement of how AI coding agents write real SDKs. Every score on this page is <code>claude-opus-5</code>, type-check only: it checks the API surface, not what the code does when it runs. Not affiliated with any library scored.</p>
   </footer>
 </div>
+<script>
+/* The board shows eight numbers. runs.json carries what those numbers were built
+   from: every task, whether the answer compiled, and the compiler's own error
+   when it did not. It is fetched at runtime, same origin, ~29KB.
+
+   If that fetch fails, nothing here runs: the evidence section stays hidden and
+   the static board above is what the page shows. */
+(function () {
+  "use strict";
+
+  var section = document.getElementById("evidence");
+  var host = document.getElementById("ex");
+  if (!section || !host || typeof window.fetch !== "function") return;
+
+  var tabsEl = document.getElementById("ex-tabs");
+  var panelEl = document.getElementById("ex-panel");
+  var totEl = document.getElementById("ex-tot");
+
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var libs = [];
+  var ids = [];
+  var index = {};
+  var cur = null;
+  var failOnly = false;
+  var hit = null;
+
+  function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+
+  function esc(v) {
+    return String(v == null ? "" : v)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* Task prompts mark identifiers with backticks; render those as code. */
+  function askHTML(v) { return esc(v).replace(/`([^`]+)`/g, "<code>$1</code>"); }
+
+  function day(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
+    return m ? Number(m[3]) + " " + MONTHS[Number(m[2]) - 1] + " " + m[1] : String(iso || "");
+  }
+
+  function plural(n, one, many) { return n === 1 ? one : many; }
+
+  function scoreClass(s) {
+    if (s >= 100) return "s-pass";
+    if (s >= 90) return "s-ok";
+    if (s > 0) return "s-warn";
+    return "s-fail";
+  }
+
+  function failedTasks(lib) {
+    return lib.tasks.filter(function (t) { return !t.passed; });
+  }
+
+  function tickLabel(lib, t, i) {
+    var s = "Task " + (i + 1) + " of " + lib.total + ", " + t.task + ": " +
+      (t.passed ? "compiled." : "did not compile.");
+    if (!t.passed && (t.code || t.message)) s += " " + (t.code || "") + " " + (t.message || "");
+    return s;
+  }
+
+  /* ---------------- library picker (ARIA tabs, roving tabindex) ------------ */
+
+  function buildTabs() {
+    libs.forEach(function (lib) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "ex-tab";
+      b.id = "extab-" + lib.id;
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-controls", "ex-panel");
+      b.setAttribute("aria-selected", "false");
+      b.tabIndex = -1;
+      b.setAttribute("aria-label", lib.name + ", " + lib.compiled + " of " + lib.total + " answers compiled");
+      b.innerHTML = '<span>' + esc(lib.name) + '</span><span class="n" aria-hidden="true">' +
+        lib.compiled + "/" + lib.total + "</span>";
+      b.addEventListener("click", function () { select(lib.id, null, false); });
+      b.addEventListener("keydown", onTabKey);
+      tabsEl.appendChild(b);
+    });
+  }
+
+  function onTabKey(e) {
+    var n = ids.length;
+    var i = ids.indexOf(cur);
+    var j = -1;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") j = (i + 1) % n;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") j = (i - 1 + n) % n;
+    else if (e.key === "Home") j = 0;
+    else if (e.key === "End") j = n - 1;
+    if (j < 0) return;
+    e.preventDefault();
+    select(ids[j], null, false);
+    var t = document.getElementById("extab-" + ids[j]);
+    if (t) t.focus();
+  }
+
+  /* ---------------- panel ------------------------------------------------- */
+
+  function patternsHTML(lib, badCount) {
+    var pats = Array.isArray(lib.patterns) ? lib.patterns : [];
+    var h = '<div class="ex-pat"><h4>What went wrong</h4>';
+    if (!pats.length || !badCount) {
+      return h + '<p class="ex-note">Every answer compiled, so there is no error to group.</p></div>';
+    }
+    var total = 0;
+    pats.forEach(function (p) { total += Number(p.count) || 0; });
+    h += "<ul>";
+    pats.forEach(function (p) {
+      h += "<li><span>" + esc(p.label) + "</span><b>" + esc(p.count) + "</b></li>";
+    });
+    h += "</ul>";
+    h += '<p class="ex-note">That is every error the compiler reported in the ' + badCount + " " +
+      plural(badCount, "answer", "answers") + " that failed, " + total + " in all. One answer can raise several errors, so these can add up to more than the number of tasks.</p></div>";
+    return h;
+  }
+
+  function renderPanel(lib) {
+    var bad = failedTasks(lib);
+    var h = "";
+
+    h += '<div class="ex-h"><h3>' + esc(lib.name) + "</h3>";
+    h += '<span class="sc ' + scoreClass(lib.score) + '">' + esc(lib.score) + "<s>/100</s></span></div>";
+
+    h += '<p class="ex-sum"><b>' + lib.compiled + " of " + lib.total + "</b> answers compiled";
+    h += bad.length ? ". <b>" + bad.length + "</b> did not. " : ". ";
+    h += "That is a score of <b>" + esc(lib.score) + " out of 100</b>.</p>";
+
+    if (lib.refused > 0) {
+      h += '<p class="ex-sum">The model refused ' + lib.refused + " further " +
+        plural(lib.refused, "task", "tasks") + " outright &amp; wrote no code at all. " +
+        "This score covers only the " + lib.total + " it answered.</p>";
+    }
+    if (lib.lost > 0) {
+      h += '<p class="ex-sum">' + lib.lost + " " + plural(lib.lost, "answer", "answers") +
+        " never came back &amp; " + plural(lib.lost, "is", "are") + " left out of the score.</p>";
+    }
+
+    h += '<p class="ex-meta"><code>' + esc(lib.pkg) + " " + esc(lib.version) + "</code>";
+    h += "<span>run " + esc(day(lib.ranAt)) + "</span>";
+    if (lib.model) h += "<span>" + esc(lib.model) + "</span>";
+    h += "</p>";
+
+    h += patternsHTML(lib, bad.length);
+
+    h += '<div class="ex-filter" role="group" aria-label="Filter tasks">';
+    h += '<button type="button" class="ex-fb" data-f="all" aria-pressed="' + (!failOnly) +
+      '">All ' + lib.total + " tasks</button>";
+    h += '<button type="button" class="ex-fb" data-f="fail" aria-pressed="' + failOnly + '">' +
+      (bad.length ? "Only the " + bad.length + " that failed" : "Only failures (none)") + "</button>";
+    h += '<span class="ex-count" id="ex-count" role="status"></span>';
+    h += "</div>";
+
+    h += '<div class="ex-grid" id="ex-grid"></div>';
+
+    panelEl.innerHTML = h;
+
+    each(panelEl.querySelectorAll(".ex-fb"), function (b) {
+      b.addEventListener("click", function () {
+        failOnly = b.getAttribute("data-f") === "fail";
+        each(panelEl.querySelectorAll(".ex-fb"), function (x) {
+          x.setAttribute("aria-pressed", String((x.getAttribute("data-f") === "fail") === failOnly));
+        });
+        hit = null;
+        renderGrid(index[cur], false);
+      });
+    });
+  }
+
+  function renderGrid(lib, jump) {
+    var grid = document.getElementById("ex-grid");
+    var count = document.getElementById("ex-count");
+    if (!grid) return;
+
+    var rows = failOnly ? failedTasks(lib) : lib.tasks;
+
+    if (!rows.length) {
+      grid.innerHTML = '<p class="ex-empty">All <b>' + lib.compiled + " of " + lib.total +
+        "</b> answers compiled. Nothing failed here, so there is nothing to show.</p>";
+      if (count) count.textContent = "Showing 0 of " + lib.total + " tasks.";
+      return;
+    }
+
+    var h = "";
+    rows.forEach(function (t) {
+      var f = !t.passed;
+      h += '<article class="tkc' + (f ? " f" : "") + (t.task === hit ? " is-hit" : "") +
+        '" tabindex="-1" data-task="' + esc(t.task) + '">';
+      h += '<p class="r1"><span class="st">' + (f ? "did not compile" : "compiled") + "</span>";
+      h += '<code class="id">' + esc(t.task) + "</code>";
+      if (t.area) h += '<span class="ar">' + esc(t.area) + "</span>";
+      h += "</p>";
+      if (t.asked) h += '<p class="prompt">' + askHTML(t.asked) + "</p>";
+      if (f && (t.code || t.message)) {
+        h += '<p class="err"><b>' + esc(t.code || "compiler error") + "</b>" + esc(t.message || "") + "</p>";
+      }
+      h += "</article>";
+    });
+    grid.innerHTML = h;
+
+    if (count) {
+      count.textContent = "Showing " + rows.length + " of " + lib.total + " " +
+        plural(lib.total, "task", "tasks") + ".";
+    }
+
+    if (hit && jump) {
+      var el = null;
+      each(grid.children, function (c) {
+        if (c.getAttribute && c.getAttribute("data-task") === hit) el = c;
+      });
+      if (el) {
+        try { el.focus({ preventScroll: true }); } catch (err) { el.focus(); }
+        el.scrollIntoView({ block: "center" });
+      }
+    }
+  }
+
+  function select(id, taskId, jump) {
+    var lib = index[id];
+    if (!lib) return;
+    if (taskId) failOnly = false;
+    cur = id;
+    hit = taskId || null;
+
+    libs.forEach(function (l) {
+      var t = document.getElementById("extab-" + l.id);
+      if (!t) return;
+      var on = l.id === id;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+    });
+    panelEl.setAttribute("aria-labelledby", "extab-" + id);
+
+    renderPanel(lib);
+    renderGrid(lib, !!jump);
+  }
+
+  /* ---------------- the tick strips on the board -------------------------- */
+  /* They were decoration: one <i> per task, coloured by outcome. Filled in from
+     the run they came from, each tick becomes a button that names its task and
+     shows the compiler error behind it. */
+
+  function liveTicks() {
+    each(document.querySelectorAll(".ticks[data-lib]"), function (strip) {
+      var lib = index[strip.getAttribute("data-lib")];
+      if (!lib || !lib.tasks.length) return;
+      var card = strip.closest ? strip.closest(".card") : null;
+
+      strip.innerHTML = "";
+      strip.className = "ticks live";
+      lib.tasks.forEach(function (t, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "tk" + (t.passed ? "" : " x");
+        b.setAttribute("data-i", String(i));
+        b.setAttribute("aria-label", tickLabel(lib, t, i));
+        b.addEventListener("click", function () { select(lib.id, t.task, true); });
+        strip.appendChild(b);
+      });
+
+      if (!card) return;
+
+      var pop = document.createElement("div");
+      pop.className = "tk-pop";
+      pop.hidden = true;
+      pop.setAttribute("aria-hidden", "true");
+      card.appendChild(pop);
+
+      var show = function (i) {
+        var t = lib.tasks[i];
+        if (!t) return;
+        var h = '<p class="p1"><code>' + esc(t.task) + '</code><span class="st' +
+          (t.passed ? "" : " f") + '">' + (t.passed ? "compiled" : "did not compile") + "</span></p>";
+        /* Kept short on purpose: the popover sits inside the card, and a taller
+           one would cover the very tick strip you are pointing at. */
+        if (!t.passed && (t.code || t.message)) {
+          h += '<p class="pe">' + esc(t.code || "") + " " + esc(t.message || "") + "</p>";
+        } else if (t.asked) {
+          h += '<p class="pa">' + askHTML(t.asked) + "</p>";
+        }
+        h += '<p class="ph">Click for the whole task below.</p>';
+        pop.innerHTML = h;
+        pop.hidden = false;
+      };
+      var hide = function () { pop.hidden = true; };
+      var from = function (e) {
+        var t = e.target;
+        return t && t.closest ? t.closest(".tk") : null;
+      };
+
+      strip.addEventListener("mouseover", function (e) { var b = from(e); if (b) show(Number(b.getAttribute("data-i"))); });
+      strip.addEventListener("mouseleave", hide);
+      strip.addEventListener("focusin", function (e) { var b = from(e); if (b) show(Number(b.getAttribute("data-i"))); });
+      strip.addEventListener("focusout", hide);
+    });
+  }
+
+  /* ---------------- boot -------------------------------------------------- */
+
+  function boot(data) {
+    if (!data || !Array.isArray(data.libraries)) throw new Error("runs.json: unexpected shape");
+    libs = data.libraries.filter(function (l) {
+      return l && l.id && Array.isArray(l.tasks) && l.tasks.length;
+    });
+    if (!libs.length) throw new Error("runs.json: no libraries");
+
+    libs.forEach(function (l) {
+      l.total = typeof l.total === "number" ? l.total : l.tasks.length;
+      l.compiled = typeof l.compiled === "number" ? l.compiled : l.tasks.length - failedTasks(l).length;
+      index[l.id] = l;
+      ids.push(l.id);
+    });
+
+    var tasks = 0, bad = 0;
+    libs.forEach(function (l) { tasks += l.total; bad += failedTasks(l).length; });
+    totEl.innerHTML = "<b>" + tasks + "</b> answers went through the compiler across <b>" +
+      libs.length + "</b> libraries. <b>" + bad + "</b> of them did not compile." +
+      (data.generatedAt ? " Last collected " + esc(day(data.generatedAt)) + "." : "");
+
+    buildTabs();
+    select(libs[0].id, null, false);
+    section.hidden = false;
+
+    try { liveTicks(); } catch (err) { /* the static strips stay as they were */ }
+  }
+
+  function grab(url) {
+    return fetch(url, { credentials: "same-origin" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+
+  grab("/runs.json")
+    .catch(function () { return grab("runs.json"); })
+    .then(boot)
+    .catch(function () { section.hidden = true; });
+})();
+</script>
