@@ -30,7 +30,11 @@ const WARN = "#d29922";
 const SANS = "Helvetica Neue, Helvetica, Arial, sans-serif";
 const MONO = "Menlo, Monaco, monospace";
 
-const scoreColor = (n) => (n >= 95 ? PASS : n >= 90 ? BRAND : WARN);
+// Below 50 the amber reads as "needs a look" when the card is reporting that
+// nothing compiled at all. FAIL is the site's own dark-theme --fail, so the
+// preview and the page it opens agree.
+const FAIL = "#f2656f";
+const scoreColor = (n) => (n >= 95 ? PASS : n >= 90 ? BRAND : n >= 50 ? WARN : FAIL);
 
 const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -144,6 +148,13 @@ const PAGES = {
     passed: 10,
     total: 10,
     note: "100% conditional, 67% unconditional — 5 of 15 refused",
+  }),
+  "react-table.png": scorecardSvg({
+    name: "TanStack Table 9",
+    score: 0,
+    passed: 0,
+    total: 12,
+    note: "v9 renamed the hook — every answer used the v8 name",
   }),
   "prisma7.png": scorecardSvg({
     name: "Prisma 7",

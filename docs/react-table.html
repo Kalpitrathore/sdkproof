@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="TanStack React Table 9 scores 0/100 on Claude Opus 5: 12 of 12 tasks failed to compile. v9 renamed useReactTable to useTable and moved the row-model factories off the package root, and the model wrote v8 every time. v9 does ship a legacy entry point that compiles — the model never reaches for it.">
+<title>TanStack React Table 9 — 0 of 12 AI-written answers compiled — SDKProof</title>
+<link rel="canonical" href="https://sdkproof.dev/react-table.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:site_name" content="SDKProof">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sdkproof.dev/react-table.html">
+<meta property="og:title" content="TanStack React Table 9 — 0/100 AI-readiness">
+<meta property="og:description" content="TanStack React Table 9 scores 0/100 on Claude Opus 5: 12 of 12 tasks failed to compile. v9 renamed useReactTable to useTable and moved the row-model factories off the package root, and the model wrote v8 every time. v9 does ship a legacy entry point that compiles — the model never reaches for it.">
+<meta property="og:image" content="https://sdkproof.dev/og/react-table.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TanStack React Table 9 — 0/100 AI-readiness">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TanStack React Table 9 — 0/100 AI-readiness">
+<meta name="twitter:description" content="TanStack React Table 9 scores 0/100 on Claude Opus 5: 12 of 12 tasks failed to compile. v9 renamed useReactTable to useTable and moved the row-model factories off the package root, and the model wrote v8 every time. v9 does ship a legacy entry point that compiles — the model never reaches for it.">
+<meta name="twitter:image" content="https://sdkproof.dev/og/react-table.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"SDKProof","url":"https://sdkproof.dev/","logo":"https://sdkproof.dev/icon-512.png","description":"Type-checked scorecards measuring how well AI coding agents write each SDK's current API.","sameAs":["https://github.com/Kalpitrathore/sdkproof"]}</script>
+<!-- Microsoft Clarity — heatmaps and session replay. Loaded in the document head so
+     replay captures from first paint; Cloudflare Web Analytics stays at the end of
+     the document and remains the source of truth for visitor counts. -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xtum7dy1n3");
+</script>
+</head>
+<body>
+<style>
+  /* ---------- tokens: light is the base, dark is a redefinition ---------- */
+  :root {
+    color-scheme: light;
+    --bg: #f7f8f7;
+    --bg-line: rgba(14,18,22,.055);
+    --panel: #ffffff;
+    --panel-2: #f1f3f2;
+    --ink: #0e1216;
+    --ink-soft: #4a545e;
+    --ink-faint: #78838e;
+    --line: #e2e7e5;
+    --line-2: #d1d8d5;
+    --accent: #0a7f74;
+    --accent-soft: #e4f2f0;
+    --on-accent: #ffffff;
+    --pass: #16794a;
+    --warn: #9a6a00;
+    --fail: #c62f3b;
+    --code-bg: #fbfcfb;
+    --tok-com: #79848f;
+    --tok-kw: #8b34c9;
+    --tok-str: #0b6484;
+    --tok-fn: #a4560a;
+    --tok-typ: #0a7f74;
+    --hi-bad: rgba(198,47,59,.13);
+    --hi-good: rgba(22,121,74,.13);
+    --shadow: 0 1px 2px rgba(14,18,22,.05), 0 14px 34px rgba(14,18,22,.07);
+    --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0a0d11;
+      --bg-line: rgba(255,255,255,.045);
+      --panel: #0f141a;
+      --panel-2: #141a22;
+      --ink: #e9eff4;
+      --ink-soft: #a0aeba;
+      --ink-faint: #6e7c89;
+      --line: #1d2530;
+      --line-2: #2b3542;
+      --accent: #3fd8b8;
+      --accent-soft: #0d2b27;
+      --on-accent: #04211d;
+      --pass: #3ecf7f;
+      --warn: #e0a83a;
+      --fail: #f2656f;
+      --code-bg: #0c1117;
+      --tok-com: #6e7c89;
+      --tok-kw: #c48cf5;
+      --tok-str: #7cc7f0;
+      --tok-fn: #f0b866;
+      --tok-typ: #4fd6bd;
+      --hi-bad: rgba(242,101,111,.17);
+      --hi-good: rgba(62,207,127,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0a0d11;
+    --bg-line: rgba(255,255,255,.045);
+    --panel: #0f141a;
+    --panel-2: #141a22;
+    --ink: #e9eff4;
+    --ink-soft: #a0aeba;
+    --ink-faint: #6e7c89;
+    --line: #1d2530;
+    --line-2: #2b3542;
+    --accent: #3fd8b8;
+    --accent-soft: #0d2b27;
+    --on-accent: #04211d;
+    --pass: #3ecf7f;
+    --warn: #e0a83a;
+    --fail: #f2656f;
+    --code-bg: #0c1117;
+    --tok-com: #6e7c89;
+    --tok-kw: #c48cf5;
+    --tok-str: #7cc7f0;
+    --tok-fn: #f0b866;
+    --tok-typ: #4fd6bd;
+    --hi-bad: rgba(242,101,111,.17);
+    --hi-good: rgba(62,207,127,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
+  }
+
+  /* ---------- base ---------- */
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--bg-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-line) 1px, transparent 1px);
+    background-size: 72px 72px, 72px 72px;
+    background-position: -1px -1px, -1px -1px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.62;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 96px; }
+  h1, h2, h3 { margin: 0; letter-spacing: -.022em; line-height: 1.1; text-wrap: balance; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  code, pre, .num { font-family: var(--font-mono); }
+  code { font-size: .9em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--ink-faint); display: block;
+  }
+  .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+  /* ---------- masthead ---------- */
+  .mast { display: flex; align-items: center; gap: 12px; padding: 24px 0 0; }
+  .logo { font-weight: 700; font-size: 16px; letter-spacing: -.03em; color: var(--ink); }
+  .logo b { color: var(--accent); font-weight: 700; }
+  .mast .navs { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .mast .gh {
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 14px;
+  }
+  .mast .gh:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 58px 0 0; }
+  .hero h1 {
+    font-size: clamp(32px, 6.4vw, 62px); font-weight: 800; letter-spacing: -.04em; line-height: 1.0;
+    margin: 18px 0 0;
+  }
+  .hero h1 .dim { color: var(--ink-faint); }
+  .hero .pkg {
+    display: inline-block; margin-top: 14px; font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 5px 13px;
+  }
+  .lede { max-width: 64ch; margin-top: 28px; }
+  .lede p { color: var(--ink-soft); font-size: clamp(16px, 2.1vw, 18.5px); margin-bottom: 15px; }
+  .lede p:last-child { margin-bottom: 0; }
+  .lede b { color: var(--ink); font-weight: 650; }
+  .verdict-line {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 7px 16px 7px 12px;
+  }
+  .verdict-line svg { flex: none; }
+
+  /* ---------- score panel ---------- */
+  .scorebox {
+    display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center;
+    margin-top: 44px; padding: 26px 28px; background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 16px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 720px) { .scorebox { grid-template-columns: 1fr; gap: 24px; padding: 22px 20px; } }
+  .scorebox .big {
+    font-family: var(--font-mono); font-size: clamp(50px, 9vw, 74px); font-weight: 700;
+    letter-spacing: -.05em; line-height: .9; font-variant-numeric: tabular-nums; display: block;
+  }
+  .scorebox .big s { text-decoration: none; font-size: 21px; color: var(--ink-faint); letter-spacing: -.02em; }
+  .scorebox .lbl {
+    display: block; margin-top: 13px; font-size: 11px; font-weight: 700; letter-spacing: .17em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  .s-fail { color: var(--fail); }
+  .s-warn { color: var(--warn); }
+  .s-ok   { color: var(--ink); }
+  .s-pass { color: var(--pass); }
+  .ticks { display: flex; gap: 4px; }
+  .ticks i { flex: 1 1 0; height: 26px; border-radius: 3px; background: var(--pass); }
+  .ticks i.x { background: var(--fail); }
+  .ticks i.r { background: var(--line-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 13px; font-size: 12.5px; color: var(--ink-faint); }
+  .legend b { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .legend .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+  .sw.p { background: var(--pass); }
+  .sw.f { background: var(--fail); }
+  .sw.r { background: var(--line-2); }
+
+  .facts { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+  .facts span {
+    font-size: 12.5px; color: var(--ink-soft); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+  }
+  .facts b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- section heads ---------- */
+  .sec { margin-top: 82px; }
+  .sec > .head { max-width: 66ch; margin-bottom: 24px; }
+  .sec h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 780; margin: 12px 0 0; }
+  .sec .head p { color: var(--ink-soft); font-size: 16.5px; margin-top: 14px; }
+  .sec .head p b { color: var(--ink); font-weight: 650; }
+  .sec .head p + p { margin-top: 12px; }
+
+  /* ---------- code comparison ---------- */
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .cmp { grid-template-columns: 1fr; } }
+  .cmp + .cmp { margin-top: 22px; }
+  .pane {
+    margin: 0; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .pane figcaption {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  }
+  .pane .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .pane.bad .dot { background: var(--fail); }
+  .pane.good .dot { background: var(--pass); }
+  .pane .pl { font-size: 13.5px; font-weight: 650; color: var(--ink); }
+  .pane .pv { margin-left: auto; font-size: 11.5px; color: var(--ink-faint); }
+  .pane .scroll { overflow-x: auto; background: var(--code-bg); }
+  .pane pre {
+    margin: 0; padding: 18px 18px 20px; font-size: 12.5px; line-height: 1.72;
+    color: var(--ink); tab-size: 2;
+  }
+  .pane .out {
+    border-top: 1px solid var(--line); padding: 13px 16px; font-family: var(--font-mono);
+    font-size: 11.5px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .pane.bad .out { color: var(--fail); background: var(--hi-bad); }
+  .pane.good .out { color: var(--pass); background: var(--hi-good); }
+  .c-com { color: var(--tok-com); }
+  .c-kw  { color: var(--tok-kw); }
+  .c-str { color: var(--tok-str); }
+  .c-fn  { color: var(--tok-fn); }
+  .c-typ { color: var(--tok-typ); }
+  .bad-t  { background: var(--hi-bad); border-bottom: 1.5px solid var(--fail); border-radius: 2px; padding: 0 2px; }
+  .good-t { background: var(--hi-good); border-bottom: 1.5px solid var(--pass); border-radius: 2px; padding: 0 2px; }
+  .cap { font-size: 13px; color: var(--ink-faint); margin-top: 16px; max-width: 70ch; }
+  .cap b { color: var(--ink-soft); font-weight: 650; }
+
+  /* ---------- panels of prose ---------- */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 24px 26px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 640px) { .panel { padding: 20px 18px; } }
+  .panel h3 { font-size: 17.5px; font-weight: 720; margin: 26px 0 9px; }
+  .panel h3:first-child { margin-top: 0; }
+  .panel p { color: var(--ink-soft); font-size: 15px; margin-bottom: 13px; max-width: 74ch; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel b { color: var(--ink); font-weight: 650; }
+  .panel .lead-in { color: var(--ink); }
+
+  /* ---------- chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
+  }
+  .chip::before { content: "\2713"; color: var(--pass); font-weight: 700; margin-right: 6px; }
+  .chip.key { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
+
+  /* ---------- tables ---------- */
+  .tblwrap {
+    overflow-x: auto; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; box-shadow: var(--shadow);
+  }
+  table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 540px; }
+  table.t th {
+    text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-faint); padding: 15px 18px;
+    border-bottom: 1px solid var(--line-2); white-space: nowrap;
+  }
+  table.t td { padding: 13px 18px; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
+  table.t tr:last-child td { border-bottom: 0; }
+  table.t td.l { color: var(--ink); font-weight: 650; }
+  table.t td.n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.t td.good { color: var(--pass); font-weight: 700; }
+  table.t td.bad { color: var(--fail); font-weight: 700; }
+  table.t td.dim { color: var(--ink-faint); }
+  table.t th.r, table.t td.r { text-align: right; }
+
+  /* ---------- limits ---------- */
+  .limits { border-top: 1px solid var(--line-2); }
+  .limits div { display: grid; grid-template-columns: 178px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .limits dt { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .limits dd { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+  .limits dd code { color: var(--ink); }
+  @media (max-width: 640px) { .limits div { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ---------- callout ---------- */
+  .callout {
+    background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--accent);
+    border-radius: 0 14px 14px 0; padding: 20px 22px; margin-top: 20px;
+  }
+  .callout p { color: var(--ink-soft); font-size: 15px; margin-bottom: 12px; max-width: 74ch; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- board of other scores ---------- */
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 18px; box-shadow: var(--shadow); transition: border-color .13s, transform .13s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .card .name { font-size: 15.5px; font-weight: 720; letter-spacing: -.02em; }
+  .card .score {
+    font-family: var(--font-mono); font-size: 27px; font-weight: 700; letter-spacing: -.04em;
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .card .score s { text-decoration: none; font-size: 12px; color: var(--ink-faint); }
+  .card .ratio { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .card .why { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
+  .card.cur { border-color: var(--accent); }
+  .card.cur .why { color: var(--ink); }
+
+  /* ---------- finding links ---------- */
+  .finding {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap; text-decoration: none;
+    margin-top: 14px; padding: 20px 22px; background: var(--panel);
+    border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0;
+  }
+  .finding:hover { border-color: var(--accent); }
+  .finding .fl { font-size: 10.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .finding .ft { flex: 1; min-width: 250px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .finding .fa { font-size: 13px; font-weight: 650; color: var(--accent); white-space: nowrap; }
+
+  /* ---------- closing ---------- */
+  .btn {
+    display: inline-block; font-size: 14px; font-weight: 650; text-decoration: none;
+    background: var(--accent); color: var(--on-accent); padding: 11px 20px; border-radius: 9px;
+    white-space: nowrap;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); padding: 9.5px 18.5px; }
+  .btn:hover { filter: brightness(1.06); }
+  .close {
+    margin-top: 80px; padding: 44px 32px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px;
+  }
+  .close h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
+  .close p { color: var(--ink-soft); font-size: 16px; margin: 14px auto 24px; max-width: 54ch; }
+  .close .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .close .note { font-size: 12.5px; color: var(--ink-faint); margin-top: 20px; }
+
+  /* ---------- footer ---------- */
+  footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
+  footer .fine { margin: 0; max-width: 78ch; }
+  footer a { color: var(--ink-soft); }
+</style>
+
+<div class="wrap">
+
+  <div class="mast">
+    <a href="index.html" aria-label="SDKProof home" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span></a>
+    <span class="navs">
+      <a class="gh" href="index.html">All eight scores</a>
+      <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">Source on GitHub</a>
+    </span>
+  </div>
+
+  <header class="hero">
+    <span class="eyebrow">Scorecard · TanStack React Table 9</span>
+    <h1>Twelve ordinary jobs.<br><span class="dim">Not one of them built.</span></h1>
+    <span class="pkg">@tanstack/react-table 9.1.2 · claude-opus-5</span>
+  </header>
+
+  <div class="lede">
+    <p>AI coding assistants write library code from memory. When a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it doesn't build.</p>
+    <p><b>SDKProof measures how often that happens.</b> It gives a model real coding jobs for one library, then compiles every answer against the real installed package with <code>tsc</code>, the TypeScript compiler. A task passes only if it compiles &mdash; no AI judges another AI.</p>
+    <p>This page is TanStack React Table. Twelve ordinary table jobs — build one, sort it, paginate it — one shot each, no docs, no retries.</p>
+    <p><b>0 of the 12 compiled.</b> That is the lowest score on this board. The model wrote the v8 API every time, and v9 renamed nearly every piece it reached for.</p>
+    <p class="verdict-line">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+      This measures the model, not TanStack Table.
+    </p>
+  </div>
+
+  <div class="scorebox">
+    <div>
+      <span class="big s-fail">0<s>/100</s></span>
+      <span class="lbl">0 of 12 compiled</span>
+    </div>
+    <div>
+      <div class="ticks">
+        <i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i>
+      </div>
+      <div class="legend">
+        <span><span class="sw p"></span><b>0</b> compiled</span>
+        <span><span class="sw f"></span><b>12</b> did not compile</span>
+        <span><span class="sw r"></span><b>0</b> refused</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="facts">
+    <span><b>Model:</b> claude-opus-5</span>
+    <span><b>Tasks:</b> 12</span>
+    <span><b>Package:</b> @tanstack/react-table 9.1.2</span>
+    <span><b>Run:</b> 18 August 2026</span>
+    <span><b>Pass:</b> it compiles</span>
+  </div>
+
+  <!-- ================= the rename ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What went wrong</span>
+      <h2>One rename takes out almost every answer</h2>
+      <p>v9 renamed the main hook. <code>useReactTable</code> is now <code>useTable</code>. It also moved the row-model factories: <code>getCoreRowModel</code> is no longer exported from the package root, and <code>createCoreRowModel</code> is. Same for the sorted, filtered, grouped and paginated ones.</p>
+      <p><b>In 11 of its 12 answers the model imported <code>createTable</code> from the package root</b>, and two of those name <code>useReactTable</code> in a comment. The v9 root exports neither one.</p>
+      <p>Both panes below are real. Left is the answer the model wrote, shortened. Right is code that compiles against the same installed copy.</p>
+    </div>
+
+    <div class="cmp">
+      <figure class="pane bad">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">Task: build a table over a list of users</span>
+          <code class="pv">@tanstack/react-table 9.1.2</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import</span> {
+  <span class="bad-t">createTable</span>,
+  <span class="bad-t">getCoreRowModel</span>,
+  <span class="c-kw">type</span> <span class="c-typ">ColumnDef</span>,
+  <span class="c-kw">type</span> <span class="c-typ">Table</span>,
+  <span class="c-kw">type</span> <span class="c-typ">TableState</span>,
+  <span class="c-kw">type</span> <span class="c-typ">Updater</span>,
+} <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table"</span>;
+
+<span class="c-kw">export function</span> <span class="c-fn">buildUserTable</span>(data: <span class="c-typ">User</span>[]): <span class="c-typ">Table</span>&lt;<span class="c-typ">User</span>&gt; {
+  <span class="c-kw">const</span> columns: <span class="c-typ">ColumnDef</span>&lt;<span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;[] = [
+    { id: <span class="c-str">"id"</span>,   accessorKey: <span class="c-str">"id"</span>,   header: <span class="c-str">"ID"</span> },
+    { id: <span class="c-str">"name"</span>, accessorKey: <span class="c-str">"name"</span>, header: <span class="c-str">"Name"</span> },
+  ];
+
+  <span class="c-kw">const</span> table: <span class="c-typ">Table</span>&lt;<span class="c-typ">User</span>&gt; = <span class="bad-t">createTable</span>&lt;<span class="c-typ">User</span>&gt;({
+    data,
+    columns,
+    <span class="bad-t">getCoreRowModel</span>: <span class="bad-t">getCoreRowModel</span>&lt;<span class="c-typ">User</span>&gt;(),
+    state,
+    onStateChange: (updater: <span class="c-typ">Updater</span>&lt;<span class="c-typ">TableState</span>&gt;) =&gt; { … },
+    renderFallbackValue: <span class="c-kw">null</span>,
+  });
+
+  <span class="c-kw">return</span> table;
+}</code></pre></div>
+        <p class="out">error TS2724: '"@tanstack/react-table"' has no exported member named 'createTable'. Did you mean 'ReactTable'?
+error TS2724: '"@tanstack/react-table"' has no exported member named 'getCoreRowModel'. Did you mean 'createCoreRowModel'?</p>
+      </figure>
+
+      <figure class="pane good">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What v9 compiles</span>
+          <code class="pv">@tanstack/react-table 9.1.2</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import</span> {
+  <span class="good-t">useTable</span>,
+  <span class="c-fn">createColumnHelper</span>,
+  <span class="c-kw">type</span> <span class="c-typ">ColumnDef</span>,
+} <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table"</span>;
+
+<span class="c-kw">type</span> <span class="c-typ">User</span> = { id: <span class="c-typ">string</span>; name: <span class="c-typ">string</span> };
+
+<span class="c-kw">const</span> <span class="good-t">features</span> = {};
+<span class="c-kw">type</span> <span class="c-typ">Features</span> = <span class="c-kw">typeof</span> features;
+
+<span class="c-kw">const</span> helper = <span class="c-fn">createColumnHelper</span>&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>&gt;();
+<span class="c-kw">const</span> columns: <span class="c-typ">ColumnDef</span>&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;[] = [
+  helper.<span class="c-fn">accessor</span>(<span class="c-str">"id"</span>, { header: <span class="c-str">"ID"</span> }),
+  helper.<span class="c-fn">accessor</span>(<span class="c-str">"name"</span>, { header: <span class="c-str">"Name"</span> }),
+];
+
+<span class="c-kw">export function</span> <span class="c-fn">buildUserTable</span>(data: <span class="c-typ">User</span>[]) {
+  <span class="c-kw">return</span> <span class="good-t">useTable</span>&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>&gt;({ features, columns, data });
+}</code></pre></div>
+        <p class="out">tsc --noEmit — 0 errors</p>
+      </figure>
+    </div>
+
+    <p class="cap"><b>Reading the error.</b> TS2724 is the compiler saying "this import does not exist, but something close does". It names the right replacement for <code>getCoreRowModel</code>. For <code>createTable</code> it does not, and that is the next section.</p>
+  </section>
+
+  <!-- ================= the did-you-mean ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The suggestion</span>
+      <h2>The compiler offers a fix, and it is a dead end</h2>
+      <p>Every one of those 11 answers gets the same hint: <b>Did you mean 'ReactTable'?</b></p>
+      <p><code>ReactTable</code> is a type, not a function. It is what <code>useTable</code> returns. Swap the name in and the import resolves, then the call fails, because you cannot call a type.</p>
+      <p>So the one automatic repair path a developer or an agent would try first leads nowhere. The name it should have landed on is <code>useTable</code>.</p>
+    </div>
+    <div class="callout">
+      <p><b>This is not TanStack's doing.</b> TypeScript picks the nearest exported name by spelling, and <code>ReactTable</code> is simply closer to <code>createTable</code> than <code>useTable</code> is. It is worth writing down because it changes what the failure costs. A wrong import you can fix straight from the error message costs a minute. This one doesn't offer that.</p>
+    </div>
+  </section>
+
+  <!-- ================= the column helper ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The second failure</span>
+      <h2>An error that names a type you never wrote</h2>
+      <p><code>createColumnHelper</code> survived into v9 with the same name and gained a type parameter in front of the data type — the table's feature set. So <code>createColumnHelper&lt;User&gt;()</code>, which was correct in v8, now hands <code>User</code> to the slot that wants features.</p>
+      <p>The compiler reports it as <code>Type 'User' has no properties in common with type 'TableFeatures'</code>. <b>11 of the 12 answers hit that error, 12 times in total.</b></p>
+      <p><code>TableFeatures</code> appears nowhere in the code that produced it. You get told your own type is wrong against a name you have never typed, which is a hard error to act on without reading the release notes first.</p>
+    </div>
+
+    <div class="cmp">
+      <figure class="pane bad">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">Task: build columns with the typed helper</span>
+          <code class="pv">@tanstack/react-table 9.1.2</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import</span> { <span class="c-fn">createColumnHelper</span>, <span class="c-kw">type</span> <span class="c-typ">ColumnDef</span> } <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table"</span>;
+
+<span class="c-kw">const</span> columnHelper = <span class="c-fn">createColumnHelper</span><span class="bad-t">&lt;<span class="c-typ">User</span>&gt;</span>();
+
+<span class="c-kw">export function</span> <span class="c-fn">userColumns</span>(): <span class="c-typ">ColumnDef</span><span class="bad-t">&lt;<span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;</span>[] {
+  <span class="c-kw">return</span> [
+    columnHelper.<span class="c-fn">accessor</span>(<span class="c-str">"id"</span>, {
+      id: <span class="c-str">"id"</span>,
+      header: () =&gt; <span class="c-str">"ID"</span>,
+      cell: (info) =&gt; info.<span class="c-fn">getValue</span>(),
+    }),
+    columnHelper.<span class="c-fn">accessor</span>(<span class="c-str">"name"</span>, { … }),
+  ];
+}</code></pre></div>
+        <p class="out">error TS2558: Expected 2 type arguments, but got 1.
+error TS2559: Type 'User' has no properties in common with type 'TableFeatures'.</p>
+      </figure>
+
+      <figure class="pane good">
+        <figcaption>
+          <span class="dot"></span>
+          <span class="pl">What v9 compiles</span>
+          <code class="pv">@tanstack/react-table 9.1.2</code>
+        </figcaption>
+        <div class="scroll"><pre><code><span class="c-kw">import</span> { <span class="c-fn">createColumnHelper</span>, <span class="c-kw">type</span> <span class="c-typ">ColumnDef</span> } <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table"</span>;
+
+<span class="c-kw">type</span> <span class="c-typ">User</span> = { id: <span class="c-typ">string</span>; name: <span class="c-typ">string</span> };
+
+<span class="c-kw">const</span> features = {};
+<span class="c-kw">type</span> <span class="c-typ">Features</span> = <span class="c-kw">typeof</span> features;
+
+<span class="c-kw">const</span> columnHelper = <span class="c-fn">createColumnHelper</span><span class="good-t">&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>&gt;</span>();
+
+<span class="c-kw">export function</span> <span class="c-fn">userColumns</span>(): <span class="c-typ">ColumnDef</span><span class="good-t">&lt;<span class="c-typ">Features</span>, <span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;</span>[] {
+  <span class="c-kw">return</span> [
+    columnHelper.<span class="c-fn">accessor</span>(<span class="c-str">"id"</span>, { header: () =&gt; <span class="c-str">"ID"</span> }),
+    columnHelper.<span class="c-fn">accessor</span>(<span class="c-str">"name"</span>, { header: () =&gt; <span class="c-str">"Name"</span> }),
+  ];
+}</code></pre></div>
+        <p class="out">tsc --noEmit — 0 errors</p>
+      </figure>
+    </div>
+    <p class="cap">The feature set goes first, the data type second, and every table type carries the same pair from then on. That is one edit per generic, and the model made it zero times.</p>
+  </section>
+
+  <!-- ================= the migration path ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Fair to TanStack</span>
+      <h2>v9 ships a way across. The model never opens it.</h2>
+      <p>This is the part a 0 hides. <b>v9 publishes a legacy entry point</b> at <code>@tanstack/react-table/legacy</code>, and it holds the v8 shapes: <code>useLegacyTable</code>, <code>getCoreRowModel</code> and the rest of the <code>getXRowModel</code> family, plus a column helper that still takes the data type on its own.</p>
+      <p>Import from there and the same job compiles clean. So the upgrade is not a cliff — there is a supported landing spot, and it works.</p>
+      <p><b>All 12 answers imported from the package root.</b> Not one reached for <code>/legacy</code>. That is the finding, and it is a finding about the model: the escape hatch is there, and it goes unused.</p>
+    </div>
+
+    <figure class="pane good" style="max-width:560px">
+      <figcaption>
+        <span class="dot"></span>
+        <span class="pl">The same table, through the legacy entry point</span>
+        <code class="pv">@tanstack/react-table 9.1.2</code>
+      </figcaption>
+      <div class="scroll"><pre><code><span class="c-kw">import</span> {
+  <span class="good-t">useLegacyTable</span>,
+  <span class="good-t">getCoreRowModel</span>,
+  <span class="c-fn">legacyCreateColumnHelper</span>,
+  <span class="c-kw">type</span> <span class="c-typ">LegacyColumnDef</span>,
+} <span class="c-kw">from</span> <span class="c-str">"@tanstack/react-table/legacy"</span>;
+
+<span class="c-kw">type</span> <span class="c-typ">User</span> = { id: <span class="c-typ">string</span>; name: <span class="c-typ">string</span> };
+
+<span class="c-kw">const</span> helper = <span class="c-fn">legacyCreateColumnHelper</span>&lt;<span class="c-typ">User</span>&gt;();
+<span class="c-kw">const</span> columns: <span class="c-typ">LegacyColumnDef</span>&lt;<span class="c-typ">User</span>, <span class="c-typ">any</span>&gt;[] = [
+  helper.<span class="c-fn">accessor</span>(<span class="c-str">"id"</span>, { header: <span class="c-str">"ID"</span> }),
+  helper.<span class="c-fn">accessor</span>(<span class="c-str">"name"</span>, { header: <span class="c-str">"Name"</span> }),
+];
+
+<span class="c-kw">export function</span> <span class="c-fn">buildUserTable</span>(data: <span class="c-typ">User</span>[]) {
+  <span class="c-kw">return</span> <span class="good-t">useLegacyTable</span>({
+    data,
+    columns,
+    getCoreRowModel: <span class="c-fn">getCoreRowModel</span>(),
+  });
+}</code></pre></div>
+      <p class="out">tsc --noEmit — 0 errors</p>
+    </figure>
+
+    <p class="cap">Compiled against the same installed 9.1.2 as everything else on this page.</p>
+
+    <div class="callout">
+      <p><b>The package also ships skill files for agents</b> — six of them under <code>skills/</code>, including one on moving from v8 to v9. This run hands the model nothing at all, so nothing here says whether those files work. <a href="skills-delta.html">That question needs its own measurement</a>, and scoring a library twice is not it.</p>
+    </div>
+  </section>
+
+  <!-- ================= where the errors land ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Where the errors land</span>
+      <h2>113 compiler errors across 12 answers</h2>
+      <p>Every failing answer produced more than one error. They sort into four groups, and the first two are the rename and the column helper you have just read.</p>
+    </div>
+
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>What the compiler objected to</th><th class="r">Count</th><th>One real example</th></tr></thead>
+        <tbody>
+          <tr><td class="l">an import that no longer exists</td><td class="n r bad">30</td><td><code>has no exported member named 'createTable'</code></td></tr>
+          <tr><td class="l">a type in the wrong slot</td><td class="n r bad">12</td><td><code>Type 'User' has no properties in common with type 'TableFeatures'</code></td></tr>
+          <tr><td class="l">an option that isn't there</td><td class="n r bad">3</td><td><code>'enableSorting' does not exist in type 'ColumnDef&lt;User, any&gt;'</code></td></tr>
+          <tr><td class="l">everything else</td><td class="n r">68</td><td><code>Expected 2 type arguments, but got 1.</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="cap">The last group is mostly knock-on: once the feature set is missing, every <code>Table</code>, <code>Row</code> and <code>TableState</code> in the file is short a type argument, so one wrong assumption bills several times. Counts are read straight out of <code>data/react-table.result.json</code>.</p>
+  </section>
+
+  <!-- ================= method ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">How this was measured</span>
+      <h2>The compiler has the last word</h2>
+      <p>Twelve realistic table tasks, written by <code>claude-opus-5</code>, each dropped into a small project with <code>@tanstack/react-table</code> 9.1.2 actually installed, then run through <code>tsc --noEmit</code>. A task passes only if it compiles. Every failure quoted above is the compiler's own error text.</p>
+    </div>
+    <dl class="limits">
+      <div><dt>One model</dt><dd>Everything here is <code>claude-opus-5</code>. Another model will score differently.</dd></div>
+      <div><dt>One shot, no docs</dt><dd>The model gets the task and nothing else — no <code>AGENTS.md</code>, no editor rules, no skill files, no web. That's the point: it measures what a model reaches for unaided.</dd></div>
+      <div><dt>Small numbers</dt><dd>Twelve tasks. Read the gap between 0 and 100 as the signal, not small gaps between neighbouring scores.</dd></div>
+      <div><dt>Compiles is not correct</dt><dd><code>tsc</code>, the TypeScript compiler, checks that the API exists and the types line up. It never runs the code, so nothing here says the code does the right thing.</dd></div>
+      <div><dt>Refusals</dt><dd>A refusal is neither a pass nor a fail — the model writes no code, so there is nothing to compile. This run had none, so 0 of 12 is 0 of everything asked.</dd></div>
+      <div><dt>It measures the model</dt><dd>0 is a statement about what <code>claude-opus-5</code> remembers of this library, not about the library's design. A number this low mostly means the release is very recent.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ================= elsewhere ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Elsewhere</span>
+      <h2>Related findings</h2>
+    </div>
+    <a class="finding" href="agent-docs.html">
+      <span class="fl">Agent docs</span>
+      <span class="ft">One sentence from a library's own docs fixes the failure 10 times out of 10. The same sentence buried in their full docs pack fixes nothing.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+    <a class="finding" href="skills-delta.html">
+      <span class="fl">Agent skills</span>
+      <span class="ft">Three libraries ship files meant for AI agents. Scored with and without them, across six runs, not one difference clears zero.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+
+    <div class="head" style="margin-top:52px">
+      <span class="eyebrow">The rest of the board</span>
+      <h2>Other libraries, scored the same way</h2>
+    </div>
+    <div class="board">
+      <a class="card" href="aisdk.html">
+        <div class="top"><span class="name">Vercel AI SDK 7</span><span class="score s-warn">71<s>/100</s></span></div>
+        <div class="ratio">10 of 14 compiled</div>
+        <p class="why">Breaks the moment a callback gets an explicit type.</p>
+      </a>
+      <a class="card" href="prisma7.html">
+        <div class="top"><span class="name">Prisma 7</span><span class="score s-warn">87<s>/100</s></span></div>
+        <div class="ratio">13 of 15 compiled</div>
+        <p class="why">Queries are clean. Both misses are client setup.</p>
+      </a>
+      <a class="card" href="nextjs.html">
+        <div class="top"><span class="name">Next.js 16</span><span class="score s-ok">92<s>/100</s></span></div>
+        <div class="ratio">12 of 13 compiled</div>
+        <p class="why">One miss: <code>revalidateTag()</code> takes two arguments now.</p>
+      </a>
+      <a class="card" href="tanstack-query.html">
+        <div class="top"><span class="name">TanStack Query 5</span><span class="score s-pass">100<s>/100</s></span></div>
+        <div class="ratio">13 of 13 compiled</div>
+        <p class="why">Every v4 to v5 rename written unprompted.</p>
+      </a>
+    </div>
+    <p class="cap"><a href="index.html">All eight scores are on the home page →</a></p>
+  </section>
+
+  <div class="close">
+    <h2>Score my library</h2>
+    <p>Name any TypeScript package &amp; I'll run it. Or do it yourself — it's all open source.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">Read the code</a>
+    </div>
+    <p class="note">There's no npm package. Clone the repo, point it at a library, run it. The compiler is the judge.</p>
+  </div>
+
+  <footer>
+    <p class="fine">SDKProof — independent measurement of how AI coding agents write real SDKs. Measured 18 August 2026 against <code>@tanstack/react-table</code> 9.1.2 with <code>claude-opus-5</code>. Type-check only: it checks the API surface, not what the code does when it runs. Not affiliated with TanStack.</p>
+    <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="skills-delta.html">Do agent docs work?</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
+  </footer>
+</div>
+<!-- Cloudflare Web Analytics -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "a50cb1636e514225ad69b1f406df2054"}'></script>
+<!-- End Cloudflare Web Analytics -->
+</body>
+</html>

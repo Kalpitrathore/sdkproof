@@ -39,190 +39,593 @@
 </head>
 <body>
 <style>
+  /* ---------- tokens: light is the base, dark is a redefinition ---------- */
   :root {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff;
+    color-scheme: light;
+    --bg: #f7f8f7;
+    --bg-line: rgba(14,18,22,.055);
+    --panel: #ffffff;
+    --panel-2: #f1f3f2;
+    --ink: #0e1216;
+    --ink-soft: #4a545e;
+    --ink-faint: #78838e;
+    --line: #e2e7e5;
+    --line-2: #d1d8d5;
+    --accent: #0a7f74;
+    --accent-soft: #e4f2f0;
+    --on-accent: #ffffff;
+    --pass: #16794a;
+    --warn: #9a6a00;
+    --fail: #c62f3b;
+    --code-bg: #fbfcfb;
+    --tok-com: #79848f;
+    --tok-kw: #8b34c9;
+    --tok-str: #0b6484;
+    --tok-fn: #a4560a;
+    --tok-typ: #0a7f74;
+    --hi-bad: rgba(198,47,59,.13);
+    --hi-good: rgba(22,121,74,.13);
+    --shadow: 0 1px 2px rgba(14,18,22,.05), 0 14px 34px rgba(14,18,22,.07);
     --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-      --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-      --brand: #2dd4bf; --brand-ink: #06231f;
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0a0d11;
+      --bg-line: rgba(255,255,255,.045);
+      --panel: #0f141a;
+      --panel-2: #141a22;
+      --ink: #e9eff4;
+      --ink-soft: #a0aeba;
+      --ink-faint: #6e7c89;
+      --line: #1d2530;
+      --line-2: #2b3542;
+      --accent: #3fd8b8;
+      --accent-soft: #0d2b27;
+      --on-accent: #04211d;
+      --pass: #3ecf7f;
+      --warn: #e0a83a;
+      --fail: #f2656f;
+      --code-bg: #0c1117;
+      --tok-com: #6e7c89;
+      --tok-kw: #c48cf5;
+      --tok-str: #7cc7f0;
+      --tok-fn: #f0b866;
+      --tok-typ: #4fd6bd;
+      --hi-bad: rgba(242,101,111,.17);
+      --hi-good: rgba(62,207,127,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
     }
   }
-  :root[data-theme="light"] {
-    --bg: #f6f8fa; --panel: #ffffff; --panel-2: #f0f3f6; --ink: #10151b;
-    --ink-soft: #4a5560; --ink-faint: #7b8794; --line: #e2e8ee; --line-strong: #d3dbe3;
-    --brand: #0e9aa7; --brand-ink: #ffffff;
-  }
   :root[data-theme="dark"] {
-    --bg: #0b0f14; --panel: #11171e; --panel-2: #161d26; --ink: #e6edf3;
-    --ink-soft: #a3b0bd; --ink-faint: #6b7784; --line: #222c37; --line-strong: #2d3946;
-    --brand: #2dd4bf; --brand-ink: #06231f;
+    color-scheme: dark;
+    --bg: #0a0d11;
+    --bg-line: rgba(255,255,255,.045);
+    --panel: #0f141a;
+    --panel-2: #141a22;
+    --ink: #e9eff4;
+    --ink-soft: #a0aeba;
+    --ink-faint: #6e7c89;
+    --line: #1d2530;
+    --line-2: #2b3542;
+    --accent: #3fd8b8;
+    --accent-soft: #0d2b27;
+    --on-accent: #04211d;
+    --pass: #3ecf7f;
+    --warn: #e0a83a;
+    --fail: #f2656f;
+    --code-bg: #0c1117;
+    --tok-com: #6e7c89;
+    --tok-kw: #c48cf5;
+    --tok-str: #7cc7f0;
+    --tok-fn: #f0b866;
+    --tok-typ: #4fd6bd;
+    --hi-bad: rgba(242,101,111,.17);
+    --hi-good: rgba(62,207,127,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 42px rgba(0,0,0,.5);
   }
+
+  /* ---------- base ---------- */
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 90px; }
-  h1, h2 { text-wrap: balance; letter-spacing: -.015em; line-height: 1.12; margin: 0; }
-  code { font-family: var(--font-mono); font-size: .92em; }
-  a { color: var(--brand); }
-  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--bg-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-line) 1px, transparent 1px);
+    background-size: 72px 72px, 72px 72px;
+    background-position: -1px -1px, -1px -1px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.62;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px 96px; }
+  h1, h2, h3 { margin: 0; letter-spacing: -.022em; line-height: 1.1; text-wrap: balance; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  code, pre, .num { font-family: var(--font-mono); }
+  code { font-size: .9em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
-  .mast { display: flex; align-items: center; gap: 10px; padding: 26px 0 0; }
-  .logo { font-family: var(--font-mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em; color: var(--ink); }
-  .logo b { color: var(--brand); }
-  .mast .gh { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-decoration: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 11px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+    color: var(--ink-faint); display: block;
+  }
+  .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
-  .hero { padding: 40px 0 30px; border-bottom: 1px solid var(--line-strong); margin-bottom: 34px; }
-  .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; }
-  .hero .sub { color: var(--ink-soft); font-size: 17px; margin: 14px 0 0; max-width: 62ch; }
+  /* ---------- masthead ---------- */
+  .mast { display: flex; align-items: center; gap: 12px; padding: 24px 0 0; }
+  .logo { font-weight: 700; font-size: 16px; letter-spacing: -.03em; color: var(--ink); }
+  .logo b { color: var(--accent); font-weight: 700; }
+  .mast .navs { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .mast .gh {
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 14px;
+  }
+  .mast .gh:hover { border-color: var(--accent); color: var(--accent); }
 
-  .doc h2 { font-size: 19px; font-weight: 700; margin: 34px 0 10px; }
-  .doc h3 { font-size: 15.5px; font-weight: 700; margin: 22px 0 8px; }
-  .doc p { color: var(--ink-soft); margin: 0 0 12px; max-width: 68ch; }
-  .doc ul { color: var(--ink-soft); margin: 0 0 12px; padding-left: 20px; max-width: 68ch; }
-  .doc li { margin-bottom: 7px; }
-  .doc b { color: var(--ink); }
-  .updated { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); margin-top: 30px; }
+  /* ---------- hero ---------- */
+  .hero { padding: 58px 0 0; }
+  .hero h1 {
+    font-size: clamp(32px, 6.4vw, 62px); font-weight: 800; letter-spacing: -.04em; line-height: 1.0;
+    margin: 18px 0 0;
+  }
+  .hero h1 .dim { color: var(--ink-faint); }
+  .hero .pkg {
+    display: inline-block; margin-top: 14px; font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 5px 13px;
+  }
+  .lede { max-width: 64ch; margin-top: 28px; }
+  .lede p { color: var(--ink-soft); font-size: clamp(16px, 2.1vw, 18.5px); margin-bottom: 15px; }
+  .lede p:last-child { margin-bottom: 0; }
+  .lede b { color: var(--ink); font-weight: 650; }
+  .verdict-line {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 7px 16px 7px 12px;
+  }
+  .verdict-line svg { flex: none; }
 
-  footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12px; font-family: var(--font-mono); line-height: 1.7; }
-  footer .fine { margin: 0; }
+  /* ---------- score panel ---------- */
+  .scorebox {
+    display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center;
+    margin-top: 44px; padding: 26px 28px; background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 16px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 720px) { .scorebox { grid-template-columns: 1fr; gap: 24px; padding: 22px 20px; } }
+  .scorebox .big {
+    font-family: var(--font-mono); font-size: clamp(50px, 9vw, 74px); font-weight: 700;
+    letter-spacing: -.05em; line-height: .9; font-variant-numeric: tabular-nums; display: block;
+  }
+  .scorebox .big s { text-decoration: none; font-size: 21px; color: var(--ink-faint); letter-spacing: -.02em; }
+  .scorebox .lbl {
+    display: block; margin-top: 13px; font-size: 11px; font-weight: 700; letter-spacing: .17em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  .s-fail { color: var(--fail); }
+  .s-warn { color: var(--warn); }
+  .s-ok   { color: var(--ink); }
+  .s-pass { color: var(--pass); }
+  .ticks { display: flex; gap: 4px; }
+  .ticks i { flex: 1 1 0; height: 26px; border-radius: 3px; background: var(--pass); }
+  .ticks i.x { background: var(--fail); }
+  .ticks i.r { background: var(--line-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 13px; font-size: 12.5px; color: var(--ink-faint); }
+  .legend b { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .legend .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+  .sw.p { background: var(--pass); }
+  .sw.f { background: var(--fail); }
+  .sw.r { background: var(--line-2); }
 
-  .t { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 6px 0 14px; }
-  .t th { text-align: left; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--line); }
-  .t td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); white-space: nowrap; }
-  .t td.l { color: var(--ink); font-weight: 650; white-space: normal; }
-  .t td.n { font-family: var(--font-mono); font-size: 12.5px; }
-  .t td.ok { color: var(--brand); }
-  .t td.no { color: var(--ink-faint); }
-  .t td.v { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
-  .t tr.base td { color: var(--ink-faint); }
-  .wrapx { overflow-x: auto; }
-  .callout { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--brand); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 0 0 14px; }
-  .callout p { margin: 0; color: var(--ink-soft); font-size: 14.5px; } .callout b { color: var(--ink); }
-  pre.sh { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 8px 0 0; }
+  .facts { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+  .facts span {
+    font-size: 12.5px; color: var(--ink-soft); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+  }
+  .facts b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- section heads ---------- */
+  .sec { margin-top: 82px; }
+  .sec > .head { max-width: 66ch; margin-bottom: 24px; }
+  .sec h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 780; margin: 12px 0 0; }
+  .sec .head p { color: var(--ink-soft); font-size: 16.5px; margin-top: 14px; }
+  .sec .head p b { color: var(--ink); font-weight: 650; }
+  .sec .head p + p { margin-top: 12px; }
+
+  /* ---------- code comparison ---------- */
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .cmp { grid-template-columns: 1fr; } }
+  .cmp + .cmp { margin-top: 22px; }
+  .pane {
+    margin: 0; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .pane figcaption {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2);
+  }
+  .pane .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .pane.bad .dot { background: var(--fail); }
+  .pane.good .dot { background: var(--pass); }
+  .pane .pl { font-size: 13.5px; font-weight: 650; color: var(--ink); }
+  .pane .pv { margin-left: auto; font-size: 11.5px; color: var(--ink-faint); }
+  .pane .scroll { overflow-x: auto; background: var(--code-bg); }
+  .pane pre {
+    margin: 0; padding: 18px 18px 20px; font-size: 12.5px; line-height: 1.72;
+    color: var(--ink); tab-size: 2;
+  }
+  .pane .out {
+    border-top: 1px solid var(--line); padding: 13px 16px; font-family: var(--font-mono);
+    font-size: 11.5px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .pane.bad .out { color: var(--fail); background: var(--hi-bad); }
+  .pane.good .out { color: var(--pass); background: var(--hi-good); }
+  .c-com { color: var(--tok-com); }
+  .c-kw  { color: var(--tok-kw); }
+  .c-str { color: var(--tok-str); }
+  .c-fn  { color: var(--tok-fn); }
+  .c-typ { color: var(--tok-typ); }
+  .bad-t  { background: var(--hi-bad); border-bottom: 1.5px solid var(--fail); border-radius: 2px; padding: 0 2px; }
+  .good-t { background: var(--hi-good); border-bottom: 1.5px solid var(--pass); border-radius: 2px; padding: 0 2px; }
+  .cap { font-size: 13px; color: var(--ink-faint); margin-top: 16px; max-width: 70ch; }
+  .cap b { color: var(--ink-soft); font-weight: 650; }
+
+  /* ---------- panels of prose ---------- */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 24px 26px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 640px) { .panel { padding: 20px 18px; } }
+  .panel h3 { font-size: 17.5px; font-weight: 720; margin: 26px 0 9px; }
+  .panel h3:first-child { margin-top: 0; }
+  .panel p { color: var(--ink-soft); font-size: 15px; margin-bottom: 13px; max-width: 74ch; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel b { color: var(--ink); font-weight: 650; }
+  .panel .lead-in { color: var(--ink); }
+
+  /* ---------- chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
+  }
+  .chip::before { content: "\2713"; color: var(--pass); font-weight: 700; margin-right: 6px; }
+  .chip.key { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
+
+  /* ---------- tables ---------- */
+  .tblwrap {
+    overflow-x: auto; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; box-shadow: var(--shadow);
+  }
+  table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 540px; }
+  table.t th {
+    text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-faint); padding: 15px 18px;
+    border-bottom: 1px solid var(--line-2); white-space: nowrap;
+  }
+  table.t td { padding: 13px 18px; border-bottom: 1px solid var(--line); color: var(--ink-soft); }
+  table.t tr:last-child td { border-bottom: 0; }
+  table.t td.l { color: var(--ink); font-weight: 650; }
+  table.t td.n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.t td.good { color: var(--pass); font-weight: 700; }
+  table.t td.bad { color: var(--fail); font-weight: 700; }
+  table.t td.dim { color: var(--ink-faint); }
+  table.t th.r, table.t td.r { text-align: right; }
+
+  /* ---------- limits ---------- */
+  .limits { border-top: 1px solid var(--line-2); }
+  .limits div { display: grid; grid-template-columns: 178px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .limits dt { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .limits dd { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+  .limits dd code { color: var(--ink); }
+  @media (max-width: 640px) { .limits div { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ---------- callout ---------- */
+  .callout {
+    background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--accent);
+    border-radius: 0 14px 14px 0; padding: 20px 22px; margin-top: 20px;
+  }
+  .callout p { color: var(--ink-soft); font-size: 15px; margin-bottom: 12px; max-width: 74ch; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout b { color: var(--ink); font-weight: 650; }
+
+  /* ---------- board of other scores ---------- */
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+    padding: 18px; box-shadow: var(--shadow); transition: border-color .13s, transform .13s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .card .name { font-size: 15.5px; font-weight: 720; letter-spacing: -.02em; }
+  .card .score {
+    font-family: var(--font-mono); font-size: 27px; font-weight: 700; letter-spacing: -.04em;
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .card .score s { text-decoration: none; font-size: 12px; color: var(--ink-faint); }
+  .card .ratio { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .card .why { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
+  .card.cur { border-color: var(--accent); }
+  .card.cur .why { color: var(--ink); }
+
+  /* ---------- finding links ---------- */
+  .finding {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap; text-decoration: none;
+    margin-top: 14px; padding: 20px 22px; background: var(--panel);
+    border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0;
+  }
+  .finding:hover { border-color: var(--accent); }
+  .finding .fl { font-size: 10.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .finding .ft { flex: 1; min-width: 250px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .finding .fa { font-size: 13px; font-weight: 650; color: var(--accent); white-space: nowrap; }
+
+  /* ---------- closing ---------- */
+  .btn {
+    display: inline-block; font-size: 14px; font-weight: 650; text-decoration: none;
+    background: var(--accent); color: var(--on-accent); padding: 11px 20px; border-radius: 9px;
+    white-space: nowrap;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); padding: 9.5px 18.5px; }
+  .btn:hover { filter: brightness(1.06); }
+  .close {
+    margin-top: 80px; padding: 44px 32px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px;
+  }
+  .close h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
+  .close p { color: var(--ink-soft); font-size: 16px; margin: 14px auto 24px; max-width: 54ch; }
+  .close .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .close .note { font-size: 12.5px; color: var(--ink-faint); margin-top: 20px; }
+
+  /* ---------- footer ---------- */
+  footer { margin-top: 56px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.7; }
+  footer .fine { margin: 0; max-width: 78ch; }
+  footer a { color: var(--ink-soft); }
 </style>
 
 <div class="wrap">
+
   <div class="mast">
     <a href="index.html" aria-label="SDKProof home" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="favicon.svg" alt="" width="26" height="26" style="display:block;flex:none"><span class="logo">SDK<b>Proof</b></span></a>
-    <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">GitHub ↗</a>
+    <span class="navs">
+      <a class="gh" href="index.html">All eight scores</a>
+      <a class="gh" href="https://github.com/Kalpitrathore/sdkproof">Source on GitHub</a>
+    </span>
   </div>
 
   <header class="hero">
-    <div class="eyebrow">Measurement · 8 August 2026</div>
-    <h1>Scoring a library twice cannot tell you whether its agent docs work.</h1>
-    <p class="sub">Score a library bare, then again with the agent files it publishes, and report the difference. It is the obvious way to answer “do my skill files help?” — and across three libraries and six arms, <b>not one difference is distinguishable from zero.</b> That is not a sample-size problem. For React Router, a <i>perfect</i> fix would not register either. <b>Measure the one task the library actually fails and the same files move it 50 to 100 points.</b></p>
+    <span class="eyebrow">Finding · 8 August 2026</span>
+    <h1>Scoring a library twice<br><span class="dim">can't tell you if its agent docs work.</span></h1>
   </header>
 
-  <div class="doc">
-    <h2>The question, and why it is the right one</h2>
-    <p>A Prisma maintainer asked it on 31 July 2026, about an earlier scorecard: <b>“does it still do that even with the skills that <code>prisma init</code> installs?”</b></p>
-    <p>It is a better question than the one this site had been answering. <b>How well a model knows your API is not something you control</b> — it is a fact about a training cut-off. Whether the files you ship close the gap is entirely under your control, and nobody was measuring it. So: score every library twice, bare and with its own published agent context, and report the delta.</p>
+  <div class="lede">
+    <p>AI coding assistants write library code from memory. When a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it doesn't build.</p>
+    <p><b>SDKProof measures how often that happens.</b> It gives a model real coding jobs for one library, then compiles every answer against the real installed package with <code>tsc</code>, the TypeScript compiler. A task passes only if it compiles &mdash; no AI judges another AI.</p>
+    <p>Some libraries now ship files written for AI agents to read. The obvious way to check whether those files help is to score the library bare, score it again with its own files in the prompt, and report the difference.</p>
+    <p><b>I did that across three libraries and six arms, and not one difference is distinguishable from zero.</b> That is not a sample-size problem. For React Router, a <i>perfect</i> fix would not register either.</p>
+    <p>Measure the one task the library actually fails, and the same files move it 50 to 100 points.</p>
+    <p class="verdict-line">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+      Measure the failing task, not the whole scorecard.
+    </p>
+  </div>
 
-    <h3>What each library actually publishes, which is three different things</h3>
-    <ul>
-      <li><b>Prisma</b> — from v7.9, <code>prisma init</code> writes a skill tree into the user's project (<code>.agents/skills/</code>, <code>.claude/skills/</code>, <code>.windsurf/skills/</code>; 9 packs). <b>This is the only one of the three that puts files on a user's disk.</b></li>
-      <li><b>React Router</b> — a skill pack exists at <code>.agents/skills/react-router/</code> in the repo. <b>⚠️ It is not shipped:</b> <code>npm i react-router</code> does not install it and <code>reactrouter.com/llms.txt</code> returns 404. Measured anyway, because it is what they wrote.</li>
-      <li><b>Next.js</b> — serves a Markdown version alongside every docs page (6.6&nbsp;KB where the HTML is 490&nbsp;KB). Published on the web, not installed.</li>
-    </ul>
-
-    <h2>Every whole-scorecard arm returns null</h2>
-    <p>Fifteen tasks per library, three trials each, so 45 generations per arm. The baseline is the same task set with no context at all. The interval is Newcombe's on the difference of two proportions.</p>
-
-    <div class="wrapx">
-    <table class="t">
-      <thead><tr><th>Library</th><th>Context arm</th><th>Passes</th><th>vs bare</th><th>95% CI on the difference</th><th>Verdict</th></tr></thead>
-      <tbody>
-        <tr><td class="l">Prisma 7</td><td class="l"><code>prisma-client-api</code> pack</td><td class="n">39 / 45</td><td class="n">+0.0 pp</td><td class="n">−14.7 … +14.7</td><td class="v no">no effect</td></tr>
-        <tr><td class="l">Prisma 7</td><td class="l">+ setup &amp; upgrade docs</td><td class="n">42 / 45</td><td class="n">+6.7 pp</td><td class="n">−6.6 … +20.2</td><td class="v no">no effect</td></tr>
-        <tr><td class="l">React Router 8</td><td class="l"><code>SKILL.md</code> only</td><td class="n">42 / 45</td><td class="n">+2.2 pp</td><td class="n">−10.2 … +14.8</td><td class="v no">no effect</td></tr>
-        <tr><td class="l">React Router 8</td><td class="l">the full five-file pack</td><td class="n">41 / 45</td><td class="n">+0.0 pp</td><td class="n">−13.0 … +13.0</td><td class="v no">no effect</td></tr>
-      </tbody>
-    </table>
+  <!-- ================= the question ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The question</span>
+      <h2>A maintainer asked it, and it is the right question</h2>
+      <p>On 31 July 2026, about an earlier scorecard, a Prisma maintainer asked: <b>“does it still do that even with the skills that <code>prisma init</code> installs?”</b></p>
+      <p>It is a better question than the one this site had been answering. <b>How well a model knows your API is not something you control</b> — that is a fact about a training cut-off. Whether the files you ship close the gap is entirely under your control, and nobody was measuring it.</p>
+      <p>So: score every library twice, bare and with its own published agent files, and report the difference.</p>
     </div>
 
-    <p>Prisma's baseline is 39/45, React Router's is 41/45. <b>Every interval contains zero.</b> Two older arms from a Prisma 6 run at n=8 return null as well, so the count across every scorecard-scale arm ever run here is <b>0 of 6</b>.</p>
+    <div class="head" style="margin-top:44px">
+      <h2>Three libraries publish something. They publish three different things.</h2>
+    </div>
+    <dl class="limits">
+      <div>
+        <dt>Prisma 7</dt>
+        <dd>From v7.9, <code>prisma init</code> writes a skill tree into the user's project — <code>.agents/skills/</code>, <code>.claude/skills/</code>, <code>.windsurf/skills/</code>, 9 packs. <b>The only one of the three that puts files on a user's disk.</b></dd>
+      </div>
+      <div>
+        <dt>React Router 8</dt>
+        <dd>A skill pack exists at <code>.agents/skills/react-router/</code> in the repo, but it is not shipped: <code>npm i react-router</code> does not install it, and <code>reactrouter.com/llms.txt</code> returns 404. Measured anyway, because it is what they wrote.</dd>
+      </div>
+      <div>
+        <dt>Next.js 16</dt>
+        <dd>A Markdown version of every docs page, served alongside the HTML — 6.6&nbsp;KB where the page itself is 490&nbsp;KB. Published on the web, not installed.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ================= every arm returns null ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The obvious method</span>
+      <h2>Every whole-scorecard arm comes back empty</h2>
+      <p>Fifteen tasks per library, three trials each, so 45 generations per arm. The baseline is the same task set with no context at all. The interval is Newcombe's on the difference of two proportions.</p>
+    </div>
+
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>Library</th><th>What was in the prompt</th><th class="r">Compiled</th><th class="r">vs bare</th><th class="r">95% CI on the difference</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td class="l">Prisma 7</td><td><code>prisma-client-api</code> pack</td><td class="n r">39 / 45</td><td class="n r dim">+0.0 pp</td><td class="n r dim">−14.7 … +14.7</td><td class="dim">no effect</td></tr>
+          <tr><td class="l">Prisma 7</td><td>plus the setup &amp; upgrade docs</td><td class="n r">42 / 45</td><td class="n r dim">+6.7 pp</td><td class="n r dim">−6.6 … +20.2</td><td class="dim">no effect</td></tr>
+          <tr><td class="l">React Router 8</td><td><code>SKILL.md</code> only</td><td class="n r">42 / 45</td><td class="n r dim">+2.2 pp</td><td class="n r dim">−10.2 … +14.8</td><td class="dim">no effect</td></tr>
+          <tr><td class="l">React Router 8</td><td>the full five-file pack</td><td class="n r">41 / 45</td><td class="n r dim">+0.0 pp</td><td class="n r dim">−13.0 … +13.0</td><td class="dim">no effect</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="cap">Prisma's baseline is <b>39 of 45</b>, React Router's is <b>41 of 45</b>. Every interval contains zero. Two older arms from a Prisma 6 run at n=8 come back empty too, so across every scorecard-scale arm ever run here the count is <b>0 of 6</b>.</p>
 
     <div class="callout">
-      <p><b>The tempting misreading is “+6.7 points, so the skills help a bit.”</b> That difference is three generations out of forty-five. React Router's “+2.2” is one. Published without an interval — which is how this site published them until today — they read as small improvements rather than as noise.</p>
+      <p><b>The tempting misreading is “+6.7 points, so the skills help a bit.”</b> That difference is three generations out of forty-five. React Router's “+2.2” is one generation.</p>
+      <p>Published without an interval — which is how this site published them until today — they read as small improvements rather than as noise.</p>
+    </div>
+  </section>
+
+  <!-- ================= not the sample size ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The obvious objection, tested</span>
+      <h2>It is not the sample size. The instrument can't see a success.</h2>
+      <p>The natural objection is that 45 generations is too few. So ask what the metric would report if the agent files worked <i>perfectly</i> — every task passing, in every trial.</p>
     </div>
 
-    <h2>It is not the sample size. The instrument cannot see a success.</h2>
-    <p>The natural objection is that 45 generations is too few. So: what would the metric report if the agent files worked <i>perfectly</i> — every task passing, in every trial?</p>
-
-    <div class="wrapx">
-    <table class="t">
-      <thead><tr><th>Library</th><th>Best possible arm</th><th>vs bare</th><th>95% CI on the difference</th><th>Would it register?</th></tr></thead>
-      <tbody>
-        <tr><td class="l">Prisma 7</td><td class="n">45 / 45 vs 39 / 45</td><td class="n">+13.3 pp</td><td class="n">+2.8 … +26.2</td><td class="v ok">barely</td></tr>
-        <tr><td class="l">React Router 8</td><td class="n">45 / 45 vs 41 / 45</td><td class="n">+8.9 pp</td><td class="n">−0.6 … +20.7</td><td class="v no">no</td></tr>
-      </tbody>
-    </table>
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>Library</th><th class="r">Best possible arm</th><th class="r">vs bare</th><th class="r">95% CI on the difference</th><th>Would it register?</th></tr></thead>
+        <tbody>
+          <tr><td class="l">Prisma 7</td><td class="n r">45 / 45 vs 39 / 45</td><td class="n r">+13.3 pp</td><td class="n r">+2.8 … +26.2</td><td class="good">barely</td></tr>
+          <tr><td class="l">React Router 8</td><td class="n r">45 / 45 vs 41 / 45</td><td class="n r">+8.9 pp</td><td class="n r dim">−0.6 … +20.7</td><td class="bad">no</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <p><b>For React Router, a total success is indistinguishable from doing nothing.</b> Prisma's ceiling clears zero, but only just, and only if every one of its two failures is fixed in all three trials. <b>A metric whose best case is “barely detectable” is not measuring the thing you care about.</b></p>
+    <p class="cap"><b>For React Router, a total success is indistinguishable from doing nothing.</b> Prisma's ceiling clears zero, but only just, and only if both of its failures are fixed in all three trials.</p>
 
-    <h2>Why: the passes you already had are in the denominator</h2>
-    <p>Prisma 7 passes <b>13 of 15 tasks with no context at all</b>. React Router 8 passes <b>14 of 15</b>. Documentation can only fix what is broken, so those thirteen and fourteen untouched passes sit in the denominator of both arms and dilute the one or two tasks that can actually move.</p>
-    <p><b>The better a library scores, the less able this metric is to detect its docs working.</b> That is backwards, and it is structural — no number of trials removes it, because the diluting tasks are not noise. They are correct answers.</p>
+    <div class="head" style="margin-top:56px">
+      <span class="eyebrow">Why</span>
+      <h2>The passes you already had sit in the denominator</h2>
+      <p>Prisma 7 passes <b>13 of 15 tasks</b> with no context at all. React Router 8 passes <b>14 of 15</b>. Documentation can only fix what is broken, so those thirteen and fourteen untouched passes sit in the denominator of both arms and dilute the one or two tasks that can actually move.</p>
+      <p><b>The better a library scores, the less able this metric is to detect its docs working.</b> That is backwards, and it is structural. No number of trials removes it, because the diluting tasks are not noise — they are correct answers.</p>
+    </div>
+  </section>
 
-    <h2>The instrument that works: isolate the task that fails</h2>
-    <p>Same libraries, same files, same model. The only change is that the denominator is the one task the library actually gets wrong, at ten trials per cell.</p>
+  <!-- ================= the instrument that works ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">The method that works</span>
+      <h2>Isolate the one task that fails</h2>
+      <p>Same libraries, same files, same model. The only change is the denominator: one task, the one the library actually gets wrong, at ten trials per cell.</p>
+    </div>
 
-    <div class="wrapx">
-    <table class="t">
-      <thead><tr><th>Library &amp; failing task</th><th>Context arm</th><th>Passes</th><th>vs bare</th><th>Verdict</th></tr></thead>
-      <tbody>
-        <tr class="base"><td class="l">Prisma — <code>construct-client</code></td><td class="l">nothing</td><td class="n">0 / 10</td><td class="n">—</td><td class="v no">baseline</td></tr>
-        <tr><td class="l"></td><td class="l"><code>prisma-client-api</code> pack</td><td class="n no">0 / 10</td><td class="n">+0.0 pp</td><td class="v no">no effect</td></tr>
-        <tr><td class="l"></td><td class="l">+ setup &amp; upgrade docs</td><td class="n">5 / 10</td><td class="n">+50.0 pp</td><td class="v ok">real</td></tr>
-        <tr><td class="l"></td><td class="l">the adapter sentence alone</td><td class="n ok">10 / 10</td><td class="n">+100.0 pp</td><td class="v ok">real</td></tr>
-        <tr class="base"><td class="l">React Router — <code>meta-from-loader</code></td><td class="l">nothing</td><td class="n">0 / 10</td><td class="n">—</td><td class="v no">baseline</td></tr>
-        <tr><td class="l"></td><td class="l">the sentence alone</td><td class="n ok">10 / 10</td><td class="n">+100.0 pp</td><td class="v ok">real</td></tr>
-        <tr><td class="l"></td><td class="l">the section it sits in</td><td class="n ok">10 / 10</td><td class="n">+100.0 pp</td><td class="v ok">real</td></tr>
-        <tr><td class="l"></td><td class="l">the 7.3 KB file it sits in</td><td class="n no">0 / 10</td><td class="n">+0.0 pp</td><td class="v no">no effect</td></tr>
-        <tr><td class="l"></td><td class="l">the full 25 KB pack</td><td class="n no">0 / 10</td><td class="n">+0.0 pp</td><td class="v no">no effect</td></tr>
-        <tr class="base"><td class="l">Next.js — <code>revalidate-tag</code></td><td class="l">nothing</td><td class="n">0 / 10</td><td class="n">—</td><td class="v no">baseline</td></tr>
-        <tr><td class="l"></td><td class="l">the sentence alone</td><td class="n ok">10 / 10</td><td class="n">+100.0 pp</td><td class="v ok">real</td></tr>
-        <tr><td class="l"></td><td class="l">+ 25 KB of padding, first</td><td class="n ok">10 / 10</td><td class="n">+100.0 pp</td><td class="v ok">real</td></tr>
-        <tr><td class="l"></td><td class="l">+ 25 KB of padding, last</td><td class="n ok">10 / 10</td><td class="n">+100.0 pp</td><td class="v ok">real</td></tr>
-        <tr><td class="l"></td><td class="l">+ 50 KB of padding, first</td><td class="n ok">9 / 10</td><td class="n">+90.0 pp</td><td class="v ok">real</td></tr>
-      </tbody>
-    </table>
+    <div class="tblwrap">
+      <table class="t">
+        <thead><tr><th>Library &amp; the task it fails</th><th>What was in the prompt</th><th class="r">Compiled</th><th class="r">vs bare</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td class="l">Prisma — <code>construct-client</code></td><td class="dim">nothing</td><td class="n r bad">0 / 10</td><td class="n r dim">—</td><td class="dim">baseline</td></tr>
+          <tr><td class="l"></td><td><code>prisma-client-api</code> pack</td><td class="n r bad">0 / 10</td><td class="n r dim">+0.0 pp</td><td class="dim">no effect</td></tr>
+          <tr><td class="l"></td><td>plus the setup &amp; upgrade docs</td><td class="n r">5 / 10</td><td class="n r good">+50.0 pp</td><td class="good">real</td></tr>
+          <tr><td class="l"></td><td>the adapter sentence alone</td><td class="n r good">10 / 10</td><td class="n r good">+100.0 pp</td><td class="good">real</td></tr>
+          <tr><td class="l">React Router — <code>meta-from-loader</code></td><td class="dim">nothing</td><td class="n r bad">0 / 10</td><td class="n r dim">—</td><td class="dim">baseline</td></tr>
+          <tr><td class="l"></td><td>the sentence alone</td><td class="n r good">10 / 10</td><td class="n r good">+100.0 pp</td><td class="good">real</td></tr>
+          <tr><td class="l"></td><td>the section it sits in</td><td class="n r good">10 / 10</td><td class="n r good">+100.0 pp</td><td class="good">real</td></tr>
+          <tr><td class="l"></td><td>the 7.3 KB file it sits in</td><td class="n r bad">0 / 10</td><td class="n r dim">+0.0 pp</td><td class="dim">no effect</td></tr>
+          <tr><td class="l"></td><td>the full 25 KB pack</td><td class="n r bad">0 / 10</td><td class="n r dim">+0.0 pp</td><td class="dim">no effect</td></tr>
+          <tr><td class="l">Next.js — <code>revalidate-tag</code></td><td class="dim">nothing</td><td class="n r bad">0 / 10</td><td class="n r dim">—</td><td class="dim">baseline</td></tr>
+          <tr><td class="l"></td><td>the sentence alone</td><td class="n r good">10 / 10</td><td class="n r good">+100.0 pp</td><td class="good">real</td></tr>
+          <tr><td class="l"></td><td>plus 25 KB of padding, first</td><td class="n r good">10 / 10</td><td class="n r good">+100.0 pp</td><td class="good">real</td></tr>
+          <tr><td class="l"></td><td>plus 25 KB of padding, last</td><td class="n r good">10 / 10</td><td class="n r good">+100.0 pp</td><td class="good">real</td></tr>
+          <tr><td class="l"></td><td>plus 50 KB of padding, first</td><td class="n r good">9 / 10</td><td class="n r good">+90.0 pp</td><td class="good">real</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="callout">
-      <p><b>Eight of these eleven arms clear zero. None of the six scorecard arms did.</b> Same files, same model, same measurements underneath — the only difference is whether the twelve or thirteen tasks that were never broken are allowed into the denominator.</p>
+      <p><b>Eight of these eleven arms clear zero. None of the six scorecard arms did.</b> Same files, same model, same measurements underneath.</p>
+      <p>The only difference is whether the twelve or thirteen tasks that were never broken are allowed into the denominator.</p>
     </div>
 
-    <p>The three that show no effect are the three that genuinely fixed nothing: <code>prisma-client-api</code> at 0/10, and React Router's containing file and full pack, both at 0/10. <b>A null result and a real zero look the same here, and they should</b> — the point of the interval is that it refuses to invent a direction in either case.</p>
+    <p class="cap">The three arms that show no effect are the three that genuinely fixed nothing: <code>prisma-client-api</code> at 0 of 10, and React Router's containing file and full pack, both at 0 of 10. <b>An empty result and a real zero look the same here, and they should</b> — the point of the interval is that it refuses to invent a direction in either case.</p>
+  </section>
 
-    <h2>What a maintainer actually gets from this</h2>
-    <p>Not “your skills moved your score 87 → 93.” That sentence is unsupported, and it is also not useful. What the failing-task measurement produces is specific enough to act on:</p>
-    <ul>
-      <li><b>Prisma ships a pack named for the task that does not fix the task.</b> <code>prisma-client-api</code> contains <code>constructor.md</code> and is what an agent routing on skill <i>name</i> loads for “construct a PrismaClient”. It moves the number by zero, on the scorecard and on the isolated task. What fixes it lives in <code>prisma-postgres-setup/references/prisma7-client.md</code> and <code>prisma-upgrade-v7/references/driver-adapters.md</code>. <b>That is a routing problem, not a writing problem</b>, and it is fixable in an afternoon.</li>
-      <li><b>React Router's correct sentence is already written and is buried by its own file.</b> Alone it fixes the failure 10/10. Inside the 7.3 KB file it sits in, 0/10. Publishing a short file would work; publishing the pack would not.</li>
-      <li><b>Next.js is the one that already works.</b> Its per-page Markdown fixes its failure 10/10 and keeps working with 50 KB of unrelated documentation in front of it.</li>
-    </ul>
+  <!-- ================= what a maintainer gets ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">What comes out of it</span>
+      <h2>Three findings a maintainer can act on</h2>
+      <p>Not “your skills moved your score 87 → 93.” That sentence is unsupported, and it is also not useful. What the failing-task measurement produces is specific enough to fix.</p>
+    </div>
+    <div class="panel">
+      <h3>1. Prisma ships a pack named for the task that does not fix the task</h3>
+      <p><code>prisma-client-api</code> contains <code>constructor.md</code>, and it is what an agent routing on a skill's <i>name</i> loads for “construct a PrismaClient”. It moves the number by zero, on the scorecard and on the isolated task.</p>
+      <p>What does fix it lives in <code>prisma-postgres-setup/references/prisma7-client.md</code> and <code>prisma-upgrade-v7/references/driver-adapters.md</code>. <b>That is a routing problem, not a writing problem</b>, and it is fixable in an afternoon.</p>
 
-    <h2>Limits</h2>
-    <p>One model (Claude Opus 5). Three libraries, one failing task each. Ten trials per cell on the isolated tasks, three on the scorecards. <b>One-shot prompts, not an agent that can search</b> — the files are pasted in, which is the most favourable possible delivery and still leaves the pack arms at zero.</p>
-    <p><b>The single-sentence arms are close to handing the model the answer</b>, since their whole context <i>is</i> the correction. They establish a ceiling — the words work — not a shipping recommendation. <b>And only three of nine libraries surveyed publish anything to measure at all</b>, so “does your agent context work” is a question most maintainers cannot yet ask.</p>
+      <h3>2. React Router's correct sentence is already written, and its own file buries it</h3>
+      <p>Alone, the sentence fixes the failure 10 times out of 10. Inside the 7.3&nbsp;KB file it sits in, 0 times out of 10. Publishing a short file would work. Publishing the pack would not.</p>
 
-    <h2>Check it yourself</h2>
-    <pre class="sh">npx tsx scripts/skills-delta.ts        # every arm on disk, with intervals
-npm test                               # includes the interval arithmetic</pre>
-    <p style="margin-top:12px">Arms and provenance: <code>fixtures/*/agent-context/PROVENANCE.md</code>. Interval maths: <code>armDelta()</code> in <code>src/stats.ts</code>, Newcombe's method over the Wilson intervals. Per-library numbers on the <a href="prisma7.html">Prisma</a>, <a href="react-router.html">React Router</a> and <a href="nextjs.html">Next.js</a> scorecards; the surrounding-text result is in <a href="agent-docs.html">the agent-docs survey</a>.</p>
+      <h3>3. Next.js is the one that already works</h3>
+      <p>Its per-page Markdown fixes its failure 10 times out of 10, and keeps working with 50&nbsp;KB of unrelated documentation in front of it.</p>
+    </div>
+  </section>
 
-    <p class="updated">Published 8 August 2026. The scorecard deltas on this page were previously shown without intervals, including as “87 → 93” on the Prisma page; that reading is withdrawn here and corrected there. No number on this page comes from a fresh run — every one is recomputed from result files already in the repository.</p>
+  <!-- ================= limits ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Limits</span>
+      <h2>What this does not establish</h2>
+    </div>
+    <dl class="limits">
+      <div><dt>One model</dt><dd>Everything here is Claude Opus 5. Another model will behave differently.</dd></div>
+      <div><dt>Three libraries</dt><dd>One failing task each. Ten trials per cell on the isolated tasks, three on the scorecards.</dd></div>
+      <div><dt>One-shot prompts</dt><dd>Not an agent that can search. The files are pasted straight in, which is the most favourable delivery there is — and the pack arms still sit at zero.</dd></div>
+      <div><dt>The single-sentence arms are close to handing over the answer</dt><dd>Their whole context <i>is</i> the correction. They establish a ceiling — the words work — not a shipping recommendation.</dd></div>
+      <div><dt>Most libraries publish nothing to measure</dt><dd>Only three of nine libraries surveyed ship any agent context at all, so “do my agent docs work” is a question most maintainers cannot yet ask.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ================= check it yourself ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Check it yourself</span>
+      <h2>Every number here is recomputed from files in the repo</h2>
+      <p>No number on this page comes from a fresh run. Each one is recomputed from result files already committed.</p>
+    </div>
+
+    <figure class="pane" style="max-width:620px">
+      <figcaption>
+        <span class="pl">Two commands</span>
+        <code class="pv">from a clone of the repo</code>
+      </figcaption>
+      <div class="scroll"><pre><code>npx tsx scripts/skills-delta.ts   <span class="c-com"># every arm on disk, with intervals</span>
+npm test                          <span class="c-com"># includes the interval arithmetic</span></code></pre></div>
+    </figure>
+
+    <p class="cap">Arms and provenance: <code>fixtures/*/agent-context/PROVENANCE.md</code>. Interval maths: <code>armDelta()</code> in <code>src/stats.ts</code>, Newcombe's method over the Wilson intervals. Per-library numbers on the <a href="prisma7.html">Prisma</a>, <a href="react-router.html">React Router</a> and <a href="nextjs.html">Next.js</a> scorecards; the surrounding-text result is in <a href="agent-docs.html">the agent-docs survey</a>.</p>
+    <p class="cap" style="margin-top:14px">Published 8 August 2026. The scorecard deltas on this page were previously shown without intervals, including as “87 → 93” on the Prisma page. That reading is withdrawn here and corrected there.</p>
+  </section>
+
+  <!-- ================= elsewhere ================= -->
+  <section class="sec">
+    <div class="head">
+      <span class="eyebrow">Elsewhere</span>
+      <h2>Related findings</h2>
+    </div>
+    <a class="finding" href="agent-docs.html">
+      <span class="fl">Agent docs</span>
+      <span class="ft">One sentence from a library's own docs fixes the failure 10 times out of 10. The same sentence buried in their full docs pack fixes nothing.</span>
+      <span class="fa">Read the numbers →</span>
+    </a>
+    <a class="finding" href="index.html">
+      <span class="fl">The board</span>
+      <span class="ft">Eight libraries, each scored by compiling the model's answers against the real installed package.</span>
+      <span class="fa">See every score →</span>
+    </a>
+  </section>
+
+  <div class="close">
+    <h2>Score my library</h2>
+    <p>Name any TypeScript package &amp; I'll run it. Or do it yourself — it's all open source.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
+      <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">Read the code</a>
+    </div>
+    <p class="note">There's no npm package. Clone the repo, point it at a library, run it. The compiler is the judge.</p>
   </div>
 
   <footer>
-    <p class="fine">SDKProof — independent analysis of how AI coding agents use real SDKs. Not affiliated with any library surveyed.</p>
+    <p class="fine">SDKProof — independent measurement of how AI coding agents write real SDKs. Not affiliated with any library surveyed.</p>
     <p class="fine" style="margin-top:10px"><a href="agent-docs.html">Agent-docs survey</a> · <a href="skills-delta.html">Do agent docs work?</a> · <a href="badge.html">README badge</a> · <a href="privacy.html">Privacy</a></p>
   </footer>
 </div>

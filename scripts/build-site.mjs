@@ -15,7 +15,7 @@ const LINK_MAP = {
   "11b4e801-b559-4e9b-805e-ddba0c1fb769": "index.html",
 };
 
-const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "stripe.html", "agent-docs.html", "skills-delta.html", "badge.html", "privacy.html"];
+const PAGES = ["index.html", "prisma7.html", "aisdk.html", "zod.html", "tanstack-query.html", "nextjs.html", "react-router.html", "stripe.html", "react-table.html", "agent-docs.html", "skills-delta.html", "badge.html", "privacy.html"];
 
 const SITE = "https://sdkproof.dev";
 
@@ -84,6 +84,16 @@ const META = {
     title: "Stripe 22 scores 100 on every AI task that ran — SDKProof",
     social: "Stripe 22 — 100% of answers correct, 67% of tasks answered",
     desc: "Claude Opus 5 writes Stripe 22's current API cleanly on all 10 tasks it would attempt, including the pinned apiVersion and Stripe.Decimal. It refused the other five outright, so the page publishes both rates.",
+    type: "article",
+  },
+  "react-table.html": {
+    // No "N% ready" title here either. At zero that phrasing reads as a verdict on
+    // the library, and the number is a verdict on the model — v9 ships a legacy
+    // entry point that compiles, so the upgrade is not a cliff. The title states
+    // the raw count instead, which is the fact and not the framing.
+    title: "TanStack React Table 9 — 0 of 12 AI-written answers compiled — SDKProof",
+    social: "TanStack React Table 9 — 0/100 AI-readiness",
+    desc: "TanStack React Table 9 scores 0/100 on Claude Opus 5: 12 of 12 tasks failed to compile. v9 renamed useReactTable to useTable and moved the row-model factories off the package root, and the model wrote v8 every time. v9 does ship a legacy entry point that compiles — the model never reaches for it.",
     type: "article",
   },
   "agent-docs.html": {
