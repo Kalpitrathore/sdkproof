@@ -37,43 +37,43 @@ const SITE = "https://sdkproof.dev";
 // to disturb and this is the cheapest moment to change them.
 const META = {
   "index.html": {
-    social: "SDKProof — How ready is your SDK for AI coding agents?",
+    social: "SDKProof — AI writes your old API. This measures how often.",
     desc: "How well do AI coding agents write your SDK's current API? Type-checked scorecards on Claude Opus 5 — the compiler decides, not an LLM judge.",
     type: "website",
   },
   "tanstack-query.html": {
-    title: "TanStack Query v5 is 100% ready for AI coding agents — SDKProof",
-    social: "TanStack Query v5 — 100/100 AI-readiness",
+    title: "TanStack Query 5 — AI navigated every v4 change, 13 of 13 compiled — SDKProof",
+    social: "TanStack Query 5 — 13 of 13 AI-written answers compiled",
     desc: "TanStack Query v5 scores 100/100 for AI-readiness on Claude Opus 5. Every v4→v5 rename — gcTime, placeholderData, 'pending' — written unprompted.",
     type: "article",
   },
   "aisdk.html": {
     title: "Vercel AI SDK 7 — ready for agents until you name a type — SDKProof",
-    social: "Vercel AI SDK 7 — 71/100 AI-readiness",
+    social: "Vercel AI SDK 7 — 10 of 14 AI-written answers compiled",
     desc: "Vercel AI SDK 7 scores 71/100 on Claude Opus 5. Inline callbacks infer fine, but v7 removed StreamTextOnFinishCallback, TelemetrySettings and ToolCallOptions — and tsc's suggestion points at the wrong function.",
     type: "article",
   },
   "zod.html": {
-    title: "Zod 4 is 100% ready for AI coding agents — SDKProof",
-    social: "Zod 4 — 100/100 AI-readiness",
+    title: "Zod 4 — AI writes v4 throughout, 10 of 10 compiled — SDKProof",
+    social: "Zod 4 — 10 of 10 AI-written answers compiled",
     desc: "Zod 4 scores 100/100 on Claude Opus 5, writing the unified error option and 2-arg z.record() unprompted. It was 90/100 on Opus 4.8.",
     type: "article",
   },
   "nextjs.html": {
-    title: "Next.js 16 is 92% ready for AI coding agents — SDKProof",
-    social: "Next.js 16 — 92/100 AI-readiness",
+    title: "Next.js 16 — AI calls revalidateTag with one argument — SDKProof",
+    social: "Next.js 16 — 12 of 13 AI-written answers compiled",
     desc: "Next.js 16 scores 92/100 for AI-readiness on Claude Opus 5. Async cookies and headers are absorbed; the 2-arg revalidateTag is the one miss.",
     type: "article",
   },
   "prisma7.html": {
-    title: "Prisma 7 is 87% ready for AI coding agents — SDKProof",
-    social: "Prisma 7 — 87/100 AI-readiness",
+    title: "Prisma 7 — AI still writes the v6 client setup — SDKProof",
+    social: "Prisma 7 — 13 of 15 AI-written answers compiled",
     desc: "Prisma 7 scores 87/100 on Claude Opus 5. The queries and $extends are clean — every miss is client construction, like the required driver adapter.",
     type: "article",
   },
   "react-router.html": {
-    title: "React Router 8 is 93% ready for AI coding agents — SDKProof",
-    social: "React Router 8 — 93/100 AI-readiness",
+    title: "React Router 8 — AI reads meta()'s removed data argument — SDKProof",
+    social: "React Router 8 — 14 of 15 AI-written answers compiled",
     desc: "React Router 8 scores 93/100 on Claude Opus 5. It drops json() and defer() unprompted; the one consistent miss is meta's removed data argument, now loaderData.",
     type: "article",
   },
@@ -92,7 +92,7 @@ const META = {
     // entry point that compiles, so the upgrade is not a cliff. The title states
     // the raw count instead, which is the fact and not the framing.
     title: "TanStack React Table 9 — 0 of 12 AI-written answers compiled — SDKProof",
-    social: "TanStack React Table 9 — 0/100 AI-readiness",
+    social: "TanStack React Table 9 — 0 of 12 AI-written answers compiled",
     desc: "TanStack React Table 9 scores 0/100 on Claude Opus 5: 12 of 12 tasks failed to compile. v9 renamed useReactTable to useTable and moved the row-model factories off the package root, and the model wrote v8 every time. v9 does ship a legacy entry point that compiles — the model never reaches for it.",
     type: "article",
   },
