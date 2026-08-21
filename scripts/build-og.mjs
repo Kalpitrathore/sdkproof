@@ -77,12 +77,17 @@ function scorecardSvg({ name, score, passed, total, note }) {
 
 // The board page: the headline plus every score, so the preview shows the whole thesis.
 function boardSvg(rows) {
+  // Two rows of four. The old single row was `104 + i * 200`, which put the
+  // seventh cell at x=1304 on a 1200px canvas — Prisma 7 was drawn off the
+  // edge of every share card. Eight libraries never fit across one row.
+  const PER_ROW = 4, COL = 248, ROW_Y = [446, 556];
   const cells = rows
     .map((r, i) => {
-      const x = 104 + i * 200;
+      const x = 104 + (i % PER_ROW) * COL;
+      const y = ROW_Y[Math.floor(i / PER_ROW)];
       return `
-  <text x="${x}" y="446" font-family="${MONO}" font-size="60" font-weight="700" fill="${scoreColor(r.score)}">${r.score}</text>
-  <text x="${x}" y="482" font-family="${SANS}" font-size="20" fill="${INK_FAINT}">${esc(r.short)}</text>`;
+  <text x="${x}" y="${y}" font-family="${MONO}" font-size="54" font-weight="700" fill="${scoreColor(r.score)}">${r.score}</text>
+  <text x="${x}" y="${y + 32}" font-family="${SANS}" font-size="19" fill="${INK_FAINT}">${esc(r.short)}</text>`;
     })
     .join("");
 
@@ -98,14 +103,16 @@ function boardSvg(rows) {
 }
 
 const PAGES = {
+  // Worst first — the board's point is the spread, not a victory lap.
   "index.png": boardSvg([
-    { short: "TanStack Q", score: 100 },
-    { short: "Vercel AI", score: 100 },
-    { short: "Zod 4", score: 100 },
-    { short: "React Router", score: 93 },
-    { short: "Next.js 16", score: 92 },
-    { short: "Stripe 22", score: 100 },
+    { short: "React Table", score: 0 },
+    { short: "Vercel AI", score: 71 },
     { short: "Prisma 7", score: 87 },
+    { short: "Next.js 16", score: 92 },
+    { short: "React Router", score: 93 },
+    { short: "Stripe 22", score: 100 },
+    { short: "TanStack Q", score: 100 },
+    { short: "Zod 4", score: 100 },
   ]),
   "tanstack-query.png": scorecardSvg({
     name: "TanStack Query v5",

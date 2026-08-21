@@ -131,6 +131,35 @@ React Router 8 removed plenty & scores 93, because v8 mostly finished removals
 that v7 had already deprecated. TanStack Table 9 renamed the main hook outright
 and scores 0.
 
+## Does shipping docs for AI agents fix it?
+
+Some libraries now ship files written for AI coding assistants. It's worth
+asking whether they work, so I measured it.
+
+I took three libraries, each with one job the model reliably gets wrong, and
+each with a sentence in its own documentation that names the fix. Then I gave
+the model that sentence three ways: not at all, on its own, and buried inside
+the library's own docs pack. Ten tries per cell, same task, same model, same
+installed package.
+
+| Library & the task it fails | No context | The sentence alone | Inside the library's own docs |
+|---|:---:|:---:|:---:|
+| React Router — the `meta()` argument | 0 / 10 | **10 / 10** (76 B) | 0 / 10 (25 KB pack) |
+| Prisma — building the client | 0 / 10 | **10 / 10** (174 B) | 5 / 10 (25 KB pack) |
+| Next.js — `revalidateTag` argument count | 0 / 10 | **10 / 10** (137 B) | 10 / 10 (6.6 KB page) |
+
+The sentence works. Every time, all three libraries, from a fix of 76 to 174
+bytes. None of them were written for this — each is quoted word for word from
+the library's own docs.
+
+What changes is how it reaches the model. React Router already ships that exact
+sentence inside a 25 KB pack, and in there it fixes nothing. Next.js serves a
+6.6 KB page and it works. So the useful question for a maintainer isn't whether
+to write docs for agents. It's whether the answer can be found once it's in
+there.
+
+Full write-up, with what is and isn't measured: <https://sdkproof.dev/agent-docs.html>
+
 ## How to read a score
 
 **It measures the model, not the library.** A 0 is not a defect in the library's

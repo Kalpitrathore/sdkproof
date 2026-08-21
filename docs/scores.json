@@ -152,6 +152,30 @@
       "badge": "https://sdkproof.dev/badge/prisma7.svg"
     },
     {
+      "library": "TanStack React Table 9",
+      "slug": "react-table",
+      "libraryVersion": "9.1.2",
+      "model": "claude-opus-5",
+      "score": 0,
+      "unconditionalScore": 0,
+      "passed": 0,
+      "total": 12,
+      "refused": 0,
+      "attempted": 12,
+      "ci95": {
+        "score": [
+          0,
+          0.2425
+        ],
+        "unconditionalScore": [
+          0,
+          0.2425
+        ]
+      },
+      "scorecard": "https://sdkproof.dev/react-table.html",
+      "badge": "https://sdkproof.dev/badge/react-table.svg"
+    },
+    {
       "library": "Stripe 22",
       "slug": "stripe",
       "libraryVersion": "22.4.0",

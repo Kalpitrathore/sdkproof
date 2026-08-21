@@ -32,6 +32,7 @@ const LIBS = [
   // construction, and this is the one run where one number is the wrong answer:
   // 100% of what the model wrote, 67% of what it was asked. It still belongs in
   // scores.json, where both rates fit.
+  { slug: "react-table", name: "TanStack React Table 9", page: "react-table.html" },
   { slug: "stripe", name: "Stripe 22", page: "stripe.html", badge: false },
 ];
 
