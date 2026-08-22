@@ -114,7 +114,12 @@ function typeCandidates(pkg: Record<string, any>): string[] {
   return [...new Set(out.filter((p) => p && /\.d\.[cm]?ts$/.test(p)))];
 }
 
-export function symbolsFromSource(src: string): Set<string> {
+export function symbolsFromSource(source: string): Set<string> {
+  // Comments are blanked first. A re-export block can carry a jsdoc per name —
+  // graphql 17 does, to mark deprecations — and splitting the raw text on
+  // commas then yields "/** @deprecated ... */ valueFromAST", which fails the
+  // identifier test and drops a symbol that is exported.
+  const src = sanitize(source);
   const out = new Set<string>();
   for (const m of src.matchAll(/export\s*(?:type\s*)?\{([^}]*)\}/gs)) {
     for (let part of m[1].split(",")) {
@@ -147,7 +152,12 @@ export function symbolsFromSource(src: string): Set<string> {
  * internal organisation, and counting them makes a rename inside one look like
  * a removal from the public surface.
  */
-export function ambientSymbols(src: string): Set<string> {
+export function ambientSymbols(source: string): Set<string> {
+  // Brace counting has to happen on text where a brace is a brace. Joi ships
+  // the same 82KB of declarations in v17 and v18; the raw scanner read 98
+  // symbols from one and 20 from the other, because a brace inside a string or
+  // a jsdoc example desynchronised the depth and closed the block early.
+  const src = sanitize(source);
   const out = new Set<string>();
   const OPEN = /declare\s+(?:module\s+["'`][^"'`]+["'`]|namespace\s+[A-Za-z_$][\w$.]*)\s*\{/g;
   const DECL =
@@ -185,6 +195,40 @@ export function ambientSymbols(src: string): Set<string> {
     }
   }
   return out;
+}
+
+/**
+ * Blank out comments and the insides of string and template literals, keeping
+ * every character position and newline. What is left has braces that mean what
+ * they say, and identifiers still where they were.
+ */
+export function sanitize(src: string): string {
+  const out = src.split("");
+  const blank = (from: number, to: number) => {
+    for (let i = from; i < to && i < out.length; i++) if (out[i] !== "\n") out[i] = " ";
+  };
+  for (let i = 0; i < src.length; i++) {
+    const c = src[i];
+    const next = src[i + 1];
+    if (c === "/" && next === "/") {
+      const end = src.indexOf("\n", i);
+      blank(i, end === -1 ? src.length : end);
+      i = end === -1 ? src.length : end;
+    } else if (c === "/" && next === "*") {
+      const end = src.indexOf("*/", i + 2);
+      blank(i, end === -1 ? src.length : end + 2);
+      i = end === -1 ? src.length : end + 1;
+    } else if (c === '"' || c === "'" || c === "`") {
+      let j = i + 1;
+      while (j < src.length && src[j] !== c) {
+        if (src[j] === "\\") j++;
+        j++;
+      }
+      blank(i + 1, j);
+      i = j;
+    }
+  }
+  return out.join("");
 }
 
 /** Declarations at the top level of a block body, ignoring anything nested. */
@@ -274,9 +318,10 @@ export async function readmeOf(p: Packument, version: string): Promise<string> {
  * sides of a diff are wrong together, so the removals stay right, but "3
  * exported symbols -> 61" is not a sentence anyone should have to interpret.
  */
-export async function surfaceOf(p: Packument, version: string, followDeps = true): Promise<Surface> {
+export async function surfaceOf(p: Packument, version: string, followDeps: number | boolean = 2): Promise<Surface> {
+  const hops = followDeps === true ? 2 : followDeps === false ? 0 : followDeps;
   try {
-    return await readSurface(p, version, followDeps, p.name);
+    return await readSurface(p, version, hops, p.name);
   } catch (err) {
     if (!(err instanceof NoTypeEntrypoint)) throw err;
     // The package publishes no declarations of its own. DefinitelyTyped is
@@ -285,7 +330,7 @@ export async function surfaceOf(p: Packument, version: string, followDeps = true
     const types = await typesPackageFor(p.name, version).catch(() => null);
     if (!types) throw untyped(p.name, version);
     try {
-      const s = await readSurface(types.packument, types.version, followDeps, types.packument.name);
+      const s = await readSurface(types.packument, types.version, hops, types.packument.name);
       return { ...s, typesFrom: `${types.packument.name}@${types.version}` };
     } catch {
       // A @types stub that carries nothing is not an answer either. Report the
@@ -330,7 +375,7 @@ async function typesPackageFor(
 async function readSurface(
   p: Packument,
   version: string,
-  followDeps: boolean,
+  hops: number,
   label: string,
 ): Promise<Surface> {
   const files = await packageFiles(p, version);
@@ -345,39 +390,51 @@ async function readSurface(
   const dts = [...files.entries()].filter(([rel]) => /\.d\.[cm]?ts$/.test(rel));
   const sources = dts.map(([, src]) => src);
 
+  // Every declared candidate is tried and the richest surface wins, rather than
+  // the first that happens to exist. A package that ships both `index.d.ts` and
+  // `index.d.mts` does not always put the same thing in them, and picking a
+  // different one for each side of a diff reports the difference between two
+  // files as a change to the API. valibot and date-fns both did that.
   let entry = "";
   let entrySrc = "";
+  let best: { symbols: Set<string>; unresolved: string[] } | null = null;
+  const self = { name: p.name, pkg };
   for (const c of typeCandidates(pkg)) {
     const src = files.get(c);
-    if (src !== undefined) {
+    if (src === undefined) continue;
+    const got = resolveExports(files, c, 12, self);
+    const richer = !best || got.symbols.size > best.symbols.size;
+    if (richer) {
+      best = got;
       entry = c;
       entrySrc = src;
-      break;
     }
   }
-  if (!entry) throw new NoTypeEntrypoint(`${p.name}@${version} ships no type entrypoint`);
+  if (!entry || !best) throw new NoTypeEntrypoint(`${p.name}@${version} ships no type entrypoint`);
 
-  const { symbols: entryOnly, unresolved } = resolveExports(files, entry);
+  const { symbols: entryOnly, unresolved } = best;
   const widened = new Set(entryOnly);
   for (const s of sources) {
     for (const x of symbolsFromSource(s)) widened.add(x);
     for (const x of ambientSymbols(s)) widened.add(x);
   }
 
-  // An ambient declaration exports nothing in the ES sense, so the reader above
-  // comes back empty on a package that is entirely `declare module`. Read the
-  // block itself before giving up.
+  // A file can carry both kinds of declaration, so both are read, always. Doing
+  // it only when the ES surface looked thin made the reader sensitive to things
+  // it has no business caring about: joi 17 and joi 18 are the same 82KB
+  // `declare namespace Joi` with different indentation, and they extracted 98
+  // symbols and 20.
+  for (const x of ambientSymbols(entrySrc)) entryOnly.add(x);
   if (entryOnly.size < 5) {
-    for (const x of ambientSymbols(entrySrc)) entryOnly.add(x);
-    if (entryOnly.size < 5) for (const src of sources) for (const x of ambientSymbols(src)) entryOnly.add(x);
+    for (const src of sources) for (const x of ambientSymbols(src)) entryOnly.add(x);
   }
 
   // Cross the package boundary once, for an `export *` that points at a
   // dependency this package declares. Anything else stays unresolved.
   const stillUnresolved: string[] = [];
-  if (followDeps) {
+  if (hops > 0) {
     for (const spec of unresolved) {
-      const inherited = await surfaceOfDependency(pkg, spec).catch(() => null);
+      const inherited = await surfaceOfDependency(pkg, spec, hops - 1).catch(() => null);
       if (!inherited) {
         stillUnresolved.push(spec);
         continue;
@@ -414,7 +471,11 @@ async function readSurface(
  * caret or tilde range falls back to the highest stable release of that major,
  * and anything else (`workspace:*`, a git url) is left unresolved.
  */
-async function surfaceOfDependency(pkg: Record<string, any>, spec: string): Promise<Surface | null> {
+async function surfaceOfDependency(
+  pkg: Record<string, any>,
+  spec: string,
+  hops: number,
+): Promise<Surface | null> {
   const range: string | undefined =
     pkg.dependencies?.[spec] ?? pkg.peerDependencies?.[spec] ?? pkg.optionalDependencies?.[spec];
   if (!range) return null;
@@ -422,13 +483,20 @@ async function surfaceOfDependency(pkg: Record<string, any>, spec: string): Prom
   if (!/^\d/.test(bare)) return null;
   const dep = await fetchPackument(spec);
   const version = dep.versions[bare] ? bare : resolveVersion(dep, bare.split(".")[0]);
-  // followDeps=false: one hop only, so a deep dependency chain cannot turn one
-  // drift check into a package-tree crawl.
-  return surfaceOf(dep, version, false);
+  // Bounded, because a chain is real — vue re-exports @vue/runtime-dom, which
+  // re-exports @vue/runtime-core — but an unbounded one turns a drift check
+  // into a crawl of the dependency tree.
+  return surfaceOf(dep, version, hops);
 }
 
-/** `export * from "spec"` / `export { a } from "spec"` — the specifier only. */
-const REEXPORT_ALL = /export\s+\*\s+from\s*["'`]([^"'`]+)["'`]/g;
+/**
+ * `export * from "spec"`, and the type-only form of it.
+ *
+ * `export type * from "./types.js"` is how got 15 re-exports most of its
+ * surface. Without the `type` alternative the walk skipped that line and 26 of
+ * the 29 symbols it then reported as removed were still importable.
+ */
+const REEXPORT_ALL = /export\s+(?:type\s+)?\*\s+(?:as\s+[A-Za-z_$][\w$]*\s+)?from\s*["'`]([^"'`]+)["'`]/g;
 
 /**
  * Walk the re-export chain from an entry .d.ts and collect every symbol a
@@ -444,6 +512,7 @@ export function resolveExports(
   files: Map<string, string>,
   entry: string,
   maxDepth = 12,
+  self?: { name: string; pkg: Record<string, any> },
 ): { symbols: Set<string>; unresolved: string[] } {
   const symbols = new Set<string>();
   const unresolved: string[] = [];
@@ -458,6 +527,15 @@ export function resolveExports(
     for (const m of src.matchAll(REEXPORT_ALL)) {
       const spec = m[1];
       if (!spec.startsWith(".")) {
+        // A package re-exporting its own subpath — `export * from "zustand/vanilla"`
+        // — is not a dependency, it is this tarball. Resolve it through the
+        // package's own exports map. zustand and jotai are both built this way,
+        // and treating it as unresolved reported their whole surface as removed.
+        const own = self && selfSubpath(files, self.name, self.pkg, spec);
+        if (own) {
+          walk(own, depth + 1);
+          continue;
+        }
         unresolved.push(spec);
         continue;
       }
@@ -471,11 +549,45 @@ export function resolveExports(
   return { symbols, unresolved: [...new Set(unresolved)] };
 }
 
+/**
+ * Resolve `pkg/sub` against the package's own `exports` map, returning the
+ * .d.ts inside this tarball that the subpath points at.
+ */
+function selfSubpath(
+  files: Map<string, string>,
+  name: string,
+  pkg: Record<string, any>,
+  spec: string,
+): string | null {
+  if (spec !== name && !spec.startsWith(`${name}/`)) return null;
+  const sub = spec === name ? "." : `./${spec.slice(name.length + 1)}`;
+  const entry = pkg.exports?.[sub];
+  const candidates: string[] = [];
+  const collect = (o: unknown, d = 0): void => {
+    if (d > 3 || !o) return;
+    if (typeof o === "string") candidates.push(o.replace(/^\.\//, ""));
+    else if (typeof o === "object") for (const v of Object.values(o as object)) collect(v, d + 1);
+  };
+  collect(entry);
+  for (const c of candidates) {
+    const stem = c.replace(/\.(js|mjs|cjs|ts|d\.ts|d\.mts|d\.cts)$/, "");
+    for (const guess of [c, `${stem}.d.ts`, `${stem}.d.mts`, `${stem}.d.cts`, `${stem}/index.d.ts`]) {
+      if (files.has(guess) && /\.d\.[cm]?ts$/.test(guess)) return guess;
+    }
+  }
+  // No exports map, or nothing typed in it: fall back to the conventional path.
+  const guess = spec === name ? "index.d.ts" : `${spec.slice(name.length + 1)}.d.ts`;
+  return files.has(guess) ? guess : null;
+}
+
 /** Map a relative specifier onto a .d.ts path inside the tarball. */
 function resolveRelativeDts(files: Map<string, string>, dir: string, spec: string): string | null {
   const base = path.posix.normalize(path.posix.join(dir, spec)).replace(/^\.\//, "");
   // `export * from "./core.js"` is how an ESM-correct .d.ts names its sibling.
-  const stem = base.replace(/\.(js|mjs|cjs|d\.ts|d\.mts|d\.cts)$/, "");
+  // `.ts` is in the list because date-fns v4's barrel is `export * from "./add.ts"`.
+  // Missing it left the entry resolving to nothing, so v4 read as 1 symbol
+  // against v3's 300 and every export looked removed.
+  const stem = base.replace(/\.(js|mjs|cjs|ts|d\.ts|d\.mts|d\.cts)$/, "");
   for (const c of [
     base,
     `${stem}.d.ts`, `${stem}.d.mts`, `${stem}.d.cts`,

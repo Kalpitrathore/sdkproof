@@ -718,14 +718,14 @@
       <button type="button" class="tt-go" id="tt-go">Run</button>
     </div>
 
-    <pre class="tt-out" id="tt-out" tabindex="0" role="group" aria-label="Command output" aria-live="polite"><span class="l rule">────────────────────────────────────────────────────────────</span>
+    <pre class="tt-out" id="tt-out" tabindex="0" role="group" aria-label="Command output" aria-live="polite"><!--drift--><span class="l rule">────────────────────────────────────────────────────────────</span>
 <span class="l head">  @apollo/client  v3.14.1 -&gt; v4.2.12</span>
 <span class="l rule">────────────────────────────────────────────────────────────</span>
 <span class="l">&nbsp;</span>
 <span class="l">  v4 landed 12 months ago</span>
-<span class="l">  132 exported symbols -&gt; 133  (entry-only diff)</span>
+<span class="l">  228 exported symbols -&gt; 134  (entry-only diff)</span>
 <span class="l">&nbsp;</span>
-<span class="l what">  WHAT LEFT (24) — functions, hooks and classes gone from the entrypoint with no deprecation first</span>
+<span class="l what">  WHAT LEFT (23) — functions, hooks and classes gone from the entrypoint with no deprecation first</span>
 <span class="l">  This is what a model trained on v3 will still write.</span>
 <span class="l">&nbsp;</span>
 <span class="l sym">    ApolloConsumer</span>
@@ -733,17 +733,17 @@
 <span class="l sym">    DocumentType</span>
 <span class="l sym">    createQueryPreloader</span>
 <span class="l sym">    getApolloContext</span>
-<span class="l sym">    isNetworkRequestSettled</span>
-<span class="l dim">    ... 18 more</span>
+<span class="l sym">    makeReference</span>
+<span class="l dim">    ... 17 more</span>
 <span class="l">&nbsp;</span>
-<span class="l">  Deprecated first, then removed (8) — these rarely produce drift:</span>
-<span class="l sym">    ApolloError, fromError, fromPromise, isApolloError, parser, resetApolloContext, throwServerError, toPromise</span>
+<span class="l">  Deprecated first, then removed (49) — these rarely produce drift:</span>
+<span class="l sym">    ApolloError, BackgroundQueryHookFetchPolicy, BackgroundQueryHookOptions, BaseMutationOptions, BaseQueryOptions, BaseSubscriptionOptions, ExecutionPatchIncrementalResult, ExecutionPatchInitialResult, ExecutionPatchResult, IncrementalPayload, InteropApolloQueryResult, InteropExecutionPatchResult, InteropLazyQueryExecResult, InteropMutateResult, InteropMutationExecutionPatchIncrementalResult, InteropMutationExecutionPatchInitialResult, InteropQueryResult, InteropSubscribeResult, LazyQueryExecFunction, LazyQueryHookExecOptions ...</span>
 <span class="l">&nbsp;</span>
-<span class="l dim">  (29 type-only export(s) also left the entrypoint. They are listed in --json; a model writes a hook far more often than it writes a type name.)</span>
+<span class="l dim">  (48 type-only export(s) also left the entrypoint. They are listed in --json; a model writes a hook far more often than it writes a type name.)</span>
 <span class="l">&nbsp;</span>
-<span class="l good">  WORTH SCORING — 24 functions, hooks and classes gone from the entrypoint with no deprecation first, in a major that is 12 months old</span>
+<span class="l good">  WORTH SCORING — 23 functions, hooks and classes gone from the entrypoint with no deprecation first, in a major that is 12 months old</span>
 <span class="l">&nbsp;</span>
-<span class="l next">  Next:  npx sdkproof @apollo/client</span></pre>
+<span class="l next">  Next:  npx sdkproof @apollo/client</span><!--/drift--></pre>
 
     <div class="tt-chips" id="tt-chips" role="group" aria-label="Pick a package"></div>
     <p class="tt-note" id="tt-note">Reads two published versions off npm &amp; diffs their type declarations &mdash; nothing is installed and no model is called. The other half, <code>npx sdkproof &lt;package&gt;</code>, gives a model real coding jobs and puts every answer through <code>tsc</code>, the TypeScript compiler. Pass means it compiled.</p>

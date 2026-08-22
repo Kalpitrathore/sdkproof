@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
-  ambientSymbols, isDeprecated, isPublicName, resolveExports, subpathRoot, symbolsFromSource,
+  ambientSymbols, isDeprecated, isPublicName, resolveExports, sanitize, subpathRoot, symbolsFromSource,
 } from "../src/surface.ts";
 
 test("symbolsFromSource reads every shape a .d.ts exports", () => {
@@ -142,4 +142,62 @@ declare module "x" {
 }
 `;
   assert.deepEqual([...ambientSymbols(src)].sort(), ["Outer", "first", "fourth", "second", "third"]);
+});
+
+test("a jsdoc between names in an export block does not eat the name", () => {
+  // graphql 17 marks deprecations inside the block. Splitting the raw text on
+  // commas yields "/** @deprecated ... */ valueFromAST", which fails the
+  // identifier test — so both symbols it exports read as removed.
+  const src = `
+export {
+  /**
+   * @deprecated use coerceInputLiteral() instead
+   */
+  valueFromAST, valueFromASTUntyped,
+  // a line comment in here too
+  astFromValue,
+};
+`;
+  assert.deepEqual(
+    [...symbolsFromSource(src)].sort(),
+    ["astFromValue", "valueFromAST", "valueFromASTUntyped"],
+  );
+});
+
+test("a brace inside a string or comment does not close a block early", () => {
+  const src = `
+declare namespace Joi {
+  // a brace in a comment: {
+  type Template = "{{#label}} is required";
+  interface First { a: string }
+  interface Second { b: string }
+}
+`;
+  assert.deepEqual([...ambientSymbols(src)].sort(), ["First", "Second", "Template"]);
+  assert.equal(sanitize('const a = "}}}";').includes("}"), false);
+  assert.equal(sanitize("// }\nconst b = 1;").split("\n").length, 2, "newlines survive");
+});
+
+test("export type * is a re-export like any other", () => {
+  // got 15 re-exports most of its surface with `export type * from './types.js'`.
+  const files = new Map([
+    ["index.d.ts", 'export type * from "./types.js";\nexport * as ns from "./other.js";'],
+    ["types.d.ts", "export declare type Got = { get(): void };"],
+    ["other.d.ts", "export declare const other: number;"],
+  ]);
+  const { symbols } = resolveExports(files, "index.d.ts");
+  assert.deepEqual([...symbols].sort(), ["Got", "other"]);
+});
+
+test("a package re-exporting its own subpath is not an unresolved dependency", () => {
+  // zustand and jotai are both `export * from "zustand/vanilla"`. Treating that
+  // as a foreign package reported their whole surface as removed.
+  const files = new Map([
+    ["index.d.ts", 'export * from "zustand/vanilla";'],
+    ["vanilla.d.ts", "export declare function createStore(): void;"],
+  ]);
+  const pkg = { exports: { "./vanilla": { types: "./vanilla.d.ts" } } };
+  const { symbols, unresolved } = resolveExports(files, "index.d.ts", 12, { name: "zustand", pkg });
+  assert.deepEqual([...symbols], ["createStore"]);
+  assert.deepEqual(unresolved, []);
 });

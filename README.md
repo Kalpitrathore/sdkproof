@@ -26,15 +26,16 @@ npx sdkproof @apollo/client         # score a model on it. Needs a model API key
 The first one reads two published versions straight off npm & diffs their type
 declarations. Nothing is added to your project and no model is called:
 
+<!-- drift:@apollo/client -->
 ```
 ────────────────────────────────────────────────────────────
   @apollo/client  v3.14.1 -> v4.2.12
 ────────────────────────────────────────────────────────────
 
   v4 landed 12 months ago
-  132 exported symbols -> 133  (entry-only diff)
+  228 exported symbols -> 134  (entry-only diff)
 
-  WHAT LEFT (24) — functions, hooks and classes gone from the entrypoint with no deprecation first
+  WHAT LEFT (23) — functions, hooks and classes gone from the entrypoint with no deprecation first
   This is what a model trained on v3 will still write.
 
     ApolloConsumer
@@ -42,19 +43,22 @@ declarations. Nothing is added to your project and no model is called:
     DocumentType
     createQueryPreloader
     getApolloContext
-    isNetworkRequestSettled
-    ... 18 more
+    makeReference
+    ... 17 more
 
-  Deprecated first, then removed (8) — these rarely produce drift:
-    ApolloError, fromError, fromPromise, isApolloError, parser, resetApolloContext, throwServerError, toPromise
+  Deprecated first, then removed (49) — these rarely produce drift:
+    ApolloError, BackgroundQueryHookFetchPolicy, BackgroundQueryHookOptions, BaseMutationOptions, BaseQueryOptions, BaseSubscriptionOptions, ExecutionPatchIncrementalResult, ExecutionPatchInitialResult, ExecutionPatchResult, IncrementalPayload, InteropApolloQueryResult, InteropExecutionPatchResult, InteropLazyQueryExecResult, InteropMutateResult, InteropMutationExecutionPatchIncrementalResult, InteropMutationExecutionPatchInitialResult, InteropQueryResult, InteropSubscribeResult, LazyQueryExecFunction, LazyQueryHookExecOptions ...
 
-  (29 type-only export(s) also left the entrypoint. They are listed in --json; a model writes a hook far more often than it writes a type name.)
+  (48 type-only export(s) also left the entrypoint. They are listed in --json; a model writes a hook far more often than it writes a type name.)
 
-  WORTH SCORING — 24 functions, hooks and classes gone from the entrypoint with no deprecation first, in a major that is 12 months old
+  WORTH SCORING — 23 functions, hooks and classes gone from the entrypoint with no deprecation first, in a major that is 12 months old
+
+  Next:  npx sdkproof @apollo/client
 ```
+<!-- /drift -->
 
 Those are Apollo Client's React entry points — the provider, the context
-accessor, the query preloader — and the 18 not shown include every `use*` hook.
+accessor, the query preloader — and the ones not shown include every `use*` hook.
 v4 moved them to a different import path, so `useQuery` written the v3 way no
 longer resolves, & a model trained on v3 writes it the v3 way.
 

@@ -99,3 +99,52 @@ const payload = {
 
 writeFileSync(path.join(root, "docs", "drift.json"), JSON.stringify(payload, null, 2));
 console.log(`\ndocs/drift.json - ${Object.keys(runs).length} packages, sdkproof ${cliPkg.version}`);
+
+// The homepage ships one run inline so the panel is complete without
+// JavaScript, and the README quotes the same one. Both are rewritten here
+// rather than by hand: they went stale within a day of being written, and a
+// stale sample on a page whose argument is "this is real output" is the worst
+// kind of wrong.
+const SAMPLE = "@apollo/client";
+const sample = runs[SAMPLE];
+if (sample) {
+  rewrite(path.join(root, "README.md"), "<!-- drift:@apollo/client -->", "<!-- /drift -->", "\n```\n" + sample + "\n```\n");
+  rewrite(path.join(root, "scorecards", "index.html"), "<!--drift-->", "<!--/drift-->", renderLines(sample));
+  console.log("rewrote the inline sample in README.md and scorecards/index.html");
+}
+
+function rewrite(file, open, close, body) {
+  const src = readFileSync(file, "utf8");
+  const a = src.indexOf(open);
+  const b = src.indexOf(close, a);
+  if (a < 0 || b < 0) throw new Error(`markers not found in ${file}`);
+  writeFileSync(file, src.slice(0, a + open.length) + body + src.slice(b));
+}
+
+function escapeHtml(v) {
+  return String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+/** Same classes the page's own script applies, so the fallback matches a live run. */
+function lineClass(line) {
+  if (line.trim() && /^\u2500+$/.test(line.trim())) return "rule";
+  if (/^ {2}NOT WORTH SCORING/.test(line) || /^ {2}CANNOT READ/.test(line)) return "stop";
+  if (/^ {2}WORTH SCORING/.test(line)) return "good";
+  if (/^ {2}WHAT LEFT/.test(line)) return "what";
+  if (/^ {2}Next:/.test(line)) return "next";
+  if (/^ {4}\.\.\./.test(line)) return "dim";
+  if (/^ {4}\S/.test(line)) return "sym";
+  if (/^ {2}\(/.test(line)) return "dim";
+  if (/^ {2}\S.*\sv[\d.]+ -> v[\d.]+/.test(line)) return "head";
+  return "";
+}
+
+function renderLines(text) {
+  return text
+    .split("\n")
+    .map((l) => {
+      const c = lineClass(l);
+      return `<span class="l${c ? " " + c : ""}">${escapeHtml(l) || "&nbsp;"}</span>`;
+    })
+    .join("\n");
+}
