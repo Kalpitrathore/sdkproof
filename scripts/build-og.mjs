@@ -80,22 +80,27 @@ function boardSvg(rows) {
   // Two rows of four. The old single row was `104 + i * 200`, which put the
   // seventh cell at x=1304 on a 1200px canvas — Prisma 7 was drawn off the
   // edge of every share card. Eight libraries never fit across one row.
-  const PER_ROW = 4, COL = 248, ROW_Y = [446, 556];
+  //
+  // The second row then landed at y=556 with its label at 588, under the footer
+  // rule at 502 and past the panel's own bottom edge at 574: four scores were
+  // drawn through the footer text and clipped. Both rows now sit above the rule,
+  // which needed the type a size smaller and the headline lifted.
+  const PER_ROW = 4, COL = 248, ROW_Y = [392, 458];
   const cells = rows
     .map((r, i) => {
       const x = 104 + (i % PER_ROW) * COL;
       const y = ROW_Y[Math.floor(i / PER_ROW)];
       return `
-  <text x="${x}" y="${y}" font-family="${MONO}" font-size="54" font-weight="700" fill="${scoreColor(r.score)}">${r.score}</text>
-  <text x="${x}" y="${y + 32}" font-family="${SANS}" font-size="19" fill="${INK_FAINT}">${esc(r.short)}</text>`;
+  <text x="${x}" y="${y}" font-family="${MONO}" font-size="46" font-weight="700" fill="${scoreColor(r.score)}">${r.score}</text>
+  <text x="${x}" y="${y + 26}" font-family="${SANS}" font-size="17" fill="${INK_FAINT}">${esc(r.short)}</text>`;
     })
     .join("");
 
   return shell(
     `
-  <text x="104" y="252" font-family="${SANS}" font-size="62" font-weight="700" fill="${INK}">How ready is your SDK</text>
-  <text x="104" y="326" font-family="${SANS}" font-size="62" font-weight="700" fill="${INK}">for AI coding <tspan fill="${BRAND}">agents</tspan>?</text>
-  <line x1="104" y1="378" x2="${W - 104}" y2="378" stroke="${LINE}" stroke-width="1.5"/>
+  <text x="104" y="236" font-family="${SANS}" font-size="60" font-weight="700" fill="${INK}">How ready is your SDK</text>
+  <text x="104" y="306" font-family="${SANS}" font-size="60" font-weight="700" fill="${INK}">for AI coding <tspan fill="${BRAND}">agents</tspan>?</text>
+  <line x1="104" y1="338" x2="${W - 104}" y2="338" stroke="${LINE}" stroke-width="1.5"/>
   ${cells}
 `,
     "Type-checked against the real installed package"

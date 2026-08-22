@@ -1,19 +1,36 @@
-<svg width="100%" viewBox="0 0 680 340" role="img" xmlns="http://www.w3.org/2000/svg" style=""><title style="fill:rgb(0, 0, 0);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">SDKProof logo with a brown cat</title><desc style="fill:rgb(0, 0, 0);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">A dark rounded badge holding a brown cat face with closed happy eyes and a green check mark, next to the lowercase sdkproof wordmark.</desc>
-<rect x="40" y="30" width="600" height="280" rx="28" fill="#FFF6EC" style="fill:rgb(255, 246, 236);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<rect x="110" y="90" width="140" height="140" rx="34" fill="#2C2C2A" style="fill:rgb(44, 44, 42);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<polygon points="144,142 152,100 186,128" fill="#C08552" style="fill:rgb(192, 133, 82);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<polygon points="216,142 208,100 174,128" fill="#C08552" style="fill:rgb(192, 133, 82);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<polygon points="152,138 157,113 176,131" fill="#E8A87C" style="fill:rgb(232, 168, 124);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<polygon points="208,138 203,113 184,131" fill="#E8A87C" style="fill:rgb(232, 168, 124);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<ellipse cx="180" cy="168" rx="44" ry="38" fill="#C08552" style="fill:rgb(192, 133, 82);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M160 164 q7 -10 14 0" fill="none" stroke="#2C2C2A" stroke-width="4.5" stroke-linecap="round" style="fill:none;stroke:rgb(44, 44, 42);color:rgb(11, 11, 11);stroke-width:4.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M186 164 q7 -10 14 0" fill="none" stroke="#2C2C2A" stroke-width="4.5" stroke-linecap="round" style="fill:none;stroke:rgb(44, 44, 42);color:rgb(11, 11, 11);stroke-width:4.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<polygon points="174,176 186,176 180,184" fill="#F0997B" style="fill:rgb(240, 153, 123);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M180 184 q-6 9 -13 3" fill="none" stroke="#2C2C2A" stroke-width="3.5" stroke-linecap="round" style="fill:none;stroke:rgb(44, 44, 42);color:rgb(11, 11, 11);stroke-width:3.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M180 184 q6 9 13 3" fill="none" stroke="#2C2C2A" stroke-width="3.5" stroke-linecap="round" style="fill:none;stroke:rgb(44, 44, 42);color:rgb(11, 11, 11);stroke-width:3.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M138 168 H126 M138 180 H126 M222 168 H234 M222 180 H234" stroke="#E8A87C" stroke-width="3" stroke-linecap="round" style="fill:rgb(0, 0, 0);stroke:rgb(232, 168, 124);color:rgb(11, 11, 11);stroke-width:3px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<circle cx="236" cy="214" r="23" fill="#639922" stroke="#FFF6EC" stroke-width="5" style="fill:rgb(99, 153, 34);stroke:rgb(255, 246, 236);color:rgb(11, 11, 11);stroke-width:5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<path d="M226 214 L233 221 L247 206" fill="none" stroke="#FFF6EC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="fill:none;stroke:rgb(255, 246, 236);color:rgb(11, 11, 11);stroke-width:5px;stroke-linecap:round;stroke-linejoin:round;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
-<text x="290" y="180" font-family="var(--font-sans)" font-size="54" fill="#2C2C2A" style="fill:rgb(44, 44, 42);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:54px;font-weight:400;text-anchor:start;dominant-baseline:auto"><tspan font-weight="400" style="fill:rgb(44, 44, 42);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:54px;font-weight:400;text-anchor:start;dominant-baseline:auto">sdk</tspan><tspan font-weight="700" style="fill:rgb(44, 44, 42);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:54px;font-weight:700;text-anchor:start;dominant-baseline:auto">proof</tspan></text>
-<rect x="379" y="196" width="152" height="9" rx="4.5" fill="#639922" style="fill:rgb(99, 153, 34);stroke:none;color:rgb(11, 11, 11);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" width="680" height="340" role="img">
+  <title>SDKProof</title>
+  <desc>The SDKProof mark, a terminal window holding a cat face, beside the lowercase sdkproof wordmark on a light card.</desc>
+
+  <!-- The card is the ground: a README renders on light or dark and the wordmark
+       has to hold on both, so it brings its own. -->
+  <rect x="40" y="30" width="600" height="280" rx="28" fill="#f7f8f7"/>
+
+  <!-- The mark's own coordinates run 104..272; this maps that square to a
+       190px box at (76, 75) inside the card. -->
+  <g transform="translate(-41.62 -20) scale(1.131)">
+    <rect x="110" y="90" width="140" height="140" rx="34" fill="#0e1216"/>
+    <path d="M110 120 H250" stroke="#2b3542" stroke-width="2.5"/>
+    <circle cx="131" cy="105" r="5" fill="#3fd8b8"/>
+    <circle cx="149" cy="105" r="5" fill="#39485a"/>
+    <circle cx="167" cy="105" r="5" fill="#39485a"/>
+    <g transform="translate(0 16) translate(180 168) scale(0.86) translate(-180 -168)">
+      <polygon points="144,142 152,100 186,128" fill="#eef2f1"/>
+      <polygon points="216,142 208,100 174,128" fill="#eef2f1"/>
+      <polygon points="152,138 157,113 176,131" fill="#3fd8b8"/>
+      <polygon points="208,138 203,113 184,131" fill="#3fd8b8"/>
+      <ellipse cx="180" cy="168" rx="44" ry="38" fill="#eef2f1"/>
+      <path d="M160 164 q7 -10 14 0" fill="none" stroke="#0e1216" stroke-width="5" stroke-linecap="round"/>
+      <path d="M186 164 q7 -10 14 0" fill="none" stroke="#0e1216" stroke-width="5" stroke-linecap="round"/>
+      <polygon points="174,176 186,176 180,184" fill="#3fd8b8"/>
+      <path d="M180 184 q-6 9 -13 3" fill="none" stroke="#0e1216" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M180 184 q6 9 13 3" fill="none" stroke="#0e1216" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M138 168 H126 M138 180 H126 M222 168 H234 M222 180 H234" fill="none" stroke="#3fd8b8" stroke-width="3.6" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <text x="300" y="192" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="76" letter-spacing="-2.4" fill="#0e1216">
+    <tspan font-weight="400">sdk</tspan><tspan font-weight="750">proof</tspan>
+  </text>
+  <rect x="418" y="214" width="180" height="10" rx="5" fill="#0a7f74"/>
 </svg>
