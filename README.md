@@ -207,7 +207,21 @@ Said up front, before anyone asks:
 
 ## Run it yourself
 
-There is no npm package, no `npx`. Clone the repo. Needs Node 20+.
+On any package on npm, not just the ones on the board:
+
+```bash
+npx sdkproof zod              # score it — needs a model API key
+npx sdkproof drift zod        # what v4 removed — needs no key at all
+```
+
+That installs the package into a throwaway sandbox, writes small coding tasks
+from that version's own README, asks the model to solve them, and compiles every
+answer with `tsc`. Same pass rule as the board: it compiles or it doesn't.
+Options & details in [`packages/cli`](packages/cli).
+
+To reproduce the board itself, clone the repo. The libraries here have
+hand-written task sets aimed at what each release changed, which the `npx` path
+does not use — it writes its own. Needs Node 20+.
 
 ```bash
 git clone https://github.com/Kalpitrathore/sdkproof
@@ -248,6 +262,11 @@ GPT model alongside.
 The pipeline itself is `src/generate.ts` (task to code), `src/verify.ts` (code
 to compiler, the load-bearing bit), `src/classify.ts` (errors to patterns) and
 `src/report.ts` (result to scorecard).
+
+The measurement core — verify, classify, score, the prompt, the stats — lives in
+[`packages/cli/src/core`](packages/cli/src/core) and is what ships to npm. The
+files above re-export it, so the board and the `npx` path score the same way by
+construction rather than by discipline. Run `npm run test:cli` for its tests.
 
 ---
 

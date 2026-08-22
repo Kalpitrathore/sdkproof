@@ -18,3 +18,7 @@ data/*.result.json
 scripts/radar/candidates.json
 scripts/radar/stage1.json
 scripts/radar/radar-hits.json
+
+# published CLI build output (regenerate with `npm run build:cli`)
+packages/cli/dist/
+packages/cli/*.tgz

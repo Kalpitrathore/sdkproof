@@ -1,0 +1,58 @@
+{
+  "name": "sdkproof",
+  "version": "0.1.0",
+  "description": "Score how often an AI model writes library code that does not compile. Give it a package name, it writes real tasks, compiles every answer against the real installed package with tsc, and reports what broke.",
+  "keywords": [
+    "ai",
+    "llm",
+    "typescript",
+    "tsc",
+    "sdk",
+    "benchmark",
+    "agents",
+    "codegen",
+    "drift",
+    "api-drift"
+  ],
+  "license": "MIT",
+  "author": "Kalpit Rathore",
+  "homepage": "https://sdkproof.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kalpitrathore/sdkproof.git",
+    "directory": "packages/cli"
+  },
+  "bugs": "https://github.com/Kalpitrathore/sdkproof/issues",
+  "type": "module",
+  "bin": {
+    "sdkproof": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.12.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test --test-concurrency=1 test/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1"
+  }
+}

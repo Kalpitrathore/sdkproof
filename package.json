@@ -11,6 +11,8 @@
     "setup": "prisma generate --schema fixtures/prisma/schema.prisma",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --import tsx --test --test-concurrency=1 test/*.test.ts",
+    "test:cli": "npm --prefix packages/cli test",
+    "build:cli": "npm --prefix packages/cli run build",
     "start": "tsx src/cli.ts",
     "score": "tsx src/cli.ts run --lib prisma",
     "build:og": "node scripts/build-og.mjs",
