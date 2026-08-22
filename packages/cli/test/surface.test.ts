@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { isDeprecated, isPublicName, resolveExports, symbolsFromSource } from "../src/surface.ts";
+import {
+  ambientSymbols, isDeprecated, isPublicName, resolveExports, subpathRoot, symbolsFromSource,
+} from "../src/surface.ts";
 
 test("symbolsFromSource reads every shape a .d.ts exports", () => {
   const syms = symbolsFromSource(`
@@ -69,4 +71,75 @@ test("names nobody writes on purpose are not findings", () => {
   assert.ok(!isPublicName("unstable_batchedUpdates"));
   assert.ok(!isPublicName("__internal"));
   assert.ok(!isPublicName("_getVisibleLeafColumns"), "a single leading underscore means internal too");
+});
+
+test("exports has two shapes and both name the type entrypoint", () => {
+  // The sugar form drops the "." and IS the condition map. chalk 6 uses it, and
+  // reading only exports["."] reported a package with a perfectly good
+  // index.d.ts as having no types at all.
+  assert.deepEqual(subpathRoot({ types: "./source/index.d.ts", default: "./source/index.js" }), {
+    types: "./source/index.d.ts",
+    default: "./source/index.js",
+  });
+  assert.deepEqual(subpathRoot({ ".": { types: "./a.d.ts" }, "./sub": { types: "./b.d.ts" } }), {
+    types: "./a.d.ts",
+  });
+  assert.equal(subpathRoot({ "./only-subpaths": { types: "./b.d.ts" } }), undefined);
+  assert.equal(subpathRoot("./index.js"), undefined);
+  assert.equal(subpathRoot(undefined), undefined);
+});
+
+test("ambientSymbols reads a declare module block", () => {
+  // Every DefinitelyTyped package for a CommonJS library declares itself this
+  // way, and an ES-export reader finds nothing in them.
+  const src = `
+declare module "winston" {
+  export interface LoggerOptions { level?: string }
+  export const transports: Transports;
+  export function createLogger(o: LoggerOptions): Logger;
+  class Logger {
+    add(t: unknown): void;
+  }
+}
+`;
+  assert.deepEqual(
+    [...ambientSymbols(src)].sort(),
+    ["Logger", "LoggerOptions", "createLogger", "transports"],
+  );
+});
+
+test("a block whose only member is a namespace is a container, not the surface", () => {
+  // stripe is `declare module 'stripe' { namespace Stripe { ... } }`. Stopping
+  // at the top level reports one symbol and a diff over nothing.
+  const src = `
+declare module "stripe" {
+  namespace Stripe {
+    interface Charge { id: string }
+    const API_VERSION: string;
+    namespace Issuing {
+      interface Card { id: string }
+    }
+  }
+}
+`;
+  const syms = ambientSymbols(src);
+  assert.ok(syms.has("Charge"), [...syms].join(","));
+  assert.ok(syms.has("API_VERSION"));
+  assert.ok(syms.has("Issuing"), "the nested namespace is a member of the container");
+  assert.ok(!syms.has("Card"), "but what is inside it is not");
+});
+
+test("nested members do not leak out of a normal ambient block", () => {
+  const src = `
+declare module "x" {
+  export interface Outer {
+    nested: { interface: string };
+  }
+  export function first(): void;
+  export function second(): void;
+  export const third: number;
+  export const fourth: number;
+}
+`;
+  assert.deepEqual([...ambientSymbols(src)].sort(), ["Outer", "first", "fourth", "second", "third"]);
 });

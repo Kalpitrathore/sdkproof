@@ -1,6 +1,6 @@
 {
   "name": "sdkproof",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Score how often an AI model writes library code that does not compile. Give it a package name, it writes real tasks, compiles every answer against the real installed package with tsc, and reports what broke.",
   "keywords": [
     "ai",

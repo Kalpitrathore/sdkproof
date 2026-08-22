@@ -57,6 +57,12 @@ export interface DriftReport {
    */
   readable: boolean;
   unreadableReason?: string;
+  /**
+   * Where the declarations were read from, when that is not the package itself
+   * — `@types/express@4.17.23` and the like. Worth saying out loud: the diff is
+   * then of what DefinitelyTyped publishes, which can lag the package.
+   */
+  typesFrom?: string;
 }
 
 export interface DriftOptions {
@@ -101,7 +107,8 @@ export function diffSurfaces(
 ): Pick<
   DriftReport,
   | "mode" | "fromCount" | "toCount" | "removed" | "withoutRunway"
-  | "removedFromEntry" | "documentedRemovals" | "valueRemovals" | "readable" | "unreadableReason"
+  | "removedFromEntry" | "documentedRemovals" | "valueRemovals" | "readable"
+  | "unreadableReason" | "typesFrom"
 > {
   // ONE mode for the pair. Deciding per version is what made Apollo read as a
   // 674 -> 133 collapse when the real removal count was far smaller.
@@ -125,18 +132,25 @@ export function diffSurfaces(
   // A package with fewer than five readable exports either has almost no API or
   // is not declaring it in a form this reader understands. Either way a diff
   // against it is not evidence.
+  // Both sides must come from the same place. A package that started shipping
+  // its own declarations mid-diff would otherwise read as a total rewrite of
+  // its API, when all that changed is who publishes the types.
+  const movedHome = a.typesFrom !== b.typesFrom && !sameOwner(a.typesFrom, b.typesFrom);
   const thin = Math.min(fromSyms.size, toSyms.size) < 5;
   const ambient = /declare\s+module\s+["'`]/.test(a.sources.join("\n").slice(0, 200_000));
-  const readable = !thin;
+  const readable = !thin && !movedHome;
   const unreadableReason = readable
     ? undefined
-    : ambient
-      ? "its declarations are an ambient `declare module` block rather than ES exports, which this diff cannot read"
-      : "too few exported symbols were readable from its .d.ts files to make a diff meaningful";
+    : movedHome
+      ? `the two versions publish their declarations in different places (${a.typesFrom} and ${b.typesFrom}), so a diff would compare two different documents`
+      : ambient
+        ? "its declarations are an ambient `declare module` block rather than ES exports, which this diff cannot read"
+        : "too few exported symbols were readable from its .d.ts files to make a diff meaningful";
 
   return {
     readable,
     ...(unreadableReason ? { unreadableReason } : {}),
+    ...(a.typesFrom.startsWith("@types/") ? { typesFrom: a.typesFrom } : {}),
     mode: widen ? "all-dts" : "entry-only",
     fromCount: fromSyms.size,
     toCount: toSyms.size,
@@ -146,6 +160,11 @@ export function diffSurfaces(
     documentedRemovals,
     valueRemovals,
   };
+}
+
+/** `@types/express@4.17.23` and `@types/express@5.0.0` are the same publisher. */
+function sameOwner(a: string, b: string): boolean {
+  return a.split("@").slice(0, -1).join("@") === b.split("@").slice(0, -1).join("@");
 }
 
 /**

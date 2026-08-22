@@ -239,6 +239,9 @@ export function renderDrift(d: DriftReport, verdict: { worth: boolean; reason: s
   out.push(BAR);
   out.push("");
   out.push(`  v${d.to.major} landed ${d.majorAgeMonths.toFixed(0)} months ago`);
+  if (d.typesFrom) {
+    out.push(`  Declarations read from ${d.typesFrom.replace(/@[^@]*$/, "")} — ${d.package} publishes none itself`);
+  }
   if (!d.readable) {
     out.push("");
     out.push(`  CANNOT READ THIS PACKAGE — ${d.unreadableReason}.`);

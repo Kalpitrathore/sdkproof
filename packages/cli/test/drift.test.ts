@@ -12,6 +12,7 @@ function surface(over: Partial<Surface>): Surface {
     entry: "index.d.ts",
     unresolved: [],
     readme: "",
+    typesFrom: "demo",
     ...over,
   };
 }

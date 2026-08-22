@@ -41,6 +41,28 @@ export interface Surface {
   unresolved: string[];
   /** the README that shipped in this version's tarball, "" if it ships none */
   readme: string;
+  /**
+   * Where the declarations came from: the package itself, or the
+   * DefinitelyTyped package that publishes them on its behalf.
+   *
+   * express, react, lodash and plenty of others ship no types at all — the
+   * types are a separate npm package with its own versions. Reading only the
+   * package's own tarball reports every one of them as unscorable, which is
+   * true of the tarball and useless to the reader.
+   */
+  typesFrom: string;
+}
+
+/**
+ * The root entry of an `exports` field, whichever of its two shapes is used:
+ * the subpath map keyed by "." , or the sugar form where the object itself is
+ * the condition map.
+ */
+export function subpathRoot(exports: unknown): unknown {
+  if (!exports || typeof exports !== "object") return undefined;
+  const keys = Object.keys(exports as object);
+  if (keys.some((k) => k === "." || k.startsWith("./"))) return (exports as Record<string, unknown>)["."];
+  return exports;
 }
 
 /** Where a package's type entrypoint might be declared, in order of authority. */
@@ -51,11 +73,17 @@ function typeCandidates(pkg: Record<string, any>): string[] {
   };
   push(pkg.types);
   push(pkg.typings);
-  const dot = pkg.exports?.["."];
-  if (dot) {
-    push(dot.types);
+  // `exports` has two shapes and both are common. The subpath map keys every
+  // entry by path (`{".": {...}, "./x": {...}}`), and the sugar form drops the
+  // "." and IS the condition map (`{"types": "...", "default": "..."}`). Reading
+  // only `exports["."]` misses the sugar entirely — which is how chalk 6, a
+  // package that ships a perfectly good index.d.ts, read as untyped.
+  const dot = subpathRoot(pkg.exports);
+  if (dot && typeof dot === "object") {
+    const cond = dot as Record<string, any>;
+    push(cond.types);
     for (const k of ["import", "require", "default", "node"]) {
-      const v = dot[k];
+      const v = cond[k];
       if (typeof v === "string" && v.endsWith(".d.ts")) push(v);
       else if (v && typeof v === "object") push(v.types ?? v.default);
     }
@@ -76,7 +104,7 @@ function typeCandidates(pkg: Record<string, any>): string[] {
     if (typeof o === "string") return push(o);
     if (typeof o === "object") for (const v of Object.values(o as object)) deep(v, d + 1);
   };
-  deep(pkg.exports?.["."]);
+  deep(dot);
   out.push(
     "index.d.ts", "dist/index.d.ts", "types/index.d.ts", "lib/index.d.ts",
     "dist/types/index.d.ts", "dist/development/index.d.ts", "dist/production/index.d.ts",
@@ -103,6 +131,80 @@ export function symbolsFromSource(src: string): Set<string> {
     /^export\s+(?:interface|type|enum|abstract class|class|function|const)\s+([A-Za-z_$][\w$]*)/gm,
   )) out.add(m[1]);
   return out;
+}
+
+/**
+ * The members of an ambient declaration — `declare module "x" { ... }` or
+ * `declare namespace X { ... }` paired with `export = X`.
+ *
+ * This is how a large share of the ecosystem still declares itself: every
+ * DefinitelyTyped package for a CommonJS library, plus stripe, winston, pino,
+ * mongoose and knex among the packages measured. An ES-export reader finds
+ * nothing in them, so without this the tool answers "cannot read this package"
+ * for one popular package in four.
+ *
+ * Only the top level of the block counts. Nested namespaces are the library's
+ * internal organisation, and counting them makes a rename inside one look like
+ * a removal from the public surface.
+ */
+export function ambientSymbols(src: string): Set<string> {
+  const out = new Set<string>();
+  const OPEN = /declare\s+(?:module\s+["'`][^"'`]+["'`]|namespace\s+[A-Za-z_$][\w$.]*)\s*\{/g;
+  const DECL =
+    /^\s*(?:export\s+)?(?:declare\s+)?(?:abstract\s+)?(?:interface|type|class|function|const|let|var|enum|namespace)\s+([A-Za-z_$][\w$]*)/;
+
+  for (const open of src.matchAll(OPEN)) {
+    // Brace-match the block so a nested `{` cannot end it early.
+    let depth = 1;
+    let i = open.index! + open[0].length;
+    const start = i;
+    for (; i < src.length && depth > 0; i++) {
+      if (src[i] === "{") depth++;
+      else if (src[i] === "}") depth--;
+    }
+    const body = src.slice(start, i - 1);
+
+    for (const name of topLevelDecls(body)) out.add(name);
+  }
+
+  // `declare module "stripe" { namespace Stripe { ... } }` puts the entire API
+  // one level further in. A block whose only member is a namespace is a
+  // container, so read what it contains instead of reporting one symbol.
+  if (out.size === 1) {
+    const only = [...out][0];
+    const inner = new RegExp(`namespace\\s+${only}\\b[^{]*\\{`).exec(src);
+    if (inner) {
+      let depth = 1;
+      let i = inner.index + inner[0].length;
+      const start = i;
+      for (; i < src.length && depth > 0; i++) {
+        if (src[i] === "{") depth++;
+        else if (src[i] === "}") depth--;
+      }
+      for (const name of topLevelDecls(src.slice(start, i - 1))) out.add(name);
+    }
+  }
+  return out;
+}
+
+/** Declarations at the top level of a block body, ignoring anything nested. */
+function topLevelDecls(body: string): string[] {
+  const DECL =
+    /^\s*(?:export\s+)?(?:declare\s+)?(?:abstract\s+)?(?:interface|type|class|function|const|let|var|enum|namespace)\s+([A-Za-z_$][\w$]*)/;
+  const names: string[] = [];
+  let d = 0;
+  for (const line of body.split("\n")) {
+    if (d === 0) {
+      const m = DECL.exec(line);
+      if (m) names.push(m[1]);
+    }
+    for (const ch of line) {
+      if (ch === "{") d++;
+      else if (ch === "}") d--;
+    }
+    if (d < 0) d = 0;
+  }
+  return names;
 }
 
 /** Did `sym` carry an @deprecated jsdoc in this package? */
@@ -173,6 +275,64 @@ export async function readmeOf(p: Packument, version: string): Promise<string> {
  * exported symbols -> 61" is not a sentence anyone should have to interpret.
  */
 export async function surfaceOf(p: Packument, version: string, followDeps = true): Promise<Surface> {
+  try {
+    return await readSurface(p, version, followDeps, p.name);
+  } catch (err) {
+    if (!(err instanceof NoTypeEntrypoint)) throw err;
+    // The package publishes no declarations of its own. DefinitelyTyped is
+    // where they live for that whole family of packages, and it is what a
+    // TypeScript user installs, so it is the surface worth diffing.
+    const types = await typesPackageFor(p.name, version).catch(() => null);
+    if (!types) throw untyped(p.name, version);
+    try {
+      const s = await readSurface(types.packument, types.version, followDeps, types.packument.name);
+      return { ...s, typesFrom: `${types.packument.name}@${types.version}` };
+    } catch {
+      // A @types stub that carries nothing is not an answer either. Report the
+      // package the caller actually asked about.
+      throw untyped(p.name, version);
+    }
+  }
+}
+
+/** Thrown when a tarball carries no declarations we can point at. */
+class NoTypeEntrypoint extends Error {}
+
+function untyped(name: string, version: string): Error {
+  return new Error(
+    `${name}@${version} ships no TypeScript declarations, and neither does its @types package. ` +
+      `There is nothing for tsc to check an answer against.`,
+  );
+}
+
+/**
+ * The DefinitelyTyped package for `name`, at the version whose major matches
+ * the package's. `@types/*` tracks the package's major by convention
+ * (@types/express 4.x for express 4.x), so that is the pairing to use; if the
+ * major is not published there, the latest is closer than nothing.
+ */
+async function typesPackageFor(
+  name: string,
+  version: string,
+): Promise<{ packument: Packument; version: string } | null> {
+  const typesName = name.startsWith("@")
+    ? `@types/${name.slice(1).replace("/", "__")}`
+    : `@types/${name}`;
+  const packument = await fetchPackument(typesName);
+  const major = version.split(".")[0];
+  try {
+    return { packument, version: resolveVersion(packument, major) };
+  } catch {
+    return { packument, version: resolveVersion(packument) };
+  }
+}
+
+async function readSurface(
+  p: Packument,
+  version: string,
+  followDeps: boolean,
+  label: string,
+): Promise<Surface> {
   const files = await packageFiles(p, version);
 
   let pkg: Record<string, any> = {};
@@ -195,15 +355,22 @@ export async function surfaceOf(p: Packument, version: string, followDeps = true
       break;
     }
   }
-  if (!entry) {
-    throw new Error(
-      `${p.name}@${version} ships no TypeScript type entrypoint — there is nothing for tsc to check it against`,
-    );
-  }
+  if (!entry) throw new NoTypeEntrypoint(`${p.name}@${version} ships no type entrypoint`);
 
   const { symbols: entryOnly, unresolved } = resolveExports(files, entry);
   const widened = new Set(entryOnly);
-  for (const s of sources) for (const x of symbolsFromSource(s)) widened.add(x);
+  for (const s of sources) {
+    for (const x of symbolsFromSource(s)) widened.add(x);
+    for (const x of ambientSymbols(s)) widened.add(x);
+  }
+
+  // An ambient declaration exports nothing in the ES sense, so the reader above
+  // comes back empty on a package that is entirely `declare module`. Read the
+  // block itself before giving up.
+  if (entryOnly.size < 5) {
+    for (const x of ambientSymbols(entrySrc)) entryOnly.add(x);
+    if (entryOnly.size < 5) for (const src of sources) for (const x of ambientSymbols(src)) entryOnly.add(x);
+  }
 
   // Cross the package boundary once, for an `export *` that points at a
   // dependency this package declares. Anything else stays unresolved.
@@ -235,7 +402,10 @@ export async function surfaceOf(p: Packument, version: string, followDeps = true
       break;
     }
   }
-  return { entryOnly, widened, needsWiden, sources, entry, unresolved: stillUnresolved, readme };
+  return {
+    entryOnly, widened, needsWiden, sources, entry,
+    unresolved: stillUnresolved, readme, typesFrom: label,
+  };
 }
 
 /**
