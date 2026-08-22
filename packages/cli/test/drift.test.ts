@@ -80,6 +80,7 @@ function report(over: Partial<DriftReport>): DriftReport {
     removedFromEntry: [],
     documentedRemovals: [],
     valueRemovals: [],
+    readable: true,
     ...over,
   };
 }
@@ -133,4 +134,31 @@ export declare class Store {}
   });
   const b = surface({ entryOnly: new Set(), widened: new Set() });
   assert.deepEqual(diffSurfaces(a, b, "").valueRemovals, ["Store", "VERSION", "useThing"]);
+});
+
+test("a package whose declarations cannot be read gets no verdict at all", () => {
+  // stripe declares itself with an ambient `declare module 'stripe'` block, so
+  // the ES-export reader finds 2 symbols on one side and 1131 on the other and
+  // would otherwise print a confident "nothing was removed".
+  const ambient = 'declare module "stripe" {\n  namespace Stripe { interface Charge {} }\n}';
+  const a = surface({ entryOnly: new Set(["Stripe"]), widened: new Set(["Stripe"]), sources: [ambient] });
+  const b = surface({
+    entryOnly: new Set(["Stripe", "a", "b", "c", "d", "e"]),
+    widened: new Set(["Stripe", "a", "b", "c", "d", "e"]),
+  });
+  const d = diffSurfaces(a, b, "");
+  assert.equal(d.readable, false);
+  assert.match(d.unreadableReason!, /ambient `declare module`/);
+  const v = driftVerdict(report({ ...d, package: "stripe" }));
+  assert.equal(v.worth, false);
+  assert.match(v.reason, /could not be read/);
+});
+
+test("a package with a real surface on both sides stays readable", () => {
+  const a = surface({
+    entryOnly: new Set(["a", "b", "c", "d", "e", "f"]),
+    widened: new Set(["a", "b", "c", "d", "e", "f"]),
+  });
+  const b = surface({ entryOnly: new Set(["a", "b", "c", "d", "e"]), widened: new Set(["a", "b", "c", "d", "e"]) });
+  assert.equal(diffSurfaces(a, b, "").readable, true);
 });

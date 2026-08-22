@@ -48,6 +48,15 @@ export interface DriftReport {
    * package ships a README too thin to rank against.
    */
   valueRemovals: string[];
+  /**
+   * False when the .d.ts files could not be read into a believable surface —
+   * almost always because the package declares itself with an ambient
+   * `declare module "pkg" { ... }` instead of ES exports. `stripe` does, and
+   * reading it naively gives "2 exported symbols -> 1131" and a confident
+   * "nothing was removed", which is worse than no answer.
+   */
+  readable: boolean;
+  unreadableReason?: string;
 }
 
 export interface DriftOptions {
@@ -91,7 +100,8 @@ export function diffSurfaces(
   oldReadme: string,
 ): Pick<
   DriftReport,
-  "mode" | "fromCount" | "toCount" | "removed" | "withoutRunway" | "removedFromEntry" | "documentedRemovals" | "valueRemovals"
+  | "mode" | "fromCount" | "toCount" | "removed" | "withoutRunway"
+  | "removedFromEntry" | "documentedRemovals" | "valueRemovals" | "readable" | "unreadableReason"
 > {
   // ONE mode for the pair. Deciding per version is what made Apollo read as a
   // 674 -> 133 collapse when the real removal count was far smaller.
@@ -112,7 +122,21 @@ export function diffSurfaces(
 
   const valueRemovals = removedFromEntry.filter((sym) => isValueExport(a.sources, sym));
 
+  // A package with fewer than five readable exports either has almost no API or
+  // is not declaring it in a form this reader understands. Either way a diff
+  // against it is not evidence.
+  const thin = Math.min(fromSyms.size, toSyms.size) < 5;
+  const ambient = /declare\s+module\s+["'`]/.test(a.sources.join("\n").slice(0, 200_000));
+  const readable = !thin;
+  const unreadableReason = readable
+    ? undefined
+    : ambient
+      ? "its declarations are an ambient `declare module` block rather than ES exports, which this diff cannot read"
+      : "too few exported symbols were readable from its .d.ts files to make a diff meaningful";
+
   return {
+    readable,
+    ...(unreadableReason ? { unreadableReason } : {}),
     mode: widen ? "all-dts" : "entry-only",
     fromCount: fromSyms.size,
     toCount: toSyms.size,
@@ -136,14 +160,25 @@ export function headlineRemovals(d: DriftReport): string[] {
 
 /** How the headline list was arrived at, for a caption the reader can trust. */
 export function headlineSource(d: DriftReport): string {
+  const one = headlineRemovals(d).length === 1;
   if (d.documentedRemovals.length) {
-    return "exports the old README documented, gone from the entrypoint with no deprecation first";
+    return one
+      ? "export named in the old README, gone from the entrypoint with no deprecation first"
+      : "exports named in the old README, gone from the entrypoint with no deprecation first";
   }
   if (d.valueRemovals.length) {
-    return "functions, hooks and classes gone from the entrypoint with no deprecation first";
+    return one
+      ? "function, hook or class gone from the entrypoint with no deprecation first"
+      : "functions, hooks and classes gone from the entrypoint with no deprecation first";
   }
-  if (d.removedFromEntry.length) return "exports gone from the entrypoint with no deprecation first";
-  return "symbols gone from a .d.ts in the package with no deprecation first";
+  if (d.removedFromEntry.length) {
+    return one
+      ? "export gone from the entrypoint with no deprecation first"
+      : "exports gone from the entrypoint with no deprecation first";
+  }
+  return one
+    ? "symbol gone from a .d.ts in the package with no deprecation first"
+    : "symbols gone from a .d.ts in the package with no deprecation first";
 }
 
 /**
@@ -156,6 +191,12 @@ export function headlineSource(d: DriftReport): string {
  *  - a removal with a deprecation runway produces almost nothing.
  */
 export function driftVerdict(d: DriftReport): { worth: boolean; reason: string } {
+  if (!d.readable) {
+    return {
+      worth: false,
+      reason: `${d.package}'s type declarations could not be read: ${d.unreadableReason}`,
+    };
+  }
   const headline = headlineRemovals(d);
   if (!headline.length) {
     return {

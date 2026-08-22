@@ -60,6 +60,16 @@ function typeCandidates(pkg: Record<string, any>): string[] {
       else if (v && typeof v === "object") push(v.types ?? v.default);
     }
   }
+  // No `types`, no `typings`, no `exports` — the declarations sit beside the
+  // JS entry under TypeScript's oldest convention, `main.js` -> `main.d.ts`.
+  // `stripe` still ships this way, and without it the whole package reads as
+  // untyped.
+  for (const field of ["main", "module", "browser"]) {
+    const v = pkg[field];
+    if (typeof v !== "string") continue;
+    const stem = v.replace(/^\.\//, "").replace(/\.(js|cjs|mjs)$/, "");
+    out.push(`${stem}.d.ts`, `${stem}.d.cts`, `${stem}.d.mts`);
+  }
   // Some packages only ship .d.mts/.d.cts, or bury the entry a level deeper.
   const deep = (o: unknown, d = 0): void => {
     if (d > 3 || !o) return;

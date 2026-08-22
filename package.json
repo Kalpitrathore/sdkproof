@@ -17,6 +17,7 @@
     "score": "tsx src/cli.ts run --lib prisma",
     "build:og": "node scripts/build-og.mjs",
     "build:badges": "node scripts/build-badges.mjs",
+    "build:drift": "node scripts/build-drift-demo.mjs",
     "build:site": "node scripts/build-og.mjs && node scripts/build-badges.mjs && node scripts/build-runs.mjs && node scripts/build-site.mjs",
     "indexnow": "node scripts/submit-indexnow.mjs",
     "build:runs": "node scripts/build-runs.mjs"

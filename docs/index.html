@@ -203,6 +203,97 @@
   }
   .stats .k { font-size: 12px; color: var(--ink-faint); margin-top: 6px; display: block; line-height: 1.35; }
   .stats .bad .n { color: var(--fail); }
+
+  /* Label a control for a screen reader without showing it. */
+  .vh {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    padding: 0; border: 0; overflow: hidden; white-space: nowrap;
+    clip-path: inset(50%);
+  }
+
+  /* ---------- try it: the command, running ---------- */
+  /* The hero object is the command itself. Every line in the output pane is
+     verbatim stdout from `sdkproof drift`, captured by
+     scripts/build-drift-demo.mjs into docs/drift.json. The colour is
+     presentation; the text is not edited, only cut, and a cut is counted. */
+  .tt {
+    margin-top: 20px; background: var(--panel); border: 1px solid var(--line-2);
+    border-radius: 14px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .tt-bar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 9px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+  }
+  .tt-dots { display: flex; gap: 5px; flex: none; }
+  .tt-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line-2); }
+  .tt-bar .ttl { font-size: 12.5px; font-weight: 650; color: var(--ink-soft); }
+  .tt-copy {
+    margin-left: auto; font-family: inherit; font-size: 12px; font-weight: 650;
+    cursor: pointer; color: var(--ink-soft); background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 11px;
+  }
+  .tt-copy:hover { border-color: var(--accent); color: var(--accent); }
+  .tt-copy[data-done="1"] { color: var(--pass); border-color: var(--pass); }
+
+  .tt-cmd {
+    display: flex; align-items: center; flex-wrap: wrap; row-gap: 8px;
+    padding: 13px 14px; background: var(--code-bg); border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: clamp(13px, 1.9vw, 15.5px);
+  }
+  .tt-cmd .sh { color: var(--accent); font-weight: 700; margin-right: 9px; }
+  .tt-cmd .fixed { color: var(--ink); white-space: nowrap; }
+  .tt-pkg {
+    flex: 1 1 14ch; min-width: 12ch; margin-left: 8px; padding: 1px 2px;
+    font: inherit; color: var(--accent); background: transparent;
+    border: 0; border-bottom: 1px dashed var(--line-2); border-radius: 0;
+  }
+  .tt-pkg:focus { outline: none; border-bottom-color: var(--accent); }
+  .tt-go {
+    margin-left: 10px; font-family: var(--font-body); font-size: 12.5px; font-weight: 650;
+    cursor: pointer; color: var(--on-accent); background: var(--accent);
+    border: 1px solid var(--accent); border-radius: 999px; padding: 5px 15px;
+  }
+  .tt-go:hover { filter: brightness(1.06); }
+
+  .tt-out {
+    margin: 0; padding: 13px 14px 16px; background: var(--code-bg);
+    font-family: var(--font-mono); font-size: 12px; line-height: 1.6;
+    min-height: 20rem; max-height: 34rem; overflow-y: auto; overflow-x: hidden;
+  }
+  /* pre-wrap, not pre: a real terminal soft-wraps a long line, and the
+     alternative here is a horizontal scrollbar hiding the verdict. */
+  .tt-out .l { display: block; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink-soft); }
+  .tt-out .l.rule { color: var(--line-2); }
+  .tt-out .l.head { color: var(--ink); font-weight: 700; }
+  .tt-out .l.what { color: var(--accent); font-weight: 700; }
+  .tt-out .l.sym { color: var(--ink); }
+  .tt-out .l.dim { color: var(--ink-faint); }
+  .tt-out .l.good { color: var(--pass); font-weight: 700; }
+  .tt-out .l.stop { color: var(--warn); font-weight: 700; }
+  .tt-out .l.next { color: var(--accent); }
+  .tt-caret {
+    display: inline-block; width: 7px; height: 12px; vertical-align: -1px;
+    background: var(--accent); animation: lcBlink 1.05s steps(1, end) infinite;
+  }
+
+  .tt-chips {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    padding: 10px 14px; border-top: 1px solid var(--line); background: var(--panel);
+  }
+  .tt-chip {
+    font-family: inherit; font-size: 12.5px; font-weight: 650; line-height: 1.2;
+    cursor: pointer; color: var(--ink-soft); background: var(--panel);
+    border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 12px;
+  }
+  .tt-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .tt-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .tt-note { padding: 0 14px 13px; margin: 0; background: var(--panel); font-size: 12.5px; color: var(--ink-faint); }
+  .tt-note code { color: var(--ink-soft); }
+  @media (max-width: 640px) {
+    /* Tall enough that the verdict line lands without a scroll. */
+    .tt-out { font-size: 10.6px; min-height: 17rem; max-height: 31rem; }
+    .tt-cmd { font-size: 13px; }
+  }
   @media (max-width: 720px) {
     .stats { grid-template-columns: 1fr 1fr; }
     .stats div { padding: 12px 14px; }
@@ -600,13 +691,63 @@
   </div>
 
   <header class="hero">
-    <span class="eyebrow">AI-readiness, measured by a compiler</span>
+    <span class="eyebrow">One command, any package on npm</span>
     <h1>The code looks right.<span class="dim">It doesn't compile.</span></h1>
     <div class="lede">
-      <p>AI coding assistants write library code from memory, so when a library ships a big release that renames or removes things, the assistant keeps writing the old version. It reads fine &amp; it doesn't compile.</p>
-      <p><b>SDKProof measures how often that happens.</b> Every answer here went through <code>tsc</code>, the TypeScript compiler, against the real installed package, and a task passes only if it compiles.</p>
+      <p>AI coding assistants write library code from memory. Ship a big release that renames or removes things &amp; the assistant keeps writing the old version &mdash; it reads fine, and it doesn't compile. <b>Point this at your package and it tells you which parts.</b></p>
     </div>
   </header>
+
+  <!-- ================= try the command ================= -->
+  <!-- The default run is written into the markup, so the panel is complete with
+       no JavaScript. The script swaps in the other packages and wires the chips. -->
+  <section class="tt" id="tt" aria-label="Try sdkproof on a package">
+    <div class="tt-bar">
+      <span class="tt-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="ttl">Real output. No install, no API key.</span>
+      <button type="button" class="tt-copy" id="tt-copy">Copy command</button>
+    </div>
+
+    <div class="tt-cmd">
+      <span class="sh" aria-hidden="true">$</span>
+      <span class="fixed">npx sdkproof drift</span>
+      <label class="vh" for="tt-pkg">Package name</label>
+      <input class="tt-pkg" id="tt-pkg" value="@apollo/client" list="tt-list" spellcheck="false"
+             autocapitalize="off" autocorrect="off" autocomplete="off" aria-describedby="tt-note">
+      <datalist id="tt-list"><option value="@apollo/client"></option><option value="@tanstack/react-table"></option><option value="react-router"></option><option value="zod"></option><option value="ai"></option><option value="@prisma/client"></option><option value="next"></option><option value="@tanstack/react-query"></option><option value="stripe"></option></datalist>
+      <button type="button" class="tt-go" id="tt-go">Run</button>
+    </div>
+
+    <pre class="tt-out" id="tt-out" tabindex="0" role="group" aria-label="Command output" aria-live="polite"><span class="l rule">────────────────────────────────────────────────────────────</span>
+<span class="l head">  @apollo/client  v3.14.1 -&gt; v4.2.12</span>
+<span class="l rule">────────────────────────────────────────────────────────────</span>
+<span class="l">&nbsp;</span>
+<span class="l">  v4 landed 12 months ago</span>
+<span class="l">  132 exported symbols -&gt; 133  (entry-only diff)</span>
+<span class="l">&nbsp;</span>
+<span class="l what">  WHAT LEFT (24) — functions, hooks and classes gone from the entrypoint with no deprecation first</span>
+<span class="l">  This is what a model trained on v3 will still write.</span>
+<span class="l">&nbsp;</span>
+<span class="l sym">    ApolloConsumer</span>
+<span class="l sym">    ApolloProvider</span>
+<span class="l sym">    DocumentType</span>
+<span class="l sym">    createQueryPreloader</span>
+<span class="l sym">    getApolloContext</span>
+<span class="l sym">    isNetworkRequestSettled</span>
+<span class="l dim">    ... 18 more</span>
+<span class="l">&nbsp;</span>
+<span class="l">  Deprecated first, then removed (8) — these rarely produce drift:</span>
+<span class="l sym">    ApolloError, fromError, fromPromise, isApolloError, parser, resetApolloContext, throwServerError, toPromise</span>
+<span class="l">&nbsp;</span>
+<span class="l dim">  (29 type-only export(s) also left the entrypoint. They are listed in --json; a model writes a hook far more often than it writes a type name.)</span>
+<span class="l">&nbsp;</span>
+<span class="l good">  WORTH SCORING — 24 functions, hooks and classes gone from the entrypoint with no deprecation first, in a major that is 12 months old</span>
+<span class="l">&nbsp;</span>
+<span class="l next">  Next:  npx sdkproof @apollo/client</span></pre>
+
+    <div class="tt-chips" id="tt-chips" role="group" aria-label="Pick a package"></div>
+    <p class="tt-note" id="tt-note">Reads two published versions off npm &amp; diffs their type declarations &mdash; nothing is installed and no model is called. The other half, <code>npx sdkproof &lt;package&gt;</code>, gives a model real coding jobs and puts every answer through <code>tsc</code>, the TypeScript compiler. Pass means it compiled.</p>
+  </section>
 
   <div class="stats">
     <div><span class="n" id="st-libs">8</span><span class="k">libraries scored</span></div>
@@ -977,7 +1118,7 @@ error TS2558: Expected 2 type arguments, but got 1.</p>
       <a class="btn" href="https://github.com/Kalpitrathore/sdkproof/issues/new?template=request-a-scorecard.yml">Request a scorecard →</a>
       <a class="btn ghost" href="https://github.com/Kalpitrathore/sdkproof">Read the code</a>
     </div>
-    <p class="note">There's no npm package. Clone the repo, point it at a library, run it. The compiler is the judge.</p>
+    <p class="note"><code>npx sdkproof &lt;package&gt;</code> runs the whole thing on any typed package on npm. The source is here too &mdash; the compiler is the judge either way.</p>
   </div>
 
   <footer>
@@ -1746,6 +1887,177 @@ error TS2558: Expected 2 type arguments, but got 1.</p>
     runs.then(boot).catch(function () { section.hidden = true; });
   } else if (section) {
     section.hidden = true;
+  }
+})();
+</script>
+
+<script>
+/* The hero terminal. docs/drift.json holds the verbatim stdout of
+   `sdkproof drift <pkg>` for the packages below, captured by
+   scripts/build-drift-demo.mjs. The default run is already in the markup, so a
+   failed fetch or no JavaScript still leaves a complete, real panel. */
+(function () {
+  "use strict";
+
+  var root = document.getElementById("tt");
+  if (!root) return;
+
+  var out = document.getElementById("tt-out");
+  var input = document.getElementById("tt-pkg");
+  var go = document.getElementById("tt-go");
+  var copyBtn = document.getElementById("tt-copy");
+  var chipsEl = document.getElementById("tt-chips");
+
+  var PACKAGES = [["@apollo/client", "Apollo Client"], ["@tanstack/react-table", "TanStack Table"], ["react-router", "React Router"], ["zod", "Zod"], ["ai", "AI SDK"], ["@prisma/client", "Prisma"], ["next", "Next.js"], ["@tanstack/react-query", "TanStack Query"], ["stripe", "Stripe"]];
+  var DEFAULT = "@apollo/client";
+
+  var data = null;
+  var timer = null;
+  var current = DEFAULT;
+  var reduce = window.matchMedia
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    : false;
+
+  function esc(v) {
+    return String(v == null ? "" : v)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* Colour by shape, so the text itself never has to be rewritten to be read. */
+  function lineClass(line) {
+    if (line.trim() && /^\u2500+$/.test(line.trim())) return "rule";
+    if (/^ {2}NOT WORTH SCORING/.test(line) || /^ {2}CANNOT READ/.test(line)) return "stop";
+    if (/^ {2}WORTH SCORING/.test(line)) return "good";
+    if (/^ {2}WHAT LEFT/.test(line)) return "what";
+    if (/^ {2}Next:/.test(line)) return "next";
+    if (/^ {4}\.\.\./.test(line)) return "dim";
+    if (/^ {4}\S/.test(line)) return "sym";
+    if (/^ {2}\(/.test(line)) return "dim";
+    if (/^ {2}\S.*\sv[\d.]+ -> v[\d.]+/.test(line)) return "head";
+    return "";
+  }
+
+  function lineHTML(line) {
+    var c = lineClass(line);
+    return '<span class="l' + (c ? " " + c : "") + '">' + (esc(line) || "&nbsp;") + "</span>";
+  }
+
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  /* Lines arrive one at a time, the way they do in a terminal. Reduced motion
+     gets the whole thing at once; the content is identical either way. */
+  function render(text) {
+    stop();
+    var lines = String(text).split("\n");
+    if (reduce) {
+      out.innerHTML = lines.map(lineHTML).join("");
+      out.scrollTop = 0;
+      return;
+    }
+    var i = 0;
+    out.innerHTML = '<span class="l"><span class="tt-caret"></span></span>';
+    timer = setInterval(function () {
+      /* Back to the top when it finishes: the package and version line is
+         written first and is the thing worth ending up looking at. */
+      if (i >= lines.length) { stop(); out.scrollTop = 0; return; }
+      var html = lines.slice(0, ++i).map(lineHTML).join("");
+      if (i < lines.length) html += '<span class="l"><span class="tt-caret"></span></span>';
+      out.innerHTML = html;
+      out.scrollTop = out.scrollHeight;
+    }, 26);
+  }
+
+  function unrecorded(pkg) {
+    stop();
+    out.innerHTML = [
+      "",
+      "  No recorded run for " + esc(pkg) + " on this page.",
+      "",
+      "  Copy the command and run it yourself. It needs no API key",
+      "  and adds nothing to your project.",
+      ""
+    ].map(function (l) { return '<span class="l dim">' + (l || "&nbsp;") + "</span>"; }).join("");
+    if (copyBtn) copyBtn.focus();
+  }
+
+  function pressChips(pkg) {
+    var buttons = chipsEl ? chipsEl.querySelectorAll(".tt-chip") : [];
+    Array.prototype.forEach.call(buttons, function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-pkg") === pkg ? "true" : "false");
+    });
+  }
+
+  function run(pkg) {
+    pkg = String(pkg || "").trim();
+    if (!pkg) return;
+    current = pkg;
+    pressChips(pkg);
+    if (copyBtn) { copyBtn.textContent = "Copy command"; copyBtn.removeAttribute("data-done"); }
+    if (data && data.runs && data.runs[pkg]) render(data.runs[pkg]);
+    else unrecorded(pkg);
+  }
+
+  if (chipsEl) {
+    var html = "";
+    for (var i = 0; i < PACKAGES.length; i++) {
+      html += '<button type="button" class="tt-chip" data-pkg="' + esc(PACKAGES[i][0]) +
+        '" aria-pressed="' + (PACKAGES[i][0] === DEFAULT ? "true" : "false") + '">' +
+        esc(PACKAGES[i][1]) + "</button>";
+    }
+    chipsEl.innerHTML = html;
+    chipsEl.addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest(".tt-chip") : null;
+      if (!b) return;
+      input.value = b.getAttribute("data-pkg");
+      run(input.value);
+    });
+  }
+
+  if (go) go.addEventListener("click", function () { run(input.value); });
+  if (input) {
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); run(input.value); }
+    });
+  }
+
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var cmd = "npx sdkproof drift " + (input.value || DEFAULT).trim();
+      var done = function () {
+        copyBtn.textContent = "Copied";
+        copyBtn.setAttribute("data-done", "1");
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(cmd).then(done, function () {});
+        return;
+      }
+      var ta = document.createElement("textarea");
+      ta.value = cmd;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch (err) { /* leave the label */ }
+      document.body.removeChild(ta);
+    });
+  }
+
+  if (typeof window.fetch === "function") {
+    var grab = function (u) {
+      return fetch(u).then(function (r) { return r.ok ? r.json() : Promise.reject(); });
+    };
+    grab("/drift.json").catch(function () { return grab("drift.json"); })
+      .then(function (json) {
+        data = json;
+        /* The default run is already on screen from the markup. Replaying it
+           makes the panel visibly a terminal rather than a screenshot. */
+        if (current === DEFAULT) render(data.runs[DEFAULT] || "");
+      })
+      .catch(function () { /* the markup default is a complete panel on its own */ });
   }
 })();
 </script>

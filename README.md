@@ -3,6 +3,8 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/sdkproof"><img src="https://img.shields.io/npm/v/sdkproof?color=0e9aa7&label=npm" alt="npm"></a>
+  &nbsp;
   <a href="https://sdkproof.dev"><img src="https://img.shields.io/badge/live-sdkproof.dev-0e9aa7" alt="Live site"></a>
   &nbsp;
   <img src="https://img.shields.io/github/license/Kalpitrathore/sdkproof?color=888" alt="license">
@@ -14,13 +16,54 @@ AI coding assistants write library code from memory. When a library ships a big
 release that renames or removes things, the assistant keeps writing the old
 version — the code looks right & doesn't compile.
 
-SDKProof measures how often that happens. It gives a model a set of small
-realistic coding jobs, then compiles every answer against the real installed
-package using `tsc`, the TypeScript compiler.
+SDKProof measures how often that happens, on any typed package on npm.
 
-Pass = it compiles. No AI judges another AI, the compiler decides.
+```bash
+npx sdkproof drift @apollo/client   # what v4 removed. No API key, nothing installed
+npx sdkproof @apollo/client         # score a model on it. Needs a model API key
+```
 
-Live board: <https://sdkproof.dev>
+The first one reads two published versions straight off npm & diffs their type
+declarations. Nothing is added to your project and no model is called:
+
+```
+────────────────────────────────────────────────────────────
+  @apollo/client  v3.14.1 -> v4.2.12
+────────────────────────────────────────────────────────────
+
+  v4 landed 12 months ago
+  132 exported symbols -> 133  (entry-only diff)
+
+  WHAT LEFT (24) — functions, hooks and classes gone from the entrypoint with no deprecation first
+  This is what a model trained on v3 will still write.
+
+    ApolloConsumer
+    ApolloProvider
+    DocumentType
+    createQueryPreloader
+    getApolloContext
+    isNetworkRequestSettled
+    ... 18 more
+
+  Deprecated first, then removed (8) — these rarely produce drift:
+    ApolloError, fromError, fromPromise, isApolloError, parser, resetApolloContext, throwServerError, toPromise
+
+  (29 type-only export(s) also left the entrypoint. They are listed in --json; a model writes a hook far more often than it writes a type name.)
+
+  WORTH SCORING — 24 functions, hooks and classes gone from the entrypoint with no deprecation first, in a major that is 12 months old
+```
+
+Those are Apollo Client's React entry points — the provider, the context
+accessor, the query preloader — and the 18 not shown include every `use*` hook.
+v4 moved them to a different import path, so `useQuery` written the v3 way no
+longer resolves, & a model trained on v3 writes it the v3 way.
+
+The second command is the measurement: it gives a model small realistic coding
+jobs, then compiles every answer against the real installed package using
+`tsc`, the TypeScript compiler. Pass = it compiles. No AI judges another AI, the
+compiler decides.
+
+Live board: <https://sdkproof.dev> · Package: [`sdkproof` on npm](https://www.npmjs.com/package/sdkproof) · [CLI docs](packages/cli)
 
 ## What this looks like in real code
 

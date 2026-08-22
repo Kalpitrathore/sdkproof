@@ -89,7 +89,7 @@ export function renderTerminal(r: Result, ctx: RunContext): string {
     out.push("");
   }
 
-  const headline = ctx.drift ? headlineRemovals(ctx.drift) : [];
+  const headline = ctx.drift?.readable ? headlineRemovals(ctx.drift) : [];
   if (ctx.drift && headline.length) {
     const d = ctx.drift;
     out.push(
@@ -197,7 +197,7 @@ export function renderMarkdown(r: Result, ctx: RunContext): string {
     lines.push("");
   }
 
-  if (ctx.drift) {
+  if (ctx.drift?.readable) {
     const d = ctx.drift;
     lines.push(`## Drift surface — v${d.from.major} → v${d.to.major}`);
     lines.push("");
@@ -239,6 +239,15 @@ export function renderDrift(d: DriftReport, verdict: { worth: boolean; reason: s
   out.push(BAR);
   out.push("");
   out.push(`  v${d.to.major} landed ${d.majorAgeMonths.toFixed(0)} months ago`);
+  if (!d.readable) {
+    out.push("");
+    out.push(`  CANNOT READ THIS PACKAGE — ${d.unreadableReason}.`);
+    out.push("  A scored run still works; only this declaration diff does not.");
+    out.push("");
+    out.push(`  Next:  npx sdkproof ${d.package}`);
+    out.push("");
+    return out.join("\n");
+  }
   out.push(`  ${d.fromCount} exported symbols -> ${d.toCount}  (${d.mode} diff)`);
   out.push("");
   if (headline.length) {
