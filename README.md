@@ -183,15 +183,23 @@ whether the generated code actually does the right thing once it runs.
 Said up front, before anyone asks:
 
 - **One model.** Everything on the board is claude-opus-5. Another model gives
-  another board.
-- **One shot.** Each task is asked once. No retries, no follow-up, no pasting
-  the compiler error back in. A real person would fix most of these on the
-  second try.
+  another board — which is why every run is dated and the model is named on the
+  page, rather than published once as a fact about the library. A score is a
+  reading of one model on one day.
+- **One shot.** Each task is asked once. No retries, no follow-up, no pasting the
+  compiler error back in. A real person would fix most of these on the second try
+  — so read a score as a floor for unassisted generation, not a prediction of what
+  a developer ships. It is also the cheapest claim here to check: every task is in
+  `data/*.tasks.json`, and every per-task verdict with its compiler error is
+  published at <https://sdkproof.dev/runs.json>.
 - **No docs.** The model gets the task and nothing else — no README, no
   `llms.txt`, no web search. That's deliberate, but it makes this a floor, not a
   ceiling.
-- **Small numbers.** 10–15 tasks per library. The 95% intervals are wide
-  (TanStack Table's 0% is really 0–24%). Read these as directional, not exact.
+- **Small numbers.** 10–15 tasks per library, so the 95% intervals are wide —
+  TanStack Table's 0 is really 0–24%. The ends of the board are readable anyway:
+  0 of 12 and 15 of 15 mean what they look like. The middle is not — Prisma 7,
+  Next.js 16 and React Router 8 have overlapping intervals, so treat them as a
+  group rather than a ranking.
 - **Type-check only.** Passing means it compiles, not that it runs or that it's
   correct. A well-typed wrong answer passes.
 - **The tasks are hand-written**, and they aim at the parts of the API that
